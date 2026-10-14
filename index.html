@@ -396,8 +396,8 @@ function openMember(idx) {
   document.getElementById('opening-gf').value = m.openingGF || 0;
   document.getElementById('gf-rate').value = m.gfRate || 0;
   document.getElementById('closing-share').value = m.closingShare || 0;
-  renderFundsTable(m);
   isEditing = false;
+  renderFundsTable(m);
   setInputsDisabled(true);
   showScreen('member-detail');
 }
@@ -425,14 +425,14 @@ function renderFundsTable(m) {
   MONTHS.forEach((month, i) => {
     const tfMonth = parseFloat(m.tfThisMonth?.[i]) || 0;
     const gfMonth = parseFloat(m.gfThisMonth?.[i]) || 0;
-    const openingTFThis = (i === 0) ? (parseFloat(m.openingTF)||0) : closingTF;
-    const openingGFThis = (i === 0) ? (parseFloat(m.openingGF)||0) : closingGF;
+    const openingTFThis = (i === 0) ? (parseFloat(m.openingTF) || 0) : closingTF;
+    const openingGFThis = (i === 0) ? (parseFloat(m.openingGF) || 0) : closingGF;
 
-    closingTF += tfMonth;
-    closingGF += gfMonth;
+    closingTF = openingTFThis + tfMonth;
+    closingGF = openingGFThis + gfMonth;
 
-    const tfInt = openingTFThis * ((parseFloat(m.tfRate)||0)/100) * (I_VALUES[i]/12);
-    const gfInt = openingGFThis * ((parseFloat(m.gfRate)||0)/100) * (I_VALUES[i]/12);
+    const tfInt = openingTFThis * ((parseFloat(m.tfRate) || 0) / 100) * (I_VALUES[i] / 12);
+    const gfInt = openingGFThis * ((parseFloat(m.gfRate) || 0) / 100) * (I_VALUES[i] / 12);
 
     sumTFMonth += tfMonth;
     sumGFMonth += gfMonth;
@@ -442,10 +442,10 @@ function renderFundsTable(m) {
     const tr = document.createElement('tr');
     tr.innerHTML = 
       '<td>' + month + '</td>' +
-      '<td><input type="number" step="0.01" value="' + tfMonth + '" data-type="tf" data-idx="' + i + '" disabled></td>' +
+      '<td><input type="number" step="0.01" value="' + tfMonth + '" data-type="tf" data-idx="' + i + '" ' + (isEditing ? '' : 'disabled') + '></td>' +
       '<td>' + closingTF.toFixed(2) + '</td>' +
       '<td>' + tfInt.toFixed(2) + '</td>' +
-      '<td><input type="number" step="0.01" value="' + gfMonth + '" data-type="gf" data-idx="' + i + '" disabled></td>' +
+      '<td><input type="number" step="0.01" value="' + gfMonth + '" data-type="gf" data-idx="' + i + '" ' + (isEditing ? '' : 'disabled') + '></td>' +
       '<td>' + closingGF.toFixed(2) + '</td>' +
       '<td>' + gfInt.toFixed(2) + '</td>';
     tbody.appendChild(tr);
