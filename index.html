@@ -111,7 +111,6 @@
     <p>Private Banking</p>
   </div>
 
-  <!-- Security Code -->
   <div id="screen-security" class="card">
     <h2>Secure Access</h2>
     <p class="subtitle">Enter your security code to continue</p>
@@ -123,7 +122,6 @@
     <div id="security-error" class="error"></div>
   </div>
 
-  <!-- Main Menu -->
   <div id="screen-menu" class="card hidden">
     <h2>Welcome</h2>
     <p class="subtitle">Select an option</p>
@@ -134,7 +132,6 @@
     <div class="footer">Secure session active</div>
   </div>
 
-  <!-- Member Login -->
   <div id="screen-login" class="card hidden">
     <h2>Member Login</h2>
     <p class="subtitle">Enter your credentials</p>
@@ -151,7 +148,6 @@
     <div id="login-error" class="error"></div>
   </div>
 
-  <!-- Admin Login -->
   <div id="screen-admin-login" class="card hidden">
     <h2>Administrator Access</h2>
     <p class="subtitle">Restricted area</p>
@@ -172,7 +168,6 @@
     <div id="admin-error" class="error"></div>
   </div>
 
-  <!-- Admin Dashboard -->
   <div id="screen-admin-dashboard" class="card hidden">
     <h2>Administrator Dashboard</h2>
     <p class="subtitle" id="admin-welcome">Access granted</p>
@@ -187,7 +182,6 @@
     <button class="btn btn-secondary" onclick="logout()">Logout</button>
   </div>
 
-  <!-- Member Detail (Admin) -->
   <div id="screen-member-detail" class="card hidden">
     <h2 id="detail-title">Member Details</h2>
     <div style="text-align:right;margin-bottom:10px;">
@@ -247,7 +241,6 @@
     <div id="detail-msg" class="success" style="margin-top:10px;"></div>
   </div>
 
-  <!-- Change ID -->
   <div id="screen-change-id" class="card hidden">
     <h2>Change ID</h2>
     <p class="subtitle">Update your identification code</p>
@@ -264,7 +257,6 @@
     <div id="change-id-msg" class="error"></div>
   </div>
 
-  <!-- Create Password -->
   <div id="screen-create-password" class="card hidden">
     <h2>Create Password</h2>
     <p class="subtitle">Set a new secure password</p>
@@ -285,7 +277,6 @@
     <div id="cp-msg" class="error"></div>
   </div>
 
-  <!-- Member Dashboard -->
   <div id="screen-member-dashboard" class="card hidden">
     <h2>Welcome, Member</h2>
     <p class="subtitle" id="member-welcome">Authenticated successfully</p>
@@ -390,7 +381,7 @@ function renderMembersList() {
   data.members.forEach((m, idx) => {
     const div = document.createElement('div');
     div.className = 'member-row';
-    div.innerHTML = `<span>\( {m.name}</span> <button class="btn btn-small" onclick="openMember( \){idx})">Open</button>`;
+    div.innerHTML = '<span>' + m.name + '</span> <button class="btn btn-small" onclick="openMember(' + idx + ')">Open</button>';
     container.appendChild(div);
   });
 }
@@ -449,15 +440,14 @@ function renderFundsTable(m) {
     sumGFInt += gfInt;
 
     const tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td>${month}</td>
-      <td><input type="number" step="0.01" value="\( {tfMonth}" data-type="tf" data-idx=" \){i}" disabled></td>
-      <td>${closingTF.toFixed(2)}</td>
-      <td>${tfInt.toFixed(2)}</td>
-      <td><input type="number" step="0.01" value="\( {gfMonth}" data-type="gf" data-idx=" \){i}" disabled></td>
-      <td>${closingGF.toFixed(2)}</td>
-      <td>${gfInt.toFixed(2)}</td>
-    `;
+    tr.innerHTML = 
+      '<td>' + month + '</td>' +
+      '<td><input type="number" step="0.01" value="' + tfMonth + '" data-type="tf" data-idx="' + i + '" disabled></td>' +
+      '<td>' + closingTF.toFixed(2) + '</td>' +
+      '<td>' + tfInt.toFixed(2) + '</td>' +
+      '<td><input type="number" step="0.01" value="' + gfMonth + '" data-type="gf" data-idx="' + i + '" disabled></td>' +
+      '<td>' + closingGF.toFixed(2) + '</td>' +
+      '<td>' + gfInt.toFixed(2) + '</td>';
     tbody.appendChild(tr);
   });
 
