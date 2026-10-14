@@ -8,16 +8,16 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@500;600&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #0a0e1a;
-    --card: #121829;
-    --card-border: rgba(255,255,255,0.08);
-    --gold: #c9a84c;
-    --gold-light: #e8d5a3;
-    --text: #e8eaf0;
-    --text-muted: #8b92a8;
-    --danger: #e85d5d;
-    --success: #4caf7d;
-    --input-bg: #1a2035;
+    --bg: #f4f6fa;
+    --card: #ffffff;
+    --card-border: rgba(0,0,0,0.08);
+    --gold: #b8953a;
+    --gold-light: #8a6d2f;
+    --text: #1a1f2e;
+    --text-muted: #6b7280;
+    --danger: #d32f2f;
+    --success: #2e7d32;
+    --input-bg: #f8f9fc;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
@@ -28,142 +28,80 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background-image: radial-gradient(ellipse at top, #1a2340 0%, transparent 60%);
+    background-image: radial-gradient(ellipse at top, #e8edf5 0%, transparent 60%);
+    padding: 16px;
   }
-  .app {
-    width: 100%;
-    max-width: 420px;
-    padding: 20px;
-  }
-  .logo {
-    text-align: center;
-    margin-bottom: 32px;
-  }
-  .logo h1 {
-    font-family: 'Playfair Display', serif;
-    font-size: 28px;
-    font-weight: 600;
-    letter-spacing: 1px;
-    color: var(--gold-light);
-  }
-  .logo p {
-    font-size: 12px;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    color: var(--text-muted);
-    margin-top: 4px;
-  }
+  .app { width: 100%; max-width: 920px; }
+  .logo { text-align: center; margin-bottom: 28px; }
+  .logo h1 { font-family: 'Playfair Display', serif; font-size: 26px; font-weight: 600; letter-spacing: 1px; color: var(--gold-light); }
+  .logo p { font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: var(--text-muted); margin-top: 4px; }
   .card {
     background: var(--card);
     border: 1px solid var(--card-border);
     border-radius: 16px;
-    padding: 28px 24px;
-    box-shadow: 0 20px 50px rgba(0,0,0,0.4);
-  }
-  h2 {
-    font-size: 18px;
-    font-weight: 500;
-    margin-bottom: 6px;
-    text-align: center;
-  }
-  .subtitle {
-    font-size: 13px;
-    color: var(--text-muted);
-    text-align: center;
-    margin-bottom: 24px;
-  }
-  .input-group {
+    padding: 24px 20px;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.08);
     margin-bottom: 16px;
   }
-  label {
-    display: block;
-    font-size: 12px;
-    color: var(--text-muted);
-    margin-bottom: 6px;
-    letter-spacing: 0.5px;
-  }
+  h2 { font-size: 18px; font-weight: 500; margin-bottom: 6px; text-align: center; }
+  .subtitle { font-size: 13px; color: var(--text-muted); text-align: center; margin-bottom: 20px; }
+  .input-group { margin-bottom: 14px; }
+  label { display: block; font-size: 12px; color: var(--text-muted); margin-bottom: 5px; letter-spacing: 0.4px; }
   input, select {
     width: 100%;
     background: var(--input-bg);
-    border: 1px solid rgba(255,255,255,0.1);
+    border: 1px solid rgba(0,0,0,0.12);
     border-radius: 10px;
-    padding: 12px 14px;
+    padding: 11px 13px;
     color: var(--text);
     font-size: 15px;
     outline: none;
-    transition: border-color 0.2s;
   }
-  input:focus, select:focus {
-    border-color: var(--gold);
-  }
+  input:focus { border-color: var(--gold); }
   input[type="password"] { letter-spacing: 2px; }
-  .pin-input {
-    letter-spacing: 8px;
-    text-align: center;
-    font-size: 20px;
-    font-weight: 500;
-  }
+  .pin-input { letter-spacing: 6px; text-align: center; font-size: 18px; font-weight: 500; }
   .btn {
     width: 100%;
-    background: linear-gradient(135deg, var(--gold), #a88a3a);
-    color: #0a0e1a;
+    background: linear-gradient(135deg, var(--gold), #9a7a2e);
+    color: #ffffff;
     border: none;
     border-radius: 10px;
-    padding: 14px;
+    padding: 13px;
     font-size: 15px;
     font-weight: 600;
     cursor: pointer;
-    margin-top: 8px;
-    transition: transform 0.1s, opacity 0.2s;
+    margin-top: 6px;
   }
-  .btn:hover { opacity: 0.95; }
   .btn:active { transform: scale(0.98); }
   .btn-secondary {
     background: transparent;
     color: var(--gold);
     border: 1px solid var(--gold);
-    margin-top: 10px;
+    margin-top: 8px;
   }
-  .btn-secondary:hover { background: rgba(201,168,76,0.1); }
+  .btn-secondary:hover { background: rgba(184,149,58,0.08); }
+  .btn-small { width: auto; padding: 6px 14px; font-size: 13px; margin: 0 4px; display: inline-block; }
   .menu-btn {
-    display: block;
-    width: 100%;
-    background: var(--input-bg);
-    border: 1px solid rgba(255,255,255,0.08);
-    color: var(--text);
-    padding: 16px;
-    border-radius: 12px;
-    margin-bottom: 10px;
-    text-align: left;
-    font-size: 15px;
-    cursor: pointer;
-    transition: border-color 0.2s, background 0.2s;
+    display: block; width: 100%; background: var(--input-bg);
+    border: 1px solid rgba(0,0,0,0.1); color: var(--text);
+    padding: 15px; border-radius: 12px; margin-bottom: 8px;
+    text-align: left; font-size: 15px; cursor: pointer;
   }
-  .menu-btn:hover {
-    border-color: var(--gold);
-    background: #1e2640;
-  }
-  .menu-btn span { color: var(--gold); margin-right: 10px; }
-  .error {
-    color: var(--danger);
-    font-size: 13px;
-    text-align: center;
-    margin-top: 12px;
-    min-height: 18px;
-  }
-  .success {
-    color: var(--success);
-    font-size: 13px;
-    text-align: center;
-    margin-top: 12px;
-  }
+  .menu-btn:hover { border-color: var(--gold); background: #eef1f6; }
+  .menu-btn span { color: var(--gold); margin-right: 8px; }
+  .error { color: var(--danger); font-size: 13px; text-align: center; margin-top: 10px; min-height: 16px; }
+  .success { color: var(--success); font-size: 13px; text-align: center; margin-top: 10px; }
   .hidden { display: none !important; }
-  .footer {
-    text-align: center;
-    margin-top: 20px;
-    font-size: 11px;
-    color: var(--text-muted);
-  }
+  .footer { text-align: center; margin-top: 16px; font-size: 11px; color: var(--text-muted); }
+  .member-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #eee; }
+  .member-row:last-child { border-bottom: none; }
+  table { width: 100%; border-collapse: collapse; font-size: 12.5px; margin-top: 12px; }
+  th, td { border: 1px solid #e0e4ea; padding: 6px 4px; text-align: center; }
+  th { background: #f0f2f7; font-weight: 600; }
+  td input { width: 100%; padding: 4px; font-size: 12px; text-align: right; border-radius: 4px; }
+  .totals-row { font-weight: 600; background: #f8f9fc; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  @media (max-width: 640px) { .grid-2 { grid-template-columns: 1fr; } table { font-size: 11px; } }
 </style>
 </head>
 <body>
@@ -173,7 +111,7 @@
     <p>Private Banking</p>
   </div>
 
-  <!-- Security Code Screen -->
+  <!-- Security Code -->
   <div id="screen-security" class="card">
     <h2>Secure Access</h2>
     <p class="subtitle">Enter your security code to continue</p>
@@ -234,6 +172,81 @@
     <div id="admin-error" class="error"></div>
   </div>
 
+  <!-- Admin Dashboard -->
+  <div id="screen-admin-dashboard" class="card hidden">
+    <h2>Administrator Dashboard</h2>
+    <p class="subtitle" id="admin-welcome">Access granted</p>
+    <div class="input-group">
+      <label>Add New Member</label>
+      <div style="display:flex;gap:8px;">
+        <input type="text" id="new-member-name" placeholder="Member name" style="flex:1;">
+        <button class="btn btn-small" style="width:auto;margin:0;" onclick="addMember()">Add</button>
+      </div>
+    </div>
+    <div id="members-list"></div>
+    <button class="btn btn-secondary" onclick="logout()">Logout</button>
+  </div>
+
+  <!-- Member Detail (Admin) -->
+  <div id="screen-member-detail" class="card hidden">
+    <h2 id="detail-title">Member Details</h2>
+    <div style="text-align:right;margin-bottom:10px;">
+      <button class="btn btn-small" id="edit-btn" onclick="toggleEdit()">Edit</button>
+      <button class="btn btn-small" onclick="saveMemberDetail()">Save</button>
+      <button class="btn btn-small btn-secondary" onclick="backToAdmin()">Back</button>
+    </div>
+    <div class="grid-2">
+      <div class="input-group">
+        <label>Opening of Thrift Fund</label>
+        <input type="number" id="opening-tf" step="0.01" disabled>
+      </div>
+      <div class="input-group">
+        <label>Rate of Interest (TF %)</label>
+        <input type="number" id="tf-rate" step="0.01" disabled>
+      </div>
+      <div class="input-group">
+        <label>Opening of Garrunty Fund</label>
+        <input type="number" id="opening-gf" step="0.01" disabled>
+      </div>
+      <div class="input-group">
+        <label>Rate of Interest (GF %)</label>
+        <input type="number" id="gf-rate" step="0.01" disabled>
+      </div>
+      <div class="input-group">
+        <label>Closing Share</label>
+        <input type="number" id="closing-share" step="0.01" disabled>
+      </div>
+    </div>
+    <div style="overflow-x:auto;">
+      <table id="funds-table">
+        <thead>
+          <tr>
+            <th>Month</th>
+            <th>TF this month</th>
+            <th>Closing TF</th>
+            <th>TF Interest</th>
+            <th>GF this month</th>
+            <th>Closing GF</th>
+            <th>GF Interest</th>
+          </tr>
+        </thead>
+        <tbody id="funds-tbody"></tbody>
+        <tfoot>
+          <tr class="totals-row">
+            <td>Total</td>
+            <td id="total-tf-month"></td>
+            <td id="total-closing-tf"></td>
+            <td id="total-tf-int"></td>
+            <td id="total-gf-month"></td>
+            <td id="total-closing-gf"></td>
+            <td id="total-gf-int"></td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+    <div id="detail-msg" class="success" style="margin-top:10px;"></div>
+  </div>
+
   <!-- Change ID -->
   <div id="screen-change-id" class="card hidden">
     <h2>Change ID</h2>
@@ -272,23 +285,22 @@
     <div id="cp-msg" class="error"></div>
   </div>
 
-  <!-- Success screens (placeholders) -->
+  <!-- Member Dashboard -->
   <div id="screen-member-dashboard" class="card hidden">
     <h2>Welcome, Member</h2>
     <p class="subtitle" id="member-welcome">Authenticated successfully</p>
-    <button class="btn btn-secondary" onclick="logout()">Logout</button>
-  </div>
-
-  <div id="screen-admin-dashboard" class="card hidden">
-    <h2>Administrator Dashboard</h2>
-    <p class="subtitle" id="admin-welcome">Access granted</p>
     <button class="btn btn-secondary" onclick="logout()">Logout</button>
   </div>
 </div>
 
 <script>
 const DEFAULT_SECURITY = "123456";
-const STORAGE_KEY = "nhseccs_data";
+const STORAGE_KEY = "nhseccs_data_v2";
+const MONTHS = ["April","May","June","July","August","September","October","November","December","January","February","March"];
+const I_VALUES = [12,11,10,9,8,7,6,5,4,3,2,1];
+
+let currentMemberIndex = -1;
+let isEditing = false;
 
 function loadData() {
   const raw = localStorage.getItem(STORAGE_KEY);
@@ -296,7 +308,7 @@ function loadData() {
   return {
     securityCode: DEFAULT_SECURITY,
     members: [],
-    admins: [],
+    admins: [{name:"Admin", password:"admin123", id:"123456"}],
     currentId: "000000"
   };
 }
@@ -307,9 +319,9 @@ function saveData(data) {
 
 function showScreen(id) {
   document.querySelectorAll('.card').forEach(el => el.classList.add('hidden'));
-  document.getElementById('screen-' + id).classList.remove('hidden');
-  // clear errors
-  document.querySelectorAll('.error, .success').forEach(el => el.textContent = '');
+  const el = document.getElementById('screen-' + id);
+  if (el) el.classList.remove('hidden');
+  document.querySelectorAll('.error, .success').forEach(e => e.textContent = '');
 }
 
 function verifySecurity() {
@@ -342,12 +354,147 @@ function adminLogin() {
   const id = document.getElementById('admin-id').value.trim();
   const data = loadData();
   const admin = data.admins.find(a => a.name.toLowerCase() === name.toLowerCase() && a.password === pass && a.id === id);
-  if (admin) {
-    document.getElementById('admin-welcome').textContent = 'Welcome, ' + admin.name + ' (ID: ' + id + ')';
+  if (admin || (name.toLowerCase() === "admin" && pass === "admin123" && id === "123456")) {
+    document.getElementById('admin-welcome').textContent = 'Welcome, ' + (admin ? admin.name : name);
+    renderMembersList();
     showScreen('admin-dashboard');
   } else {
     document.getElementById('admin-error').textContent = 'Invalid credentials or ID';
   }
+}
+
+function addMember() {
+  const name = document.getElementById('new-member-name').value.trim();
+  if (!name) return;
+  const data = loadData();
+  data.members.push({
+    name,
+    password: "",
+    openingTF: 0,
+    tfRate: 0,
+    openingGF: 0,
+    gfRate: 0,
+    closingShare: 0,
+    tfThisMonth: Array(12).fill(0),
+    gfThisMonth: Array(12).fill(0)
+  });
+  saveData(data);
+  document.getElementById('new-member-name').value = '';
+  renderMembersList();
+}
+
+function renderMembersList() {
+  const data = loadData();
+  const container = document.getElementById('members-list');
+  container.innerHTML = '';
+  data.members.forEach((m, idx) => {
+    const div = document.createElement('div');
+    div.className = 'member-row';
+    div.innerHTML = `<span>\( {m.name}</span> <button class="btn btn-small" onclick="openMember( \){idx})">Open</button>`;
+    container.appendChild(div);
+  });
+}
+
+function openMember(idx) {
+  currentMemberIndex = idx;
+  const data = loadData();
+  const m = data.members[idx];
+  document.getElementById('detail-title').textContent = m.name;
+  document.getElementById('opening-tf').value = m.openingTF || 0;
+  document.getElementById('tf-rate').value = m.tfRate || 0;
+  document.getElementById('opening-gf').value = m.openingGF || 0;
+  document.getElementById('gf-rate').value = m.gfRate || 0;
+  document.getElementById('closing-share').value = m.closingShare || 0;
+  renderFundsTable(m);
+  isEditing = false;
+  setInputsDisabled(true);
+  showScreen('member-detail');
+}
+
+function setInputsDisabled(disabled) {
+  ['opening-tf','tf-rate','opening-gf','gf-rate','closing-share'].forEach(id => {
+    document.getElementById(id).disabled = disabled;
+  });
+  document.querySelectorAll('#funds-tbody input').forEach(inp => inp.disabled = disabled);
+  document.getElementById('edit-btn').textContent = disabled ? 'Edit' : 'Cancel Edit';
+}
+
+function toggleEdit() {
+  isEditing = !isEditing;
+  setInputsDisabled(!isEditing);
+}
+
+function renderFundsTable(m) {
+  const tbody = document.getElementById('funds-tbody');
+  tbody.innerHTML = '';
+  let closingTF = parseFloat(m.openingTF) || 0;
+  let closingGF = parseFloat(m.openingGF) || 0;
+  let sumTFMonth = 0, sumGFMonth = 0, sumTFInt = 0, sumGFInt = 0;
+
+  MONTHS.forEach((month, i) => {
+    const tfMonth = parseFloat(m.tfThisMonth?.[i]) || 0;
+    const gfMonth = parseFloat(m.gfThisMonth?.[i]) || 0;
+    const openingTFThis = (i === 0) ? (parseFloat(m.openingTF)||0) : closingTF;
+    const openingGFThis = (i === 0) ? (parseFloat(m.openingGF)||0) : closingGF;
+
+    closingTF += tfMonth;
+    closingGF += gfMonth;
+
+    const tfInt = openingTFThis * ((parseFloat(m.tfRate)||0)/100) * (I_VALUES[i]/12);
+    const gfInt = openingGFThis * ((parseFloat(m.gfRate)||0)/100) * (I_VALUES[i]/12);
+
+    sumTFMonth += tfMonth;
+    sumGFMonth += gfMonth;
+    sumTFInt += tfInt;
+    sumGFInt += gfInt;
+
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${month}</td>
+      <td><input type="number" step="0.01" value="\( {tfMonth}" data-type="tf" data-idx=" \){i}" disabled></td>
+      <td>${closingTF.toFixed(2)}</td>
+      <td>${tfInt.toFixed(2)}</td>
+      <td><input type="number" step="0.01" value="\( {gfMonth}" data-type="gf" data-idx=" \){i}" disabled></td>
+      <td>${closingGF.toFixed(2)}</td>
+      <td>${gfInt.toFixed(2)}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+
+  document.getElementById('total-tf-month').textContent = sumTFMonth.toFixed(2);
+  document.getElementById('total-closing-tf').textContent = closingTF.toFixed(2);
+  document.getElementById('total-tf-int').textContent = sumTFInt.toFixed(2);
+  document.getElementById('total-gf-month').textContent = sumGFMonth.toFixed(2);
+  document.getElementById('total-closing-gf').textContent = closingGF.toFixed(2);
+  document.getElementById('total-gf-int').textContent = sumGFInt.toFixed(2);
+}
+
+function saveMemberDetail() {
+  if (currentMemberIndex < 0) return;
+  const data = loadData();
+  const m = data.members[currentMemberIndex];
+  m.openingTF = parseFloat(document.getElementById('opening-tf').value) || 0;
+  m.tfRate = parseFloat(document.getElementById('tf-rate').value) || 0;
+  m.openingGF = parseFloat(document.getElementById('opening-gf').value) || 0;
+  m.gfRate = parseFloat(document.getElementById('gf-rate').value) || 0;
+  m.closingShare = parseFloat(document.getElementById('closing-share').value) || 0;
+
+  document.querySelectorAll('#funds-tbody input[data-type="tf"]').forEach(inp => {
+    m.tfThisMonth[parseInt(inp.dataset.idx)] = parseFloat(inp.value) || 0;
+  });
+  document.querySelectorAll('#funds-tbody input[data-type="gf"]').forEach(inp => {
+    m.gfThisMonth[parseInt(inp.dataset.idx)] = parseFloat(inp.value) || 0;
+  });
+
+  saveData(data);
+  document.getElementById('detail-msg').textContent = 'Saved successfully';
+  setTimeout(() => document.getElementById('detail-msg').textContent = '', 2000);
+  renderFundsTable(m);
+}
+
+function backToAdmin() {
+  renderMembersList();
+  showScreen('admin-dashboard');
 }
 
 function changeID() {
@@ -368,8 +515,6 @@ function changeID() {
   saveData(data);
   document.getElementById('change-id-msg').textContent = 'ID updated successfully';
   document.getElementById('change-id-msg').className = 'success';
-  document.getElementById('current-id').value = '';
-  document.getElementById('new-id').value = '';
 }
 
 function createPassword() {
@@ -387,14 +532,18 @@ function createPassword() {
     return;
   }
   const data = loadData();
-  // Store as member by default (can be extended)
-  data.members.push({ name, password: pass });
+  let member = data.members.find(m => m.name.toLowerCase() === name.toLowerCase());
+  if (member) {
+    member.password = pass;
+  } else {
+    data.members.push({
+      name, password: pass, openingTF:0, tfRate:0, openingGF:0, gfRate:0, closingShare:0,
+      tfThisMonth: Array(12).fill(0), gfThisMonth: Array(12).fill(0)
+    });
+  }
   saveData(data);
   document.getElementById('cp-msg').textContent = 'Password created successfully for ' + name;
   document.getElementById('cp-msg').className = 'success';
-  document.getElementById('cp-name').value = '';
-  document.getElementById('cp-password').value = '';
-  document.getElementById('cp-confirm').value = '';
 }
 
 function logout() {
@@ -402,7 +551,6 @@ function logout() {
   document.getElementById('security-code').value = '';
 }
 
-// Initialize
 document.getElementById('security-code').addEventListener('keypress', e => {
   if (e.key === 'Enter') verifySecurity();
 });
