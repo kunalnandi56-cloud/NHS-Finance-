@@ -420,14 +420,36 @@ function showTotalCredit() {
     return;
   }
   const data = loadData();
-  const m = data.members.find(mem => mem.name === currentUser.name);
-  document.getElementById('credit-title').textContent = m.name + ' - Credit Details';
-  document.getElementById('credit-content').innerHTML = `
-    <p>Opening TF: ${m.openingTF || 0}</p>
-    <p>Closing Share: ${m.closingShare || 0}</p>
-    <p>Total Interest TF: ${(parseFloat(m.openingTF||0)*(parseFloat(m.tfRate||0)/100) + (m.tfThisMonth||[]).reduce((s,v,i)=>s+(v*(parseFloat(m.tfRate||0)/100)*(I_VALUES[i]/12)),0)).toFixed(0)}</p>
-  `;
-  showScreen('member-credit');
+  const idx = data.members.findIndex(m => m.name === currentUser.name);
+  if (idx === -1) {
+    alert('Account not found');
+    return;
+  }
+  currentMemberIndex = idx;
+  const m = data.members[idx];
+  document.getElementById('detail-title').textContent = m.name + ' (Your Account)';
+  document.getElementById('opening-tf').value = m.openingTF || 0;
+  document.getElementById('tf-rate').value = m.tfRate || 0;
+  document.getElementById('opening-gf').value = m.openingGF || 0;
+  document.getElementById('gf-rate').value = m.gfRate || 0;
+  document.getElementById('closing-share').value = m.closingShare || 0;
+  document.getElementById('circulating-share').value = data.circulatingShare || 0;
+  isEditing = false;
+  renderFundsTable(m);
+  setInputsDisabled(true);
+  const editBtn = document.getElementById('edit-btn');
+  const saveBtn = document.querySelector('#screen-member-detail button[onclick="saveMemberDetail()"]');
+  if (editBtn) editBtn.style.display = 'none';
+  if (saveBtn) saveBtn.style.display = 'none';
+  const backBtn = document.querySelector('#screen-member-detail .back-btn');
+  if (backBtn) {
+    backBtn.onclick = function() {
+      if (editBtn) editBtn.style.display = '';
+      if (saveBtn) saveBtn.style.display = '';
+      showScreen('member-login');
+    };
+  }
+  showScreen('member-detail');
 }
 
 function adminLogin() {
