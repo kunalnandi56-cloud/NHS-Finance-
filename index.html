@@ -652,17 +652,17 @@ function liveUpdate() {
 function autoFillFromInputs() {
   const tfInputs = Array.from(document.querySelectorAll('#funds-tbody input[data-type="tf"]'));
   const gfInputs = Array.from(document.querySelectorAll('#funds-tbody input[data-type="gf"]'));
-  let firstTF = null;
+  let lastTF = null;
   for (let i = 0; i < tfInputs.length; i++) {
     const val = tfInputs[i].value.trim();
-    if (val !== '' && firstTF === null) firstTF = val;
-    if (firstTF !== null && i > 0) tfInputs[i].value = firstTF;
+    if (val !== '') lastTF = val;
+    if (lastTF !== null && val === '') tfInputs[i].value = lastTF;
   }
-  let firstGF = null;
+  let lastGF = null;
   for (let i = 0; i < gfInputs.length; i++) {
     const val = gfInputs[i].value.trim();
-    if (val !== '' && firstGF === null) firstGF = val;
-    if (firstGF !== null && i > 0) gfInputs[i].value = firstGF;
+    if (val !== '') lastGF = val;
+    if (lastGF !== null && val === '') gfInputs[i].value = lastGF;
   }
 }
 
@@ -714,6 +714,7 @@ function saveMemberDetail() {
 }
 
 function backToAdmin() {
+  if (isEditing) saveMemberDetail();
   renderMembersList();
   showScreen('admin-dashboard');
 }
