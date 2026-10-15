@@ -437,6 +437,14 @@ function showTotalCredit() {
   isEditing = false;
   renderFundsTable(m);
   setInputsDisabled(true);
+  setTimeout(() => {
+    if (typeof liveUpdate === 'function') {
+      const wasEditing = isEditing;
+      isEditing = true;
+      liveUpdate();
+      isEditing = wasEditing;
+    }
+  }, 100);
   const editBtn = document.getElementById('edit-btn');
   const saveBtn = document.querySelector('#screen-member-detail button[onclick="saveMemberDetail()"]');
   if (editBtn) editBtn.style.display = 'none';
