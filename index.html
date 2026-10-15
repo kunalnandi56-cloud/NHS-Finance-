@@ -191,7 +191,7 @@
     <h2 id="detail-title">Member</h2>
     <div style="text-align:right;margin-bottom:10px;">
       <button class="btn-3d btn-small" id="edit-btn" onclick="toggleEdit()">Edit</button>
-      <button class="btn-3d btn-small" onclick="saveMemberDetail()">Save</button>
+      <button class="btn-3d btn-small" type="button" onclick="saveMemberDetail()">Save</button>
     </div>
     <div class="grid-2">
       <div class="input-group">
@@ -686,9 +686,17 @@ function updateTotalsAndSummary(sumTFMonth, closingTF, sumTFInt, sumGFMonth, clo
 }
 
 function saveMemberDetail() {
-  if (currentMemberIndex < 0) return;
+  if (currentMemberIndex < 0) {
+    alert('No member selected');
+    return;
+  }
   const data = loadData();
   const m = data.members[currentMemberIndex];
+  if (!m) {
+    alert('Member not found');
+    return;
+  }
+
   m.openingTF = parseFloat(document.getElementById('opening-tf').value) || 0;
   m.tfRate = parseFloat(document.getElementById('tf-rate').value) || 0;
   m.openingGF = parseFloat(document.getElementById('opening-gf').value) || 0;
@@ -696,17 +704,25 @@ function saveMemberDetail() {
   m.closingShare = parseFloat(document.getElementById('closing-share').value) || 0;
   data.circulatingShare = parseFloat(document.getElementById('circulating-share').value) || 0;
 
+  if (!Array.isArray(m.tfThisMonth)) m.tfThisMonth = Array(12).fill(0);
+  if (!Array.isArray(m.gfThisMonth)) m.gfThisMonth = Array(12).fill(0);
+
   document.querySelectorAll('#funds-tbody input[data-type="tf"]').forEach(inp => {
-    m.tfThisMonth[parseInt(inp.dataset.idx)] = parseFloat(inp.value) || 0;
+    const idx = parseInt(inp.dataset.idx);
+    m.tfThisMonth[idx] = parseFloat(inp.value) || 0;
   });
   document.querySelectorAll('#funds-tbody input[data-type="gf"]').forEach(inp => {
-    m.gfThisMonth[parseInt(inp.dataset.idx)] = parseFloat(inp.value) || 0;
+    const idx = parseInt(inp.dataset.idx);
+    m.gfThisMonth[idx] = parseFloat(inp.value) || 0;
   });
 
   saveData(data);
-  document.getElementById('detail-msg').textContent = 'Saved';
-  setTimeout(() => document.getElementById('detail-msg').textContent = '', 2000);
+  document.getElementById('detail-msg').textContent = 'Saved successfully';
+  document.getElementById('detail-msg').className = 'success';
+  setTimeout(() => document.getElementById('detail-msg').textContent = '', 2500);
+
   renderFundsTable(m);
+  alert('Data saved');
 }
 
 function backToAdmin() {
