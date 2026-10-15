@@ -580,7 +580,9 @@ function renderFundsTable(m) {
 
   updateTotalsAndSummary(sumTFMonth, runningTF, sumTFInt, sumGFMonth, runningGF, sumGFInt, m);
 
-  setTimeout(() => liveUpdate(), 50);
+  setTimeout(() => {
+    liveUpdate();
+  }, 200);
 }
 
 function liveUpdate() {
