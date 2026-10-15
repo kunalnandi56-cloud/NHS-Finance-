@@ -1,4 +1,4 @@
-l<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -534,26 +534,27 @@ function autoFillFromInputs() {
   const tfInputs = Array.from(document.querySelectorAll('#funds-tbody input[data-type="tf"]'));
   const gfInputs = Array.from(document.querySelectorAll('#funds-tbody input[data-type="gf"]'));
 
-  // When a value is typed in any month, force all later months to the same value
   let lastTF = null;
-  tfInputs.forEach((inp, i) => {
-    if (inp.value !== '') {
-      lastTF = inp.value;
+  for (let i = 0; i < tfInputs.length; i++) {
+    const val = tfInputs[i].value;
+    if (val !== '') {
+      lastTF = val;
     }
-    if (lastTF !== null && i > 0) {
-      inp.value = lastTF;
+    if (lastTF !== null) {
+      tfInputs[i].value = lastTF;
     }
-  });
+  }
 
   let lastGF = null;
-  gfInputs.forEach((inp, i) => {
-    if (inp.value !== '') {
-      lastGF = inp.value;
+  for (let i = 0; i < gfInputs.length; i++) {
+    const val = gfInputs[i].value;
+    if (val !== '') {
+      lastGF = val;
     }
-    if (lastGF !== null && i > 0) {
-      inp.value = lastGF;
+    if (lastGF !== null) {
+      gfInputs[i].value = lastGF;
     }
-  });
+  }
 }
 
 function updateTotalsAndSummary(sumTFMonth, closingTF, sumTFInt, sumGFMonth, closingGF, sumGFInt, m) {
