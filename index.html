@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -482,9 +481,8 @@ function renderFundsTable(m) {
 
 function liveUpdate() {
   if (!isEditing) return;
-  const data = loadData();
-  const m = data.members[currentMemberIndex];
-  if (!m) return;
+
+  autoFillFromInputs();
 
   const temp = {
     openingTF: parseFloat(document.getElementById('opening-tf').value) || 0,
@@ -501,8 +499,6 @@ function liveUpdate() {
   document.querySelectorAll('#funds-tbody input[data-type="gf"]').forEach(inp => {
     temp.gfThisMonth[parseInt(inp.dataset.idx)] = parseFloat(inp.value) || 0;
   });
-
-  autoFillFromInputs();
 
   let runningTF = temp.openingTF;
   let runningGF = temp.openingGF;
@@ -522,29 +518,39 @@ function liveUpdate() {
     sumTFInt += tfInt;
     sumGFInt += gfInt;
 
-    row.querySelector('.closing-tf').textContent = runningTF.toFixed(2);
-    row.querySelector('.tf-int').textContent = tfInt.toFixed(2);
-    row.querySelector('.closing-gf').textContent = runningGF.toFixed(2);
-    row.querySelector('.gf-int').textContent = gfInt.toFixed(2);
+    const closingTfCell = row.querySelector('.closing-tf');
+    const tfIntCell = row.querySelector('.tf-int');
+    const closingGfCell = row.querySelector('.closing-gf');
+    const gfIntCell = row.querySelector('.gf-int');
+    if (closingTfCell) closingTfCell.textContent = runningTF.toFixed(2);
+    if (tfIntCell) tfIntCell.textContent = tfInt.toFixed(2);
+    if (closingGfCell) closingGfCell.textContent = runningGF.toFixed(2);
+    if (gfIntCell) gfIntCell.textContent = gfInt.toFixed(2);
   });
 
   updateTotalsAndSummary(sumTFMonth, runningTF, sumTFInt, sumGFMonth, runningGF, sumGFInt, temp);
 }
 
 function autoFillFromInputs() {
-  const tfInputs = document.querySelectorAll('#funds-tbody input[data-type="tf"]');
-  const gfInputs = document.querySelectorAll('#funds-tbody input[data-type="gf"]');
+  const tfInputs = Array.from(document.querySelectorAll('#funds-tbody input[data-type="tf"]'));
+  const gfInputs = Array.from(document.querySelectorAll('#funds-tbody input[data-type="gf"]'));
 
-  let lastTF = null;
+  let lastTF = '';
   tfInputs.forEach((inp, i) => {
-    if (inp.value !== '' && inp.value !== '0') lastTF = inp.value;
-    else if (lastTF !== null && i > 0) inp.value = lastTF;
+    if (inp.value !== '' && parseFloat(inp.value) !== 0) {
+      lastTF = inp.value;
+    } else if (lastTF !== '' && i > 0) {
+      inp.value = lastTF;
+    }
   });
 
-  let lastGF = null;
+  let lastGF = '';
   gfInputs.forEach((inp, i) => {
-    if (inp.value !== '' && inp.value !== '0') lastGF = inp.value;
-    else if (lastGF !== null && i > 0) inp.value = lastGF;
+    if (inp.value !== '' && parseFloat(inp.value) !== 0) {
+      lastGF = inp.value;
+    } else if (lastGF !== '' && i > 0) {
+      inp.value = lastGF;
+    }
   });
 }
 
