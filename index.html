@@ -463,13 +463,16 @@ function renderFundsTable(m) {
     sumTFInt += tfInt;
     sumGFInt += gfInt;
 
+    const tfDisplay = tfMonth === 0 ? '' : tfMonth;
+    const gfDisplay = gfMonth === 0 ? '' : gfMonth;
+
     const tr = document.createElement('tr');
     tr.innerHTML = 
       '<td>' + month + '</td>' +
-      '<td><input type="number" step="0.01" value="' + tfMonth + '" data-type="tf" data-idx="' + i + '" ' + (isEditing ? '' : 'disabled') + ' oninput="liveUpdate()"></td>' +
+      '<td><input type="number" step="0.01" value="' + tfDisplay + '" data-type="tf" data-idx="' + i + '" ' + (isEditing ? '' : 'disabled') + ' oninput="liveUpdate()"></td>' +
       '<td class="closing-tf">' + runningTF.toFixed(2) + '</td>' +
       '<td class="tf-int">' + tfInt.toFixed(2) + '</td>' +
-      '<td><input type="number" step="0.01" value="' + gfMonth + '" data-type="gf" data-idx="' + i + '" ' + (isEditing ? '' : 'disabled') + ' oninput="liveUpdate()"></td>' +
+      '<td><input type="number" step="0.01" value="' + gfDisplay + '" data-type="gf" data-idx="' + i + '" ' + (isEditing ? '' : 'disabled') + ' oninput="liveUpdate()"></td>' +
       '<td class="closing-gf">' + runningGF.toFixed(2) + '</td>' +
       '<td class="gf-int">' + gfInt.toFixed(2) + '</td>';
     tbody.appendChild(tr);
@@ -536,22 +539,20 @@ function autoFillFromInputs() {
 
   let lastTF = null;
   for (let i = 0; i < tfInputs.length; i++) {
-    const val = tfInputs[i].value;
+    const val = tfInputs[i].value.trim();
     if (val !== '') {
       lastTF = val;
-    }
-    if (lastTF !== null) {
+    } else if (lastTF !== null && i > 0) {
       tfInputs[i].value = lastTF;
     }
   }
 
   let lastGF = null;
   for (let i = 0; i < gfInputs.length; i++) {
-    const val = gfInputs[i].value;
+    const val = gfInputs[i].value.trim();
     if (val !== '') {
       lastGF = val;
-    }
-    if (lastGF !== null) {
+    } else if (lastGF !== null && i > 0) {
       gfInputs[i].value = lastGF;
     }
   }
