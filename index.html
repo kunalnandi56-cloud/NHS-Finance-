@@ -1,1 +1,761 @@
-Create a project and transfer this chat on that project
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nhseccs Private Banking</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f0f7ff;
+    --card: #ffffff;
+    --gold: #c9a227;
+    --gold-dark: #8b6914;
+    --text: #1a2a4a;
+    --muted: #4a5a7a;
+    --danger: #e53935;
+    --success: #43a047;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    background: linear-gradient(135deg, #e8f4ff 0%, #f5f9ff 100%);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 20px;
+    font-size: 14px;
+    position: relative;
+  }
+  body::before {
+    content: '';
+    position: fixed;
+    top: 50%; left: 50%;
+    width: 400px; height: 400px;
+    background: url('logo.png') center/contain no-repeat;
+    opacity: 0.08;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    z-index: 0;
+  }
+  .app { position: relative; z-index: 1; max-width: 960px; margin: 0 auto; }
+  .logo { text-align: center; margin-bottom: 20px; }
+  .logo h1 { font-family: 'Playfair Display', serif; font-size: 26px; color: var(--gold-dark); }
+  .logo p { font-size: 12px; letter-spacing: 2px; color: var(--muted); }
+  .card {
+    background: var(--card);
+    border-radius: 16px;
+    padding: 22px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+    margin-bottom: 16px;
+  }
+  h2 { text-align: center; margin-bottom: 8px; font-size: 20px; }
+  .subtitle { text-align: center; color: var(--muted); margin-bottom: 18px; }
+  .input-group { margin-bottom: 14px; }
+  label { display: block; margin-bottom: 6px; color: var(--muted); font-weight: 500; }
+  input, select {
+    width: 100%; padding: 12px; border: 1px solid #c5d9f0; border-radius: 10px;
+    background: #f5f9ff; font-size: 14px; font-weight: 500;
+  }
+  input:focus { outline: none; border-color: var(--gold); }
+  .btn-3d {
+    display: inline-block;
+    background: linear-gradient(180deg, #e6c35c 0%, #c9a227 100%);
+    color: #1a2a4a;
+    border: none;
+    border-radius: 12px;
+    padding: 12px 20px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 6px 0 #8b6914, 0 8px 15px rgba(0,0,0,0.2);
+    transition: all 0.1s;
+    margin: 4px;
+  }
+  .btn-3d:active {
+    transform: translateY(4px);
+    box-shadow: 0 2px 0 #8b6914, 0 4px 8px rgba(0,0,0,0.15);
+  }
+  .btn-full { width: 100%; display: block; text-align: center; }
+  .btn-small { padding: 8px 14px; font-size: 13px; }
+  .btn-danger {
+    background: linear-gradient(180deg, #ff6b6b 0%, #e53935 100%);
+    box-shadow: 0 6px 0 #b71c1c, 0 8px 15px rgba(0,0,0,0.2);
+    color: white;
+  }
+  .btn-danger:active { box-shadow: 0 2px 0 #b71c1c; }
+  .menu-btn {
+    display: block; width: 100%; background: #f5f9ff;
+    border: 1px solid #c5d9f0; padding: 14px; border-radius: 12px;
+    margin-bottom: 8px; text-align: left; font-size: 15px; cursor: pointer;
+  }
+  .menu-btn:hover { border-color: var(--gold); }
+  .error { color: var(--danger); text-align: center; margin-top: 10px; }
+  .success { color: var(--success); text-align: center; margin-top: 10px; }
+  .hidden { display: none !important; }
+  .member-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #eee; }
+  table { width: 100%; border-collapse: collapse; margin-top: 16px; font-size: 13px; }
+  th, td { border: 1px solid #d0e4ff; padding: 8px 4px; text-align: center; }
+  th { background: #e3f2fd; color: #1565c0; font-weight: 600; }
+  td input { width: 100%; padding: 4px; text-align: right; }
+  .totals-row { font-weight: 700; background: #fff8e1; }
+  .summary-box { margin-top: 16px; padding: 14px; background: #f5f9ff; border-radius: 12px; border: 1px solid #d0e4ff; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .back-btn { position: absolute; top: 16px; left: 16px; }
+  @media (max-width: 640px) { .grid-2 { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="logo">
+    <h1>Nhseccs</h1>
+    <p>PRIVATE BANKING</p>
+  </div>
+
+  <div id="screen-security" class="card">
+    <h2>Secure Access</h2>
+    <p class="subtitle">Enter security code</p>
+    <div class="input-group">
+      <label>Security Code</label>
+      <input type="password" id="security-code" maxlength="6" placeholder="••••••">
+    </div>
+    <button class="btn-3d btn-full" onclick="verifySecurity()">Continue</button>
+    <div id="security-error" class="error"></div>
+  </div>
+
+  <div id="screen-menu" class="card hidden">
+    <button class="btn-3d btn-small back-btn" onclick="showScreen('security')">Back</button>
+    <h2>Welcome</h2>
+    <button class="menu-btn" onclick="showScreen('member-login')">Member Login</button>
+    <button class="menu-btn" onclick="showScreen('admin-login')">Administrator Login</button>
+    <button class="menu-btn" onclick="showScreen('change-id')">Change ID</button>
+    <button class="menu-btn" onclick="showScreen('create-password')">Create Password</button>
+  </div>
+
+  <div id="screen-member-login" class="card hidden">
+    <button class="btn-3d btn-small back-btn" onclick="showScreen('menu')">Back</button>
+    <h2>Member Login</h2>
+    <div class="input-group">
+      <label>Choose Your Name</label>
+      <select id="member-select-name"></select>
+    </div>
+    <div class="input-group">
+      <label>Password</label>
+      <input type="password" id="member-password">
+    </div>
+    <button class="btn-3d btn-full" onclick="memberLogin()">Login</button>
+    <button class="btn-3d" onclick="showScreen('change-password')">Change Password</button>
+    <button class="btn-3d" onclick="showTotalCredit()">Total Credit Amount</button>
+    <div id="login-error" class="error"></div>
+  </div>
+
+  <div id="screen-admin-login" class="card hidden">
+    <button class="btn-3d btn-small back-btn" onclick="showScreen('menu')">Back</button>
+    <h2>Administrator Login</h2>
+    <div class="input-group">
+      <label>Name of Administrator</label>
+      <input type="text" id="admin-name">
+    </div>
+    <div class="input-group">
+      <label>Password</label>
+      <input type="password" id="admin-password">
+    </div>
+    <div class="input-group">
+      <label>ID (6 digits)</label>
+      <input type="text" id="admin-id" maxlength="6">
+    </div>
+    <button class="btn-3d btn-full" onclick="adminLogin()">Authenticate</button>
+    <div id="admin-error" class="error"></div>
+  </div>
+
+  <div id="screen-admin-dashboard" class="card hidden">
+    <button class="btn-3d btn-small back-btn" onclick="showScreen('menu')">Back</button>
+    <h2>Administrator Dashboard</h2>
+    <div class="input-group">
+      <label>Add New Member</label>
+      <div style="display:flex;gap:8px;">
+        <input type="text" id="new-member-name" placeholder="Member name" style="flex:1;">
+        <button class="btn-3d btn-small" onclick="addMember()">Add</button>
+      </div>
+    </div>
+    <div id="members-list"></div>
+    <button class="btn-3d" onclick="showTotalShare()">Total Share</button>
+    <button class="btn-3d" onclick="showScreenSelectAdmin()">Select Administrator</button>
+    <button class="btn-3d" onclick="showScreen('choose-id')">Choose ID</button>
+    <button class="btn-3d" onclick="logout()">Logout</button>
+    <div id="total-share-display" style="margin-top:12px;font-weight:600;"></div>
+  </div>
+
+  <div id="screen-member-detail" class="card hidden">
+    <button class="btn-3d btn-small back-btn" onclick="backToAdmin()">Back</button>
+    <h2 id="detail-title">Member</h2>
+    <div style="text-align:right;margin-bottom:10px;">
+      <button class="btn-3d btn-small" id="edit-btn" onclick="toggleEdit()">Edit</button>
+      <button class="btn-3d btn-small" onclick="saveMemberDetail()">Save</button>
+    </div>
+    <div class="grid-2">
+      <div class="input-group">
+        <label>Opening of Thrift Fund</label>
+        <input type="number" id="opening-tf" step="0.01">
+      </div>
+      <div class="input-group">
+        <label>Rate of Interest (TF %)</label>
+        <input type="number" id="tf-rate" step="0.01">
+      </div>
+      <div class="input-group">
+        <label>Opening of Garrunty Fund</label>
+        <input type="number" id="opening-gf" step="0.01">
+      </div>
+      <div class="input-group">
+        <label>Rate of Interest (GF %)</label>
+        <input type="number" id="gf-rate" step="0.01">
+      </div>
+      <div class="input-group">
+        <label>Closing Share</label>
+        <input type="number" id="closing-share" step="0.01">
+      </div>
+    </div>
+    <div class="input-group">
+      <label>Circulating Share Value</label>
+      <input type="number" id="circulating-share" step="0.01" oninput="liveUpdate()">
+    </div>
+    <div style="overflow-x:auto;">
+      <table>
+        <thead>
+          <tr>
+            <th>Month</th>
+            <th>TF this month</th>
+            <th>Closing TF</th>
+            <th>TF Interest</th>
+            <th>GF this month</th>
+            <th>Closing GF</th>
+            <th>GF Interest</th>
+          </tr>
+        </thead>
+        <tbody id="funds-tbody"></tbody>
+        <tfoot>
+          <tr class="totals-row">
+            <td>Total</td>
+            <td id="total-tf-month"></td>
+            <td id="total-closing-tf"></td>
+            <td id="total-tf-int"></td>
+            <td id="total-gf-month"></td>
+            <td id="total-closing-gf"></td>
+            <td id="total-gf-int"></td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+    <div class="summary-box">
+      <h3>Interest Summary</h3>
+      <div>Interest on Opening Balance (TF): <span id="int-opening-tf">0</span></div>
+      <div>Interest on Opening Balance (GF): <span id="int-opening-gf">0</span></div>
+      <div><strong>Total Interest on TF: <span id="total-int-tf">0</span></strong></div>
+      <div><strong>Total Interest on GF: <span id="total-int-gf">0</span></strong></div>
+      <div style="margin-top:12px;font-weight:600;">Share Dividend: <span id="share-dividend">0</span></div>
+    </div>
+    <div id="detail-msg" class="success"></div>
+  </div>
+
+  <div id="screen-select-admin" class="card hidden">
+    <button class="btn-3d btn-small back-btn" onclick="showScreen('admin-dashboard')">Back</button>
+    <h2>Select Administrator (Max 3)</h2>
+    <div id="admin-select-list"></div>
+    <button class="btn-3d" onclick="saveAdmins()">Save Administrators</button>
+  </div>
+
+  <div id="screen-choose-id" class="card hidden">
+    <button class="btn-3d btn-small back-btn" onclick="showScreen('admin-dashboard')">Back</button>
+    <h2>Choose ID for Admin Login</h2>
+    <div class="input-group">
+      <label>New 6-digit ID</label>
+      <input type="text" id="new-admin-id" maxlength="6">
+    </div>
+    <button class="btn-3d" onclick="saveAdminId()">Save ID</button>
+    <div id="id-msg" class="success"></div>
+  </div>
+
+  <div id="screen-change-password" class="card hidden">
+    <button class="btn-3d btn-small back-btn" onclick="showScreen('member-login')">Back</button>
+    <h2>Change Password</h2>
+    <div class="input-group">
+      <label>Your Name</label>
+      <select id="cp-name"></select>
+    </div>
+    <div class="input-group">
+      <label>New Password</label>
+      <input type="password" id="cp-password">
+    </div>
+    <div class="input-group">
+      <label>Confirm Password</label>
+      <input type="password" id="cp-confirm">
+    </div>
+    <button class="btn-3d btn-full" onclick="changePassword()">Update Password</button>
+    <div id="cp-msg" class="error"></div>
+  </div>
+
+  <div id="screen-create-password" class="card hidden">
+    <button class="btn-3d btn-small back-btn" onclick="showScreen('menu')">Back</button>
+    <h2>Create Password</h2>
+    <div class="input-group">
+      <label>Name</label>
+      <input type="text" id="create-name">
+    </div>
+    <div class="input-group">
+      <label>Password</label>
+      <input type="password" id="create-pass">
+    </div>
+    <button class="btn-3d btn-full" onclick="createPassword()">Create</button>
+    <div id="create-msg" class="error"></div>
+  </div>
+
+  <div id="screen-change-id" class="card hidden">
+    <button class="btn-3d btn-small back-btn" onclick="showScreen('menu')">Back</button>
+    <h2>Change ID</h2>
+    <div class="input-group">
+      <label>Current ID</label>
+      <input type="text" id="current-id" maxlength="6">
+    </div>
+    <div class="input-group">
+      <label>New ID</label>
+      <input type="text" id="new-id" maxlength="6">
+    </div>
+    <button class="btn-3d btn-full" onclick="changeID()">Update</button>
+    <div id="change-id-msg" class="error"></div>
+  </div>
+
+  <div id="screen-member-credit" class="card hidden">
+    <button class="btn-3d btn-small back-btn" onclick="showScreen('member-login')">Back</button>
+    <h2 id="credit-title">Your Credit</h2>
+    <div id="credit-content"></div>
+  </div>
+</div>
+
+<script>
+const DEFAULT_SECURITY = "123456";
+const STORAGE_KEY = "nhseccs_data_v3";
+const MONTHS = ["April","May","June","July","August","September","October","November","December","January","February","March"];
+const I_VALUES = [12,11,10,9,8,7,6,5,4,3,2,1];
+
+let currentMemberIndex = -1;
+let isEditing = false;
+let currentUser = null;
+
+function loadData() {
+  const raw = localStorage.getItem(STORAGE_KEY);
+  if (raw) return JSON.parse(raw);
+  return {
+    securityCode: DEFAULT_SECURITY,
+    members: [],
+    admins: [{name:"Admin", password:"admin123", id:"123456"}],
+    currentId: "000000",
+    circulatingShare: 0
+  };
+}
+
+function saveData(data) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+}
+
+function showScreen(id) {
+  document.querySelectorAll('.card').forEach(el => el.classList.add('hidden'));
+  const el = document.getElementById('screen-' + id);
+  if (el) el.classList.remove('hidden');
+  document.querySelectorAll('.error, .success').forEach(e => e.textContent = '');
+  if (id === 'member-login') populateMemberSelect();
+  if (id === 'change-password') populateCPSelect();
+}
+
+function verifySecurity() {
+  const code = document.getElementById('security-code').value.trim();
+  const data = loadData();
+  if (code === data.securityCode) {
+    showScreen('menu');
+  } else {
+    document.getElementById('security-error').textContent = 'Invalid security code';
+  }
+}
+
+function populateMemberSelect() {
+  const data = loadData();
+  const sel = document.getElementById('member-select-name');
+  sel.innerHTML = '<option value="">Select Name</option>';
+  data.members.forEach(m => {
+    const opt = document.createElement('option');
+    opt.value = m.name;
+    opt.textContent = m.name;
+    sel.appendChild(opt);
+  });
+}
+
+function populateCPSelect() {
+  const data = loadData();
+  const sel = document.getElementById('cp-name');
+  sel.innerHTML = '';
+  data.members.forEach(m => {
+    const opt = document.createElement('option');
+    opt.value = m.name;
+    opt.textContent = m.name;
+    sel.appendChild(opt);
+  });
+}
+
+function memberLogin() {
+  const name = document.getElementById('member-select-name').value;
+  const pass = document.getElementById('member-password').value;
+  const data = loadData();
+  const member = data.members.find(m => m.name === name && m.password === pass);
+  if (member) {
+    currentUser = member;
+    document.getElementById('login-error').textContent = '';
+    alert('Login successful');
+  } else {
+    document.getElementById('login-error').textContent = 'Invalid name or password';
+  }
+}
+
+function showTotalCredit() {
+  if (!currentUser) {
+    alert('Please login first');
+    return;
+  }
+  const data = loadData();
+  const m = data.members.find(mem => mem.name === currentUser.name);
+  document.getElementById('credit-title').textContent = m.name + ' - Credit Details';
+  document.getElementById('credit-content').innerHTML = `
+    <p>Opening TF: ${m.openingTF || 0}</p>
+    <p>Closing Share: ${m.closingShare || 0}</p>
+    <p>Total Interest TF: ${(parseFloat(m.openingTF||0)*(parseFloat(m.tfRate||0)/100) + (m.tfThisMonth||[]).reduce((s,v,i)=>s+(v*(parseFloat(m.tfRate||0)/100)*(I_VALUES[i]/12)),0)).toFixed(0)}</p>
+  `;
+  showScreen('member-credit');
+}
+
+function adminLogin() {
+  const name = document.getElementById('admin-name').value.trim();
+  const pass = document.getElementById('admin-password').value;
+  const id = document.getElementById('admin-id').value.trim();
+  const data = loadData();
+  const admin = data.admins.find(a => a.name.toLowerCase() === name.toLowerCase() && a.password === pass && a.id === id);
+  if (admin || (name.toLowerCase() === 'admin' && pass === 'admin123' && id === '123456')) {
+    renderMembersList();
+    showScreen('admin-dashboard');
+  } else {
+    document.getElementById('admin-error').textContent = 'Invalid credentials';
+  }
+}
+
+function addMember() {
+  const name = document.getElementById('new-member-name').value.trim();
+  if (!name) return;
+  const data = loadData();
+  data.members.push({
+    name, password: '', openingTF: 0, tfRate: 0, openingGF: 0, gfRate: 0,
+    closingShare: 0, tfThisMonth: Array(12).fill(0), gfThisMonth: Array(12).fill(0)
+  });
+  saveData(data);
+  document.getElementById('new-member-name').value = '';
+  renderMembersList();
+}
+
+function renderMembersList() {
+  const data = loadData();
+  const container = document.getElementById('members-list');
+  container.innerHTML = '';
+  data.members.forEach((m, idx) => {
+    const div = document.createElement('div');
+    div.className = 'member-row';
+    div.innerHTML = `<span>${m.name}</span>
+      <div>
+        <button class="btn-3d btn-small" onclick="openMember(${idx})">Open</button>
+        <button class="btn-3d btn-small btn-danger" onclick="deleteMember(${idx})">Delete</button>
+      </div>`;
+    container.appendChild(div);
+  });
+}
+
+function deleteMember(idx) {
+  if (!confirm('Delete this member?')) return;
+  const data = loadData();
+  data.members.splice(idx, 1);
+  saveData(data);
+  renderMembersList();
+}
+
+function showTotalShare() {
+  const data = loadData();
+  const total = data.members.reduce((sum, m) => sum + (parseFloat(m.closingShare) || 0), 0);
+  document.getElementById('total-share-display').textContent = 'Total Share: ' + total.toFixed(0);
+}
+
+function openMember(idx) {
+  currentMemberIndex = idx;
+  const data = loadData();
+  const m = data.members[idx];
+  document.getElementById('detail-title').textContent = m.name;
+  document.getElementById('opening-tf').value = m.openingTF || 0;
+  document.getElementById('tf-rate').value = m.tfRate || 0;
+  document.getElementById('opening-gf').value = m.openingGF || 0;
+  document.getElementById('gf-rate').value = m.gfRate || 0;
+  document.getElementById('closing-share').value = m.closingShare || 0;
+  document.getElementById('circulating-share').value = data.circulatingShare || 0;
+  isEditing = false;
+  renderFundsTable(m);
+  setInputsDisabled(true);
+  showScreen('member-detail');
+}
+
+function setInputsDisabled(disabled) {
+  ['opening-tf','tf-rate','opening-gf','gf-rate','closing-share','circulating-share'].forEach(id => {
+    document.getElementById(id).disabled = disabled;
+  });
+  document.querySelectorAll('#funds-tbody input').forEach(inp => inp.disabled = disabled);
+  document.getElementById('edit-btn').textContent = disabled ? 'Edit' : 'Cancel';
+}
+
+function toggleEdit() {
+  isEditing = !isEditing;
+  setInputsDisabled(!isEditing);
+}
+
+function renderFundsTable(m) {
+  const tbody = document.getElementById('funds-tbody');
+  tbody.innerHTML = '';
+  let runningTF = parseFloat(m.openingTF) || 0;
+  let runningGF = parseFloat(m.openingGF) || 0;
+  let sumTFMonth = 0, sumGFMonth = 0, sumTFInt = 0, sumGFInt = 0;
+
+  MONTHS.forEach((month, i) => {
+    const tfMonth = parseFloat(m.tfThisMonth?.[i]) || 0;
+    const gfMonth = parseFloat(m.gfThisMonth?.[i]) || 0;
+    runningTF += tfMonth;
+    runningGF += gfMonth;
+    const tfInt = Math.round(tfMonth * ((parseFloat(m.tfRate) || 0) / 100) * (I_VALUES[i] / 12));
+    const gfInt = Math.round(gfMonth * ((parseFloat(m.gfRate) || 0) / 100) * (I_VALUES[i] / 12));
+    sumTFMonth += tfMonth;
+    sumGFMonth += gfMonth;
+    sumTFInt += tfInt;
+    sumGFInt += gfInt;
+
+    const tfDisplay = tfMonth === 0 ? '' : tfMonth;
+    const gfDisplay = gfMonth === 0 ? '' : gfMonth;
+
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${month}</td>
+      <td><input type="number" step="0.01" value="\( {tfDisplay}" data-type="tf" data-idx=" \){i}" ${isEditing ? '' : 'disabled'} oninput="liveUpdate()"></td>
+      <td class="closing-tf">${runningTF.toFixed(2)}</td>
+      <td class="tf-int">${tfInt}</td>
+      <td><input type="number" step="0.01" value="\( {gfDisplay}" data-type="gf" data-idx=" \){i}" ${isEditing ? '' : 'disabled'} oninput="liveUpdate()"></td>
+      <td class="closing-gf">${runningGF.toFixed(2)}</td>
+      <td class="gf-int">${gfInt}</td>`;
+    tbody.appendChild(tr);
+  });
+
+  updateTotalsAndSummary(sumTFMonth, runningTF, sumTFInt, sumGFMonth, runningGF, sumGFInt, m);
+}
+
+function liveUpdate() {
+  if (!isEditing) return;
+  autoFillFromInputs();
+  const temp = {
+    openingTF: parseFloat(document.getElementById('opening-tf').value) || 0,
+    tfRate: parseFloat(document.getElementById('tf-rate').value) || 0,
+    openingGF: parseFloat(document.getElementById('opening-gf').value) || 0,
+    gfRate: parseFloat(document.getElementById('gf-rate').value) || 0,
+    closingShare: parseFloat(document.getElementById('closing-share').value) || 0,
+    tfThisMonth: [], gfThisMonth: []
+  };
+  document.querySelectorAll('#funds-tbody input[data-type="tf"]').forEach(inp => {
+    temp.tfThisMonth[parseInt(inp.dataset.idx)] = parseFloat(inp.value) || 0;
+  });
+  document.querySelectorAll('#funds-tbody input[data-type="gf"]').forEach(inp => {
+    temp.gfThisMonth[parseInt(inp.dataset.idx)] = parseFloat(inp.value) || 0;
+  });
+
+  let runningTF = temp.openingTF;
+  let runningGF = temp.openingGF;
+  let sumTFMonth = 0, sumGFMonth = 0, sumTFInt = 0, sumGFInt = 0;
+  const rows = document.querySelectorAll('#funds-tbody tr');
+  rows.forEach((row, i) => {
+    const tfMonth = temp.tfThisMonth[i] || 0;
+    const gfMonth = temp.gfThisMonth[i] || 0;
+    runningTF += tfMonth;
+    runningGF += gfMonth;
+    const tfInt = Math.round(tfMonth * (temp.tfRate / 100) * (I_VALUES[i] / 12));
+    const gfInt = Math.round(gfMonth * (temp.gfRate / 100) * (I_VALUES[i] / 12));
+    sumTFMonth += tfMonth; sumGFMonth += gfMonth; sumTFInt += tfInt; sumGFInt += gfInt;
+    row.querySelector('.closing-tf').textContent = runningTF.toFixed(2);
+    row.querySelector('.tf-int').textContent = tfInt;
+    row.querySelector('.closing-gf').textContent = runningGF.toFixed(2);
+    row.querySelector('.gf-int').textContent = gfInt;
+  });
+  updateTotalsAndSummary(sumTFMonth, runningTF, sumTFInt, sumGFMonth, runningGF, sumGFInt, temp);
+}
+
+function autoFillFromInputs() {
+  const tfInputs = Array.from(document.querySelectorAll('#funds-tbody input[data-type="tf"]'));
+  const gfInputs = Array.from(document.querySelectorAll('#funds-tbody input[data-type="gf"]'));
+  let firstTF = null;
+  for (let i = 0; i < tfInputs.length; i++) {
+    const val = tfInputs[i].value.trim();
+    if (val !== '' && firstTF === null) firstTF = val;
+    if (firstTF !== null && i > 0) tfInputs[i].value = firstTF;
+  }
+  let firstGF = null;
+  for (let i = 0; i < gfInputs.length; i++) {
+    const val = gfInputs[i].value.trim();
+    if (val !== '' && firstGF === null) firstGF = val;
+    if (firstGF !== null && i > 0) gfInputs[i].value = firstGF;
+  }
+}
+
+function updateTotalsAndSummary(sumTFMonth, closingTF, sumTFInt, sumGFMonth, closingGF, sumGFInt, m) {
+  document.getElementById('total-tf-month').textContent = sumTFMonth.toFixed(2);
+  document.getElementById('total-closing-tf').textContent = closingTF.toFixed(2);
+  document.getElementById('total-tf-int').textContent = sumTFInt;
+  document.getElementById('total-gf-month').textContent = sumGFMonth.toFixed(2);
+  document.getElementById('total-closing-gf').textContent = closingGF.toFixed(2);
+  document.getElementById('total-gf-int').textContent = sumGFInt;
+
+  const intOpeningTF = Math.round((parseFloat(m.openingTF) || 0) * ((parseFloat(m.tfRate) || 0) / 100));
+  const intOpeningGF = Math.round((parseFloat(m.openingGF) || 0) * ((parseFloat(m.gfRate) || 0) / 100));
+  document.getElementById('int-opening-tf').textContent = intOpeningTF;
+  document.getElementById('int-opening-gf').textContent = intOpeningGF;
+  document.getElementById('total-int-tf').textContent = sumTFInt + intOpeningTF;
+  document.getElementById('total-int-gf').textContent = sumGFInt + intOpeningGF;
+
+  const data = loadData();
+  const totalShare = data.members.reduce((s, mem) => s + (parseFloat(mem.closingShare) || 0), 0);
+  const circ = parseFloat(document.getElementById('circulating-share').value) || 0;
+  const shareVal = parseFloat(m.closingShare) || 0;
+  const dividend = totalShare > 0 ? Math.round((circ / totalShare) * shareVal) : 0;
+  document.getElementById('share-dividend').textContent = dividend;
+}
+
+function saveMemberDetail() {
+  if (currentMemberIndex < 0) return;
+  const data = loadData();
+  const m = data.members[currentMemberIndex];
+  m.openingTF = parseFloat(document.getElementById('opening-tf').value) || 0;
+  m.tfRate = parseFloat(document.getElementById('tf-rate').value) || 0;
+  m.openingGF = parseFloat(document.getElementById('opening-gf').value) || 0;
+  m.gfRate = parseFloat(document.getElementById('gf-rate').value) || 0;
+  m.closingShare = parseFloat(document.getElementById('closing-share').value) || 0;
+  data.circulatingShare = parseFloat(document.getElementById('circulating-share').value) || 0;
+
+  document.querySelectorAll('#funds-tbody input[data-type="tf"]').forEach(inp => {
+    m.tfThisMonth[parseInt(inp.dataset.idx)] = parseFloat(inp.value) || 0;
+  });
+  document.querySelectorAll('#funds-tbody input[data-type="gf"]').forEach(inp => {
+    m.gfThisMonth[parseInt(inp.dataset.idx)] = parseFloat(inp.value) || 0;
+  });
+
+  saveData(data);
+  document.getElementById('detail-msg').textContent = 'Saved';
+  setTimeout(() => document.getElementById('detail-msg').textContent = '', 2000);
+  renderFundsTable(m);
+}
+
+function backToAdmin() {
+  renderMembersList();
+  showScreen('admin-dashboard');
+}
+
+function showScreenSelectAdmin() {
+  const data = loadData();
+  const container = document.getElementById('admin-select-list');
+  container.innerHTML = '';
+  data.members.forEach(m => {
+    const div = document.createElement('div');
+    div.innerHTML = `<label><input type="checkbox" value="${m.name}"> ${m.name}</label>`;
+    container.appendChild(div);
+  });
+  showScreen('select-admin');
+}
+
+function saveAdmins() {
+  const data = loadData();
+  const checked = Array.from(document.querySelectorAll('#admin-select-list input:checked')).map(cb => cb.value);
+  if (checked.length > 3) {
+    alert('Maximum 3 administrators');
+    return;
+  }
+  data.admins = checked.map(name => ({name, password: 'admin123', id: data.currentId || '123456'}));
+  if (data.admins.length === 0) data.admins = [{name:'Admin', password:'admin123', id:'123456'}];
+  saveData(data);
+  alert('Administrators saved');
+}
+
+function saveAdminId() {
+  const newId = document.getElementById('new-admin-id').value.trim();
+  if (!/^\d{6}$/.test(newId)) {
+    document.getElementById('id-msg').textContent = 'Must be 6 digits';
+    return;
+  }
+  const data = loadData();
+  data.currentId = newId;
+  data.admins.forEach(a => a.id = newId);
+  saveData(data);
+  document.getElementById('id-msg').textContent = 'ID updated';
+}
+
+function changePassword() {
+  const name = document.getElementById('cp-name').value;
+  const pass = document.getElementById('cp-password').value;
+  const conf = document.getElementById('cp-confirm').value;
+  if (pass !== conf || pass.length < 6) {
+    document.getElementById('cp-msg').textContent = 'Passwords do not match or too short';
+    return;
+  }
+  const data = loadData();
+  const m = data.members.find(mem => mem.name === name);
+  if (m) {
+    m.password = pass;
+    saveData(data);
+    document.getElementById('cp-msg').textContent = 'Password updated';
+    document.getElementById('cp-msg').className = 'success';
+  }
+}
+
+function createPassword() {
+  const name = document.getElementById('create-name').value.trim();
+  const pass = document.getElementById('create-pass').value;
+  if (!name || pass.length < 6) return;
+  const data = loadData();
+  let m = data.members.find(mem => mem.name.toLowerCase() === name.toLowerCase());
+  if (m) m.password = pass;
+  else data.members.push({name, password: pass, openingTF:0, tfRate:0, openingGF:0, gfRate:0, closingShare:0, tfThisMonth:Array(12).fill(0), gfThisMonth:Array(12).fill(0)});
+  saveData(data);
+  document.getElementById('create-msg').textContent = 'Password created';
+  document.getElementById('create-msg').className = 'success';
+}
+
+function changeID() {
+  const current = document.getElementById('current-id').value.trim();
+  const newId = document.getElementById('new-id').value.trim();
+  const data = loadData();
+  if (current !== data.currentId) {
+    document.getElementById('change-id-msg').textContent = 'Current ID mismatch';
+    return;
+  }
+  if (!/^\d{6}$/.test(newId)) {
+    document.getElementById('change-id-msg').textContent = 'New ID must be 6 digits';
+    return;
+  }
+  data.currentId = newId;
+  saveData(data);
+  document.getElementById('change-id-msg').textContent = 'Updated';
+  document.getElementById('change-id-msg').className = 'success';
+}
+
+function logout() {
+  currentUser = null;
+  showScreen('security');
+}
+
+document.getElementById('security-code').addEventListener('keypress', e => {
+  if (e.key === 'Enter') verifySecurity();
+});
+</script>
+</body>
+</html>
