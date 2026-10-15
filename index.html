@@ -552,29 +552,41 @@ function renderFundsTable(m) {
   });
 
   updateTotalsAndSummary(sumTFMonth, runningTF, sumTFInt, sumGFMonth, runningGF, sumGFInt, m);
+  if (isEditing) {
+    setTimeout(liveUpdate, 50);
+  }
 }
 
 function liveUpdate() {
   if (!isEditing) return;
+
   autoFillFromInputs();
+
   const temp = {
     openingTF: parseFloat(document.getElementById('opening-tf').value) || 0,
     tfRate: parseFloat(document.getElementById('tf-rate').value) || 0,
     openingGF: parseFloat(document.getElementById('opening-gf').value) || 0,
     gfRate: parseFloat(document.getElementById('gf-rate').value) || 0,
     closingShare: parseFloat(document.getElementById('closing-share').value) || 0,
-    tfThisMonth: [], gfThisMonth: []
+    tfThisMonth: Array(12).fill(0),
+    gfThisMonth: Array(12).fill(0)
   };
+
   document.querySelectorAll('#funds-tbody input[data-type="tf"]').forEach(inp => {
-    temp.tfThisMonth[parseInt(inp.dataset.idx)] = parseFloat(inp.value) || 0;
+    const idx = parseInt(inp.dataset.idx);
+    const val = parseFloat(inp.value);
+    temp.tfThisMonth[idx] = isNaN(val) ? 0 : val;
   });
   document.querySelectorAll('#funds-tbody input[data-type="gf"]').forEach(inp => {
-    temp.gfThisMonth[parseInt(inp.dataset.idx)] = parseFloat(inp.value) || 0;
+    const idx = parseInt(inp.dataset.idx);
+    const val = parseFloat(inp.value);
+    temp.gfThisMonth[idx] = isNaN(val) ? 0 : val;
   });
 
   let runningTF = temp.openingTF;
   let runningGF = temp.openingGF;
   let sumTFMonth = 0, sumGFMonth = 0, sumTFInt = 0, sumGFInt = 0;
+
   const rows = document.querySelectorAll('#funds-tbody tr');
   rows.forEach((row, i) => {
     const tfMonth = temp.tfThisMonth[i] || 0;
@@ -583,12 +595,21 @@ function liveUpdate() {
     runningGF += gfMonth;
     const tfInt = Math.round(tfMonth * (temp.tfRate / 100) * (I_VALUES[i] / 12));
     const gfInt = Math.round(gfMonth * (temp.gfRate / 100) * (I_VALUES[i] / 12));
-    sumTFMonth += tfMonth; sumGFMonth += gfMonth; sumTFInt += tfInt; sumGFInt += gfInt;
-    row.querySelector('.closing-tf').textContent = runningTF.toFixed(2);
-    row.querySelector('.tf-int').textContent = tfInt;
-    row.querySelector('.closing-gf').textContent = runningGF.toFixed(2);
-    row.querySelector('.gf-int').textContent = gfInt;
+    sumTFMonth += tfMonth;
+    sumGFMonth += gfMonth;
+    sumTFInt += tfInt;
+    sumGFInt += gfInt;
+
+    const closingTf = row.querySelector('.closing-tf');
+    const tfIntCell = row.querySelector('.tf-int');
+    const closingGf = row.querySelector('.closing-gf');
+    const gfIntCell = row.querySelector('.gf-int');
+    if (closingTf) closingTf.textContent = runningTF.toFixed(2);
+    if (tfIntCell) tfIntCell.textContent = tfInt;
+    if (closingGf) closingGf.textContent = runningGF.toFixed(2);
+    if (gfIntCell) gfIntCell.textContent = gfInt;
   });
+
   updateTotalsAndSummary(sumTFMonth, runningTF, sumTFInt, sumGFMonth, runningGF, sumGFInt, temp);
 }
 
