@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -113,6 +112,7 @@
     <p>PRIVATE BANKING</p>
   </div>
 
+  <!-- Security -->
   <div id="screen-security" class="card">
     <h2>Secure Access</h2>
     <p class="subtitle">Enter security code</p>
@@ -124,6 +124,7 @@
     <div id="security-error" class="error"></div>
   </div>
 
+  <!-- Menu -->
   <div id="screen-menu" class="card hidden">
     <button class="btn-3d btn-small back-btn" onclick="showScreen('security')">Back</button>
     <h2>Welcome</h2>
@@ -133,6 +134,7 @@
     <button class="menu-btn" onclick="showScreen('create-password')">Create Password</button>
   </div>
 
+  <!-- Member Login -->
   <div id="screen-member-login" class="card hidden">
     <button class="btn-3d btn-small back-btn" onclick="showScreen('menu')">Back</button>
     <h2>Member Login</h2>
@@ -150,6 +152,7 @@
     <div id="login-error" class="error"></div>
   </div>
 
+  <!-- Admin Login -->
   <div id="screen-admin-login" class="card hidden">
     <button class="btn-3d btn-small back-btn" onclick="showScreen('menu')">Back</button>
     <h2>Administrator Login</h2>
@@ -169,6 +172,7 @@
     <div id="admin-error" class="error"></div>
   </div>
 
+  <!-- Admin Dashboard -->
   <div id="screen-admin-dashboard" class="card hidden">
     <button class="btn-3d btn-small back-btn" onclick="showScreen('menu')">Back</button>
     <h2>Administrator Dashboard</h2>
@@ -181,12 +185,13 @@
     </div>
     <div id="members-list"></div>
     <button class="btn-3d" onclick="showTotalShare()">Total Share</button>
-    <button class="btn-3d" onclick="showScreenSelectAdmin()">Select Administrator</button>
+    <button class="btn-3d" onclick="showScreen('select-admin')">Select Administrator</button>
     <button class="btn-3d" onclick="showScreen('choose-id')">Choose ID</button>
     <button class="btn-3d" onclick="logout()">Logout</button>
     <div id="total-share-display" style="margin-top:12px;font-weight:600;"></div>
   </div>
 
+  <!-- Member Detail / Calculation -->
   <div id="screen-member-detail" class="card hidden">
     <button class="btn-3d btn-small back-btn" onclick="backToAdmin()">Back</button>
     <h2 id="detail-title">Member</h2>
@@ -258,6 +263,7 @@
     <div id="detail-msg" class="success"></div>
   </div>
 
+  <!-- Select Administrator -->
   <div id="screen-select-admin" class="card hidden">
     <button class="btn-3d btn-small back-btn" onclick="showScreen('admin-dashboard')">Back</button>
     <h2>Select Administrator (Max 3)</h2>
@@ -265,6 +271,7 @@
     <button class="btn-3d" onclick="saveAdmins()">Save Administrators</button>
   </div>
 
+  <!-- Choose ID -->
   <div id="screen-choose-id" class="card hidden">
     <button class="btn-3d btn-small back-btn" onclick="showScreen('admin-dashboard')">Back</button>
     <h2>Choose ID for Admin Login</h2>
@@ -276,6 +283,7 @@
     <div id="id-msg" class="success"></div>
   </div>
 
+  <!-- Change Password -->
   <div id="screen-change-password" class="card hidden">
     <button class="btn-3d btn-small back-btn" onclick="showScreen('member-login')">Back</button>
     <h2>Change Password</h2>
@@ -295,6 +303,7 @@
     <div id="cp-msg" class="error"></div>
   </div>
 
+  <!-- Create Password -->
   <div id="screen-create-password" class="card hidden">
     <button class="btn-3d btn-small back-btn" onclick="showScreen('menu')">Back</button>
     <h2>Create Password</h2>
@@ -310,6 +319,7 @@
     <div id="create-msg" class="error"></div>
   </div>
 
+  <!-- Change ID -->
   <div id="screen-change-id" class="card hidden">
     <button class="btn-3d btn-small back-btn" onclick="showScreen('menu')">Back</button>
     <h2>Change ID</h2>
@@ -325,6 +335,7 @@
     <div id="change-id-msg" class="error"></div>
   </div>
 
+  <!-- Member Credit View -->
   <div id="screen-member-credit" class="card hidden">
     <button class="btn-3d btn-small back-btn" onclick="showScreen('member-login')">Back</button>
     <h2 id="credit-title">Your Credit</h2>
@@ -438,8 +449,15 @@ function showTotalCredit() {
   isEditing = false;
   renderFundsTable(m);
   setInputsDisabled(true);
+  // Force recalculation of display values
   setTimeout(() => {
-    if (typeof liveUpdate === 'function') liveUpdate();
+    if (typeof liveUpdate === 'function') {
+      // Temporarily allow update for display
+      const wasEditing = isEditing;
+      isEditing = true;
+      liveUpdate();
+      isEditing = wasEditing;
+    }
   }, 100);
   const editBtn = document.getElementById('edit-btn');
   const saveBtn = document.querySelector('#screen-member-detail button[onclick="saveMemberDetail()"]');
@@ -570,10 +588,10 @@ function renderFundsTable(m) {
     const tr = document.createElement('tr');
     tr.innerHTML = `
       <td>${month}</td>
-      <td><input type="number" step="0.01" value="\( {tfDisplay}" data-type="tf" data-idx=" \){i}" ${isEditing ? '' : 'disabled'} oninput="liveUpdate()" onblur="autoFillFromInputs(); liveUpdate();"></td>
+      <td><input type="number" step="0.01" value="${tfDisplay}" data-type="tf" data-idx="${i}" ${isEditing ? '' : 'disabled'} oninput="liveUpdate()" onblur="autoFillFromInputs(); liveUpdate();"></td>
       <td class="closing-tf">${runningTF.toFixed(2)}</td>
       <td class="tf-int">${tfInt}</td>
-      <td><input type="number" step="0.01" value="\( {gfDisplay}" data-type="gf" data-idx=" \){i}" ${isEditing ? '' : 'disabled'} oninput="liveUpdate()" onblur="autoFillFromInputs(); liveUpdate();"></td>
+      <td><input type="number" step="0.01" value="${gfDisplay}" data-type="gf" data-idx="${i}" ${isEditing ? '' : 'disabled'} oninput="liveUpdate()" onblur="autoFillFromInputs(); liveUpdate();"></td>
       <td class="closing-gf">${runningGF.toFixed(2)}</td>
       <td class="gf-int">${gfInt}</td>`;
     tbody.appendChild(tr);
@@ -581,6 +599,7 @@ function renderFundsTable(m) {
 
   updateTotalsAndSummary(sumTFMonth, runningTF, sumTFInt, sumGFMonth, runningGF, sumGFInt, m);
 
+  // Force recalculation from the actual input values after the table is fully rendered
   setTimeout(() => {
     liveUpdate();
   }, 200);
@@ -642,6 +661,7 @@ function autoFillFromInputs() {
   const tfInputs = Array.from(document.querySelectorAll('#funds-tbody input[data-type="tf"]'));
   const gfInputs = Array.from(document.querySelectorAll('#funds-tbody input[data-type="gf"]'));
 
+  // Only fill empty subsequent months with the last non-empty value. Never overwrite existing values.
   let lastTF = null;
   for (let i = 0; i < tfInputs.length; i++) {
     const val = tfInputs[i].value.trim();
@@ -678,6 +698,7 @@ function updateTotalsAndSummary(sumTFMonth, closingTF, sumTFInt, sumGFMonth, clo
   document.getElementById('total-int-tf').textContent = sumTFInt + intOpeningTF;
   document.getElementById('total-int-gf').textContent = sumGFInt + intOpeningGF;
 
+  // Share Dividend
   const data = loadData();
   const totalShare = data.members.reduce((s, mem) => s + (parseFloat(mem.closingShare) || 0), 0);
   const circ = parseFloat(document.getElementById('circulating-share').value) || 0;
@@ -705,6 +726,7 @@ function saveMemberDetail() {
   m.closingShare = parseFloat(document.getElementById('closing-share').value) || 0;
   data.circulatingShare = parseFloat(document.getElementById('circulating-share').value) || 0;
 
+  // Ensure arrays exist
   if (!Array.isArray(m.tfThisMonth)) m.tfThisMonth = Array(12).fill(0);
   if (!Array.isArray(m.gfThisMonth)) m.gfThisMonth = Array(12).fill(0);
 
@@ -722,6 +744,7 @@ function saveMemberDetail() {
   document.getElementById('detail-msg').className = 'success';
   setTimeout(() => document.getElementById('detail-msg').textContent = '', 2500);
 
+  // Re-render with the saved data so calculations update
   renderFundsTable(m);
   alert('Data saved');
 }
