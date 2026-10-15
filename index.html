@@ -445,18 +445,16 @@ function toggleEdit() {
 function renderFundsTable(m) {
   const tbody = document.getElementById('funds-tbody');
   tbody.innerHTML = '';
-  let closingTF = parseFloat(m.openingTF) || 0;
-  let closingGF = parseFloat(m.openingGF) || 0;
+  let runningTF = parseFloat(m.openingTF) || 0;
+  let runningGF = parseFloat(m.openingGF) || 0;
   let sumTFMonth = 0, sumGFMonth = 0, sumTFInt = 0, sumGFInt = 0;
 
   MONTHS.forEach((month, i) => {
     const tfMonth = parseFloat(m.tfThisMonth?.[i]) || 0;
     const gfMonth = parseFloat(m.gfThisMonth?.[i]) || 0;
-    const openingTFThis = (i === 0) ? (parseFloat(m.openingTF) || 0) : closingTF;
-    const openingGFThis = (i === 0) ? (parseFloat(m.openingGF) || 0) : closingGF;
 
-    closingTF = openingTFThis + tfMonth;
-    closingGF = openingGFThis + gfMonth;
+    runningTF += tfMonth;
+    runningGF += gfMonth;
 
     const tfInt = tfMonth * ((parseFloat(m.tfRate) || 0) / 100) * (I_VALUES[i] / 12);
     const gfInt = gfMonth * ((parseFloat(m.gfRate) || 0) / 100) * (I_VALUES[i] / 12);
@@ -469,20 +467,20 @@ function renderFundsTable(m) {
     const tr = document.createElement('tr');
     tr.innerHTML = 
       '<td>' + month + '</td>' +
-      '<td><input type="number" step="0.01" value="' + tfMonth + '" data-type="tf" data-idx="' + i + '" ' + (isEditing ? '' : 'disabled') + '></td>' +
-      '<td>' + closingTF.toFixed(2) + '</td>' +
+      '<td><input type="number" step="0.01" value="' + tfMonth + '" data-type="tf" data-idx="' + i + '" ' + (isEditing ? '' : 'disabled') + ' oninput="autoFillTF(this)"></td>' +
+      '<td>' + runningTF.toFixed(2) + '</td>' +
       '<td>' + tfInt.toFixed(2) + '</td>' +
-      '<td><input type="number" step="0.01" value="' + gfMonth + '" data-type="gf" data-idx="' + i + '" ' + (isEditing ? '' : 'disabled') + '></td>' +
-      '<td>' + closingGF.toFixed(2) + '</td>' +
+      '<td><input type="number" step="0.01" value="' + gfMonth + '" data-type="gf" data-idx="' + i + '" ' + (isEditing ? '' : 'disabled') + ' oninput="autoFillGF(this)"></td>' +
+      '<td>' + runningGF.toFixed(2) + '</td>' +
       '<td>' + gfInt.toFixed(2) + '</td>';
     tbody.appendChild(tr);
   });
 
   document.getElementById('total-tf-month').textContent = sumTFMonth.toFixed(2);
-  document.getElementById('total-closing-tf').textContent = closingTF.toFixed(2);
+  document.getElementById('total-closing-tf').textContent = runningTF.toFixed(2);
   document.getElementById('total-tf-int').textContent = sumTFInt.toFixed(2);
   document.getElementById('total-gf-month').textContent = sumGFMonth.toFixed(2);
-  document.getElementById('total-closing-gf').textContent = closingGF.toFixed(2);
+  document.getElementById('total-closing-gf').textContent = runningGF.toFixed(2);
   document.getElementById('total-gf-int').textContent = sumGFInt.toFixed(2);
 
   const intOpeningTF = (parseFloat(m.openingTF) || 0) * ((parseFloat(m.tfRate) || 0) / 100);
@@ -492,6 +490,26 @@ function renderFundsTable(m) {
 
   document.getElementById('total-int-tf').textContent = (sumTFInt + intOpeningTF).toFixed(2);
   document.getElementById('total-int-gf').textContent = (sumGFInt + intOpeningGF).toFixed(2);
+}
+
+function autoFillTF(input) {
+  if (!isEditing) return;
+  const idx = parseInt(input.dataset.idx);
+  const val = input.value;
+  const inputs = document.querySelectorAll('#funds-tbody input[data-type="tf"]');
+  for (let j = idx + 1; j < inputs.length; j++) {
+    inputs[j].value = val;
+  }
+}
+
+function autoFillGF(input) {
+  if (!isEditing) return;
+  const idx = parseInt(input.dataset.idx);
+  const val = input.value;
+  const inputs = document.querySelectorAll('#funds-tbody input[data-type="gf"]');
+  for (let j = idx + 1; j < inputs.length; j++) {
+    inputs[j].value = val;
+  }
 }
 
 function saveMemberDetail() {
