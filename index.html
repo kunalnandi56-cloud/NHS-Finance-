@@ -1,4 +1,4 @@
-e<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -574,10 +574,10 @@ function renderFundsTable(m) {
     const tr = document.createElement('tr');
     tr.innerHTML = `
       <td>${month}</td>
-      <td><input type="number" step="0.01" value="\( {tfDisplay}" data-type="tf" data-idx=" \){i}" ${isEditing ? '' : 'disabled'} oninput="liveUpdate()"></td>
+      <td><input type="number" step="0.01" value="\( {tfDisplay}" data-type="tf" data-idx=" \){i}" ${isEditing ? '' : 'disabled'} oninput="liveUpdate()" onblur="autoFillFromInputs(); liveUpdate();"></td>
       <td class="closing-tf">${runningTF.toFixed(2)}</td>
       <td class="tf-int">${tfInt}</td>
-      <td><input type="number" step="0.01" value="\( {gfDisplay}" data-type="gf" data-idx=" \){i}" ${isEditing ? '' : 'disabled'} oninput="liveUpdate()"></td>
+      <td><input type="number" step="0.01" value="\( {gfDisplay}" data-type="gf" data-idx=" \){i}" ${isEditing ? '' : 'disabled'} oninput="liveUpdate()" onblur="autoFillFromInputs(); liveUpdate();"></td>
       <td class="closing-gf">${runningGF.toFixed(2)}</td>
       <td class="gf-int">${gfInt}</td>`;
     tbody.appendChild(tr);
@@ -595,8 +595,6 @@ function renderFundsTable(m) {
 
 function liveUpdate() {
   setTimeout(() => {
-    autoFillFromInputs();
-
     const temp = {
       openingTF: parseFloat(document.getElementById('opening-tf').value) || 0,
       tfRate: parseFloat(document.getElementById('tf-rate').value) || 0,
@@ -646,23 +644,31 @@ function liveUpdate() {
     });
 
     updateTotalsAndSummary(sumTFMonth, runningTF, sumTFInt, sumGFMonth, runningGF, sumGFInt, temp);
-  }, 150);
+  }, 100);
 }
 
 function autoFillFromInputs() {
   const tfInputs = Array.from(document.querySelectorAll('#funds-tbody input[data-type="tf"]'));
   const gfInputs = Array.from(document.querySelectorAll('#funds-tbody input[data-type="gf"]'));
+
   let lastTF = null;
   for (let i = 0; i < tfInputs.length; i++) {
     const val = tfInputs[i].value.trim();
-    if (val !== '' && !isNaN(parseFloat(val))) lastTF = val;
-    if (lastTF !== null && (val === '' || val !== lastTF)) tfInputs[i].value = lastTF;
+    if (val !== '' && !isNaN(parseFloat(val))) {
+      lastTF = val;
+    } else if (lastTF !== null && val === '') {
+      tfInputs[i].value = lastTF;
+    }
   }
+
   let lastGF = null;
   for (let i = 0; i < gfInputs.length; i++) {
     const val = gfInputs[i].value.trim();
-    if (val !== '' && !isNaN(parseFloat(val))) lastGF = val;
-    if (lastGF !== null && (val === '' || val !== lastGF)) gfInputs[i].value = lastGF;
+    if (val !== '' && !isNaN(parseFloat(val))) {
+      lastGF = val;
+    } else if (lastGF !== null && val === '') {
+      gfInputs[i].value = lastGF;
+    }
   }
 }
 
