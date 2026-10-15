@@ -8,21 +8,22 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #ffffff;
+    --bg: #f0f7ff;
     --card: #ffffff;
-    --card-border: #e8eaed;
-    --gold: #b8953a;
-    --gold-light: #7a5f28;
-    --text: #1a1a1a;
-    --text-muted: #5f6368;
-    --danger: #d93025;
-    --success: #188038;
-    --input-bg: #f8f9fa;
+    --card-border: #d0e4ff;
+    --gold: #c9a227;
+    --gold-light: #8b6914;
+    --text: #1a2a4a;
+    --text-muted: #4a5a7a;
+    --danger: #e53935;
+    --success: #43a047;
+    --input-bg: #f5f9ff;
+    --accent: #4a90d9;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
     font-family: 'Inter', system-ui, sans-serif;
-    background: #f0f4f8;
+    background: linear-gradient(135deg, #e8f4ff 0%, #f0f7ff 50%, #fff8e1 100%);
     color: var(--text);
     min-height: 100vh;
     display: flex;
@@ -42,7 +43,7 @@
     border: 1px solid var(--card-border);
     border-radius: 16px;
     padding: 24px 22px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+    box-shadow: 0 8px 32px rgba(74,144,217,0.12);
     margin-bottom: 16px;
   }
   h2 { font-size: 20px; font-weight: 600; margin-bottom: 6px; text-align: center; }
@@ -52,7 +53,7 @@
   input, select {
     width: 100%;
     background: var(--input-bg);
-    border: 1px solid #dadce0;
+    border: 1px solid #c5d9f0;
     border-radius: 10px;
     padding: 12px 14px;
     color: var(--text);
@@ -65,12 +66,12 @@
   .pin-input { letter-spacing: 6px; text-align: center; font-size: 18px; font-weight: 600; }
   .btn {
     width: 100%;
-    background: linear-gradient(135deg, var(--gold), #9a7a2e);
-    color: #ffffff;
+    background: linear-gradient(135deg, #c9a227, #e6c35c);
+    color: #1a2a4a;
     border: none;
     border-radius: 10px;
     padding: 13px;
-    font-size: 14px;
+    font-size: 15px;
     font-weight: 600;
     cursor: pointer;
     margin-top: 6px;
@@ -82,32 +83,32 @@
     border: 1px solid var(--gold);
     margin-top: 8px;
   }
-  .btn-secondary:hover { background: rgba(184,149,58,0.08); }
-  .btn-small { width: auto; padding: 7px 14px; font-size: 13px; margin: 0 4px; display: inline-block; }
+  .btn-secondary:hover { background: rgba(201,162,39,0.1); }
+  .btn-small { width: auto; padding: 6px 14px; font-size: 13px; margin: 0 4px; display: inline-block; }
   .menu-btn {
-    display: block; width: 100%; background: #f8f9fa;
-    border: 1px solid #dadce0; color: var(--text);
+    display: block; width: 100%; background: #f5f9ff;
+    border: 1px solid #c5d9f0; color: var(--text);
     padding: 15px; border-radius: 12px; margin-bottom: 8px;
-    text-align: left; font-size: 14px; font-weight: 500; cursor: pointer;
+    text-align: left; font-size: 15px; cursor: pointer;
   }
-  .menu-btn:hover { border-color: var(--gold); background: #f1f3f4; }
+  .menu-btn:hover { border-color: var(--gold); background: #e8f0fe; }
   .menu-btn span { color: var(--gold); margin-right: 8px; }
-  .error { color: var(--danger); font-size: 14px; text-align: center; margin-top: 10px; min-height: 16px; }
-  .success { color: var(--success); font-size: 14px; text-align: center; margin-top: 10px; }
+  .error { color: var(--danger); font-size: 13px; text-align: center; margin-top: 10px; min-height: 16px; }
+  .success { color: var(--success); font-size: 13px; text-align: center; margin-top: 10px; }
   .hidden { display: none !important; }
-  .footer { text-align: center; margin-top: 16px; font-size: 13px; color: var(--text-muted); }
-  .member-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #eee; font-size: 14px; }
+  .footer { text-align: center; margin-top: 16px; font-size: 11px; color: var(--text-muted); }
+  .member-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #e3f2fd; }
   .member-row:last-child { border-bottom: none; }
   table { width: 100%; border-collapse: collapse; font-size: 14px; margin-top: 16px; }
-  th, td { border: 1px solid #e0e4ea; padding: 8px 6px; text-align: center; }
-  th { background: #f8f9fa; font-weight: 600; font-size: 14px; }
+  th, td { border: 1px solid #d0e4ff; padding: 8px 6px; text-align: center; }
+  th { background: #e3f2fd; font-weight: 600; font-size: 14px; color: #1565c0; }
   td input { width: 100%; padding: 6px; font-size: 14px; text-align: right; border-radius: 4px; font-weight: 500; }
-  .totals-row { font-weight: 600; background: #f8f9fa; font-size: 14px; }
-  .summary-box { margin-top: 20px; padding: 16px; background: #f8f9fa; border-radius: 12px; border: 1px solid #e0e4ea; }
-  .summary-box h3 { font-size: 16px; margin-bottom: 12px; font-weight: 600; }
+  .totals-row { font-weight: 600; background: #fff8e1; font-size: 14px; }
+  .summary-box { margin-top: 20px; padding: 16px; background: #f5f9ff; border-radius: 12px; border: 1px solid #d0e4ff; }
+  .summary-box h3 { font-size: 16px; margin-bottom: 10px; font-weight: 600; color: #1565c0; }
   .summary-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 14px; font-weight: 500; }
-  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-  @media (max-width: 640px) { .grid-2 { grid-template-columns: 1fr; } table { font-size: 13px; } }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  @media (max-width: 640px) { .grid-2 { grid-template-columns: 1fr; } table { font-size: 11px; } }
 </style>
 </head>
 <body>
@@ -190,7 +191,7 @@
 
   <div id="screen-member-detail" class="card hidden">
     <h2 id="detail-title">Member Details</h2>
-    <div style="text-align:right;margin-bottom:12px;">
+    <div style="text-align:right;margin-bottom:10px;">
       <button class="btn btn-small" id="edit-btn" onclick="toggleEdit()">Edit</button>
       <button class="btn btn-small" onclick="saveMemberDetail()">Save</button>
       <button class="btn btn-small btn-secondary" onclick="backToAdmin()">Back</button>
@@ -537,23 +538,25 @@ function autoFillFromInputs() {
   const tfInputs = Array.from(document.querySelectorAll('#funds-tbody input[data-type="tf"]'));
   const gfInputs = Array.from(document.querySelectorAll('#funds-tbody input[data-type="gf"]'));
 
-  let lastTF = null;
+  let firstTF = null;
   for (let i = 0; i < tfInputs.length; i++) {
     const val = tfInputs[i].value.trim();
-    if (val !== '') {
-      lastTF = val;
-    } else if (lastTF !== null && i > 0) {
-      tfInputs[i].value = lastTF;
+    if (val !== '' && firstTF === null) {
+      firstTF = val;
+    }
+    if (firstTF !== null && i > 0) {
+      tfInputs[i].value = firstTF;
     }
   }
 
-  let lastGF = null;
+  let firstGF = null;
   for (let i = 0; i < gfInputs.length; i++) {
     const val = gfInputs[i].value.trim();
-    if (val !== '') {
-      lastGF = val;
-    } else if (lastGF !== null && i > 0) {
-      gfInputs[i].value = lastGF;
+    if (val !== '' && firstGF === null) {
+      firstGF = val;
+    }
+    if (firstGF !== null && i > 0) {
+      gfInputs[i].value = firstGF;
     }
   }
 }
