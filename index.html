@@ -584,6 +584,13 @@ function renderFundsTable(m) {
   });
 
   updateTotalsAndSummary(sumTFMonth, runningTF, sumTFInt, sumGFMonth, runningGF, sumGFInt, m);
+
+  setTimeout(() => {
+    const wasEditing = isEditing;
+    isEditing = true;
+    liveUpdate();
+    isEditing = wasEditing;
+  }, 80);
 }
 
 function liveUpdate() {
