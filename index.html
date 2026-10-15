@@ -559,8 +559,10 @@ function renderFundsTable(m) {
     const gfMonth = parseFloat(m.gfThisMonth?.[i]) || 0;
     runningTF += tfMonth;
     runningGF += gfMonth;
-    const tfInt = Math.round(tfMonth * ((parseFloat(m.tfRate) || 0) / 100) * (I_VALUES[i] / 12));
-    const gfInt = Math.round(gfMonth * ((parseFloat(m.gfRate) || 0) / 100) * (I_VALUES[i] / 12));
+    const rateTF = parseFloat(m.tfRate) || 0;
+    const rateGF = parseFloat(m.gfRate) || 0;
+    const tfInt = Math.round(tfMonth * (rateTF / 100) * (I_VALUES[i] / 12));
+    const gfInt = Math.round(gfMonth * (rateGF / 100) * (I_VALUES[i] / 12));
     sumTFMonth += tfMonth;
     sumGFMonth += gfMonth;
     sumTFInt += tfInt;
@@ -582,9 +584,6 @@ function renderFundsTable(m) {
   });
 
   updateTotalsAndSummary(sumTFMonth, runningTF, sumTFInt, sumGFMonth, runningGF, sumGFInt, m);
-  if (isEditing) {
-    setTimeout(liveUpdate, 50);
-  }
 }
 
 function liveUpdate() {
