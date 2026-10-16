@@ -2,26 +2,26 @@
   "name": "NHS ECCS Private Banking",
   "short_name": "NHS ECCS",
   "description": "NEBADHAI HIGH SCHOOL Employees Co-operative Credit Society Limited - Secure member banking",
-  "start_url": "/",
+  "start_url": "./",
   "display": "standalone",
   "background_color": "#f0f7ff",
   "theme_color": "#c9a227",
   "orientation": "portrait",
   "icons": [
     {
-      "src": "/icon.svg",
+      "src": "./icon.svg",
       "sizes": "any",
       "type": "image/svg+xml",
       "purpose": "any maskable"
     },
     {
-      "src": "/icon-192.png",
+      "src": "./grok_1792132518195.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "/icon-512.png",
+      "src": "./grok_1792132523949.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
