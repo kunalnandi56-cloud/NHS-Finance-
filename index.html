@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="NHS ECCS">
-<link rel="apple-touch-icon" href="/icon-192.png">
+<link rel="apple-touch-icon" href="/grok_1792132518195.png">
 <title>Nhseccs Private Banking</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
@@ -514,8 +514,210 @@ function adminLogin() {
   }
 }
 
-// NOTE: The remaining original functions (renderMembersList, openMember, setInputsDisabled, toggleEdit, renderFundsTable, saveMemberDetail, liveUpdate, addMember, etc.) are preserved from the original file.
-// Full original script continues below the PWA registration.
+function addMember() {
+  const name = document.getElementById('new-member-name').value.trim();
+  if (!name) return;
+  const data = loadData();
+  data.members.push({
+    name,
+    password: "",
+    openingTF: 0,
+    tfRate: 0,
+    openingGF: 0,
+    gfRate: 0,
+    closingShare: 0,
+    tfThisMonth: Array(12).fill(0),
+    gfThisMonth: Array(12).fill(0)
+  });
+  saveData(data);
+  document.getElementById('new-member-name').value = '';
+  renderMembersList();
+}
+
+function renderMembersList() {
+  const data = loadData();
+  const container = document.getElementById('members-list');
+  if (!container) return;
+  container.innerHTML = '';
+  data.members.forEach((m, idx) => {
+    const div = document.createElement('div');
+    div.className = 'member-row';
+    div.innerHTML = `<span>${m.name}</span> <button class="btn-3d btn-small" onclick="openMember(${idx})">Open</button>`;
+    container.appendChild(div);
+  });
+}
+
+function openMember(idx) {
+  currentMemberIndex = idx;
+  const data = loadData();
+  const m = data.members[idx];
+  document.getElementById('detail-title').textContent = m.name;
+  document.getElementById('opening-tf').value = m.openingTF || 0;
+  document.getElementById('tf-rate').value = m.tfRate || 0;
+  document.getElementById('opening-gf').value = m.openingGF || 0;
+  document.getElementById('gf-rate').value = m.gfRate || 0;
+  document.getElementById('closing-share').value = m.closingShare || 0;
+  renderFundsTable(m);
+  isEditing = false;
+  setInputsDisabled(true);
+  showScreen('member-detail');
+}
+
+function setInputsDisabled(disabled) {
+  ['opening-tf','tf-rate','opening-gf','gf-rate','closing-share'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.disabled = disabled;
+  });
+  document.querySelectorAll('#funds-tbody input').forEach(inp => inp.disabled = disabled);
+  const editBtn = document.getElementById('edit-btn');
+  if (editBtn) editBtn.textContent = disabled ? 'Edit' : 'Cancel Edit';
+}
+
+function toggleEdit() {
+  isEditing = !isEditing;
+  setInputsDisabled(!isEditing);
+}
+
+function renderFundsTable(m) {
+  const tbody = document.getElementById('funds-tbody');
+  if (!tbody) return;
+  tbody.innerHTML = '';
+  let closingTF = parseFloat(m.openingTF) || 0;
+  let closingGF = parseFloat(m.openingGF) || 0;
+  let sumTFMonth = 0, sumGFMonth = 0, sumTFInt = 0, sumGFInt = 0;
+
+  MONTHS.forEach((month, i) => {
+    const tfMonth = parseFloat(m.tfThisMonth?.[i]) || 0;
+    const gfMonth = parseFloat(m.gfThisMonth?.[i]) || 0;
+    const openingTFThis = (i === 0) ? (parseFloat(m.openingTF)||0) : closingTF;
+    const openingGFThis = (i === 0) ? (parseFloat(m.openingGF)||0) : closingGF;
+
+    closingTF += tfMonth;
+    closingGF += gfMonth;
+
+    const tfInt = openingTFThis * ((parseFloat(m.tfRate)||0)/100) * (I_VALUES[i]/12);
+    const gfInt = openingGFThis * ((parseFloat(m.gfRate)||0)/100) * (I_VALUES[i]/12);
+
+    sumTFMonth += tfMonth;
+    sumGFMonth += gfMonth;
+    sumTFInt += tfInt;
+    sumGFInt += gfInt;
+
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${month}</td>
+      <td><input type="number" step="0.01" value="${tfMonth}" data-type="tf" data-idx="${i}" disabled></td>
+      <td>${closingTF.toFixed(2)}</td>
+      <td>${tfInt.toFixed(2)}</td>
+      <td><input type="number" step="0.01" value="${gfMonth}" data-type="gf" data-idx="${i}" disabled></td>
+      <td>${closingGF.toFixed(2)}</td>
+      <td>${gfInt.toFixed(2)}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+
+  document.getElementById('total-tf-month').textContent = sumTFMonth.toFixed(2);
+  document.getElementById('total-closing-tf').textContent = closingTF.toFixed(2);
+  document.getElementById('total-tf-int').textContent = sumTFInt.toFixed(2);
+  document.getElementById('total-gf-month').textContent = sumGFMonth.toFixed(2);
+  document.getElementById('total-closing-gf').textContent = closingGF.toFixed(2);
+  document.getElementById('total-gf-int').textContent = sumGFInt.toFixed(2);
+}
+
+function saveMemberDetail() {
+  if (currentMemberIndex < 0) return;
+  const data = loadData();
+  const m = data.members[currentMemberIndex];
+  m.openingTF = parseFloat(document.getElementById('opening-tf').value) || 0;
+  m.tfRate = parseFloat(document.getElementById('tf-rate').value) || 0;
+  m.openingGF = parseFloat(document.getElementById('opening-gf').value) || 0;
+  m.gfRate = parseFloat(document.getElementById('gf-rate').value) || 0;
+  m.closingShare = parseFloat(document.getElementById('closing-share').value) || 0;
+
+  document.querySelectorAll('#funds-tbody input').forEach(inp => {
+    const type = inp.dataset.type;
+    const idx = parseInt(inp.dataset.idx);
+    const val = parseFloat(inp.value) || 0;
+    if (type === 'tf') m.tfThisMonth[idx] = val;
+    if (type === 'gf') m.gfThisMonth[idx] = val;
+  });
+
+  saveData(data);
+  document.getElementById('detail-msg').textContent = 'Saved successfully';
+  setTimeout(() => document.getElementById('detail-msg').textContent = '', 2000);
+}
+
+function backToAdmin() {
+  showScreen('admin-dashboard');
+  renderMembersList();
+}
+
+function logout() {
+  currentUser = null;
+  currentMemberIndex = -1;
+  showScreen('menu');
+}
+
+function changePassword() {
+  const name = document.getElementById('cp-name').value;
+  const pass = document.getElementById('cp-password').value;
+  const confirm = document.getElementById('cp-confirm').value;
+  if (pass !== confirm) {
+    document.getElementById('cp-msg').textContent = 'Passwords do not match';
+    return;
+  }
+  const data = loadData();
+  const member = data.members.find(m => m.name === name);
+  if (member) {
+    member.password = pass;
+    saveData(data);
+    document.getElementById('cp-msg').textContent = 'Password updated';
+  } else {
+    document.getElementById('cp-msg').textContent = 'Member not found';
+  }
+}
+
+function createPassword() {
+  const name = document.getElementById('create-name').value.trim();
+  const pass = document.getElementById('create-pass').value;
+  if (!name || !pass) return;
+  const data = loadData();
+  let member = data.members.find(m => m.name.toLowerCase() === name.toLowerCase());
+  if (!member) {
+    member = { name, password: pass, openingTF:0, tfRate:0, openingGF:0, gfRate:0, closingShare:0, tfThisMonth:Array(12).fill(0), gfThisMonth:Array(12).fill(0) };
+    data.members.push(member);
+  } else {
+    member.password = pass;
+  }
+  saveData(data);
+  document.getElementById('create-msg').textContent = 'Password created';
+}
+
+function changeID() {
+  const current = document.getElementById('current-id').value.trim();
+  const neu = document.getElementById('new-id').value.trim();
+  const data = loadData();
+  if (current === data.currentId || current === data.securityCode) {
+    data.currentId = neu;
+    data.securityCode = neu;
+    saveData(data);
+    document.getElementById('change-id-msg').textContent = 'ID updated';
+  } else {
+    document.getElementById('change-id-msg').textContent = 'Current ID incorrect';
+  }
+}
+
+function liveUpdate() {
+  // live calculation placeholder
+}
+
+function showTotalShare() {
+  const data = loadData();
+  let total = 0;
+  data.members.forEach(m => total += parseFloat(m.closingShare) || 0);
+  const el = document.getElementById('total-share-display');
+  if (el) el.textContent = 'Total Share: ' + total.toFixed(2);
+}
 </script>
 <script>
 let deferredPrompt;
@@ -527,7 +729,6 @@ window.addEventListener('beforeinstallprompt', (e) => {
   deferredPrompt = e;
   if (installBtn) installBtn.style.display = 'block';
 });
-// Always show the button
 if (installBtn) installBtn.style.display = 'block';
 
 if (installBtn) {
@@ -538,7 +739,6 @@ if (installBtn) {
     }
     deferredPrompt.prompt();
     const { outcome } = await deferredPrompt.userChoice;
-    console.log('Install outcome:', outcome);
     if (outcome === 'accepted') {
       installBtn.style.display = 'none';
     }
@@ -551,7 +751,6 @@ window.addEventListener('appinstalled', () => {
   deferredPrompt = null;
 });
 
-// iOS hint
 const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
 const isInStandaloneMode = ('standalone' in window.navigator) && window.navigator.standalone;
 if (isIOS && !isInStandaloneMode && iosHint) {
