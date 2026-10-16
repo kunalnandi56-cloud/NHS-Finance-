@@ -1,9 +1,10 @@
-const CACHE_NAME = 'nhseccs-v2';
+const CACHE_NAME = 'nhseccs-v3';
 const ASSETS = [
   '/',
   '/index.html',
   '/nhseccs-banking.html',
   '/manifest.json',
+  '/icon.svg',
   '/icon-192.png',
   '/icon-512.png'
 ];
