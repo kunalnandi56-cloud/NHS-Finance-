@@ -1,199 +1,206 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NHS ECCS</title>
+<title>Nhseccs Private Banking</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 body{font-family:Arial,sans-serif;background:#e8f0f8;margin:0;padding:20px;}
 .header{background:#0d2b4a;color:#fff;text-align:center;padding:15px;border-radius:8px;margin-bottom:20px;}
-.card{background:#fff;padding:20px;border-radius:12px;max-width:500px;margin:15px auto;box-shadow:0 4px 12px rgba(0,0,0,.1);}
+.card{background:#fff;padding:20px;border-radius:12px;max-width:700px;margin:15px auto;box-shadow:0 4px 12px rgba(0,0,0,.1);}
 input,select{width:100%;padding:12px;margin:8px 0;border:1px solid #ccc;border-radius:8px;box-sizing:border-box;}
-button{width:100%;padding:12px;background:#c9a227;border:none;border-radius:8px;font-weight:bold;cursor:pointer;margin:6px 0;}
+button{padding:12px 16px;background:#c9a227;border:none;border-radius:8px;font-weight:bold;cursor:pointer;margin:4px;}
+.btn-full{width:100%;display:block;}
 .btn-dark{background:#0d2b4a;color:#fff;}
 .btn-pink{background:#f8d7da;color:#721c24;}
 .hidden{display:none;}
 .error{color:red;text-align:center;}
+.member-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #eee;}
+table{width:100%;border-collapse:collapse;margin-top:10px;font-size:13px;}
+th,td{border:1px solid #ddd;padding:6px;text-align:center;}
+th{background:#e3f2fd;}
 </style>
 </head>
 <body>
 <div class="header">
-  <h2>NHS ECCS · SECURE MEMBER BANKING</h2>
-  <h3>NEBADHAI HIGH SCHOOL</h3>
-  <p>Employees Co-operative Credit Society Limited</p>
+  <h2>Nhseccs Private Banking</h2>
+  <p>NEBADHAI HIGH SCHOOL Employees Co-operative Credit Society Limited</p>
 </div>
 
-<div class="card" id="code">
-  <h3>Society code</h3>
-  <input type="password" id="scode" placeholder="Society code">
-  <button class="btn-dark" onclick="openMain()">Open</button>
+<!-- Security -->
+<div class="card" id="security">
+  <h3>Security Gate</h3>
+  <input type="password" id="sec-code" placeholder="6-digit security code" maxlength="6">
+  <button class="btn-full btn-dark" onclick="checkSecurity()">Continue</button>
+  <div id="sec-err" class="error"></div>
 </div>
 
-<div class="card hidden" id="main">
-  <h3>Main</h3>
-  <button class="btn-dark" onclick="showPage('addadmin')">Add Administrators (max 3)</button>
-  <button onclick="showPage('addmember')">Add Members</button>
-  <button class="btn-pink" onclick="showPage('adminlogin')">Administrative Login</button>
-  <button class="btn-dark" onclick="showPage('memberlogin');loadNames();">Member Login</button>
-  <button onclick="showPage('changepass')">Change Password</button>
+<!-- Main Menu -->
+<div class="card hidden" id="menu">
+  <h3>Welcome</h3>
+  <button class="btn-full btn-dark" onclick="show('member-login');loadNames();">Member Login</button>
+  <button class="btn-full btn-pink" onclick="show('admin-login')">Administrator Login</button>
 </div>
 
-<div class="card hidden" id="addadmin">
-  <h3>Add Administrators</h3>
-  <input type="text" id="admin-name" placeholder="Administrator Name">
-  <button onclick="addAdmin()">Add Administrator</button>
-  <div id="admin-list"></div>
-  <button onclick="showPage('main')">Back</button>
-</div>
-
-<div class="card hidden" id="addmember">
-  <h3>Add Members</h3>
-  <input type="text" id="member-name" placeholder="Member Name">
-  <button onclick="addMember()">Add Member</button>
-  <div id="member-list"></div>
-  <button onclick="showPage('main')">Back</button>
-</div>
-
-<div class="card hidden" id="adminlogin">
-  <h3>Administrative Login</h3>
-  <input type="password" id="a-pass" placeholder="Password">
-  <input type="text" id="a-id" placeholder="6-digit ID" maxlength="6">
-  <button class="btn-pink" onclick="adminLogin()">Login</button>
-  <div id="a-err" class="error"></div>
-  <button onclick="showPage('main')">Back</button>
-</div>
-
-<div class="card hidden" id="admindash">
-  <h3>Administrator Dashboard</h3>
-  <p>Logged in as Administrator</p>
-  <button onclick="showPage('addadmin')">Add Administrators</button>
-  <button onclick="showPage('addmember')">Add Members</button>
-  <button onclick="showPage('main')">Back to Main</button>
-</div>
-
-<div class="card hidden" id="memberlogin">
+<!-- Member Login -->
+<div class="card hidden" id="member-login">
   <h3>Member Login</h3>
   <select id="m-name"></select>
   <input type="password" id="m-pass" placeholder="Password">
-  <button class="btn-dark" onclick="memberLogin()">Login</button>
+  <button class="btn-full" onclick="memberLogin()">Login</button>
   <div id="m-err" class="error"></div>
-  <button onclick="showPage('main')">Back</button>
+  <button onclick="show('menu')">Back</button>
 </div>
 
-<div class="card hidden" id="memberdash">
-  <h3 id="m-welcome">Welcome</h3>
-  <p>You are logged in.</p>
-  <button onclick="showPage('main')">Back to Main</button>
+<!-- Admin Login -->
+<div class="card hidden" id="admin-login">
+  <h3>Administrator Login</h3>
+  <input type="text" id="a-name" placeholder="Name">
+  <input type="password" id="a-pass" placeholder="Password">
+  <input type="text" id="a-id" placeholder="6-digit ID" maxlength="6">
+  <button class="btn-full btn-pink" onclick="adminLogin()">Authenticate</button>
+  <div id="a-err" class="error"></div>
+  <button onclick="show('menu')">Back</button>
 </div>
 
-<div class="card hidden" id="changepass">
-  <h3>Change Password</h3>
-  <select id="c-name"></select>
-  <input type="password" id="c-old" placeholder="Current Password">
-  <input type="password" id="c-new" placeholder="New Password">
-  <button onclick="changePass()">Update</button>
-  <div id="c-err" class="error"></div>
-  <button onclick="showPage('main')">Back</button>
+<!-- Admin Dashboard -->
+<div class="card hidden" id="admin-dash">
+  <h3>Admin Dashboard</h3>
+  <div style="display:flex;gap:8px;">
+    <input type="text" id="new-name" placeholder="New member name" style="flex:1;">
+    <button onclick="addMember()">Add</button>
+  </div>
+  <div id="members-list" style="margin-top:15px;"></div>
+  <button onclick="logout()">Logout</button>
+</div>
+
+<!-- Member Detail -->
+<div class="card hidden" id="member-detail">
+  <h3 id="detail-title">Member</h3>
+  <button onclick="saveMember()">Save</button>
+  <button onclick="show('admin-dash')">Back</button>
+  <div style="margin-top:10px;">
+    <label>Opening TF</label><input type="number" id="otf">
+    <label>TF Rate %</label><input type="number" id="trate">
+    <label>Opening GF</label><input type="number" id="ogf">
+    <label>GF Rate %</label><input type="number" id="grate">
+    <label>Closing Share</label><input type="number" id="cshare">
+  </div>
+  <div id="detail-msg" class="error"></div>
 </div>
 
 <script>
-let members = JSON.parse(localStorage.getItem('nhs_members') || '[]');
+let supabase = null;
+try {
+  if (window.supabase) {
+    supabase = window.supabase.createClient(
+      'https://jmmbtmtocsnzvpantqpd.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImptbWJ0bXRvY3NuenZwYW50cXBkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTIyMDU0NzMsImV4cCI6MjEwNzc4MTQ3M30.tEkXvFRh2voYPBil6fTI0BXmub8Nh479dHoNNUbfdrY'
+    );
+  }
+} catch(e){}
 
-function save(){ localStorage.setItem('nhs_members', JSON.stringify(members)); }
+let current = null;
 
-function showPage(id){
+function show(id){
   document.querySelectorAll('.card').forEach(c => c.classList.add('hidden'));
   document.getElementById(id).classList.remove('hidden');
-  if(id === 'addadmin') showAdminList();
-  if(id === 'addmember') showMemberList();
 }
 
-function openMain(){
-  if(document.getElementById('scode').value.trim() === '123456'){
-    showPage('main');
-  } else {
-    alert('Invalid society code');
-  }
+function checkSecurity(){
+  if(document.getElementById('sec-code').value.trim() === '123456') show('menu');
+  else document.getElementById('sec-err').innerText = 'Invalid security code';
 }
 
-function addAdmin(){
-  const name = document.getElementById('admin-name').value.trim();
-  if(!name) return;
-  if(members.filter(m => m.isAdmin).length >= 3){ alert('Maximum 3 administrators'); return; }
-  if(members.find(m => m.name === name)){ alert('Name already exists'); return; }
-  members.push({name, password:'123456', isAdmin:true});
-  save();
-  document.getElementById('admin-name').value = '';
-  showAdminList();
-  alert('Administrator added. Password is 123456');
-}
-
-function showAdminList(){
-  const div = document.getElementById('admin-list');
-  div.innerHTML = '<h4>Administrators:</h4>';
-  members.filter(m => m.isAdmin).forEach(m => div.innerHTML += '<div>' + m.name + '</div>');
-}
-
-function addMember(){
-  const name = document.getElementById('member-name').value.trim();
-  if(!name) return;
-  if(members.find(m => m.name === name)){ alert('Name already exists'); return; }
-  members.push({name, password:'123456', isAdmin:false});
-  save();
-  document.getElementById('member-name').value = '';
-  showMemberList();
-  alert('Member added. Password is 123456');
-}
-
-function showMemberList(){
-  const div = document.getElementById('member-list');
-  div.innerHTML = '<h4>Members:</h4>';
-  members.filter(m => !m.isAdmin).forEach(m => div.innerHTML += '<div>' + m.name + '</div>');
-}
-
-function loadNames(){
+async function loadNames(){
+  if(!supabase) return;
+  const {data} = await supabase.from('members').select('name').order('name');
   const sel = document.getElementById('m-name');
   sel.innerHTML = '<option value="">Select Name</option>';
-  members.forEach(m => {
+  (data||[]).forEach(m => {
     const o = document.createElement('option');
     o.value = m.name; o.textContent = m.name; sel.appendChild(o);
   });
-  document.getElementById('c-name').innerHTML = sel.innerHTML;
 }
 
-function adminLogin(){
-  const pass = document.getElementById('a-pass').value;
-  const id = document.getElementById('a-id').value.trim();
-  if(pass === '123456' && id === '123456'){
-    showPage('admindash');
-  } else {
-    document.getElementById('a-err').innerText = 'Invalid password or ID';
-  }
-}
-
-function memberLogin(){
+async function memberLogin(){
+  if(!supabase){ alert('Database not ready'); return; }
   const name = document.getElementById('m-name').value;
   const pass = document.getElementById('m-pass').value;
-  const m = members.find(x => x.name === name && x.password === pass);
-  if(m){
-    document.getElementById('m-welcome').textContent = 'Welcome ' + m.name;
-    showPage('memberdash');
-  } else {
-    document.getElementById('m-err').innerText = 'Invalid name or password';
-  }
+  const {data, error} = await supabase.from('members').select('*').eq('name',name).eq('password',pass).single();
+  if(error || !data){ document.getElementById('m-err').innerText = 'Invalid'; return; }
+  current = data;
+  document.getElementById('detail-title').textContent = data.name + ' (Your Account)';
+  fillForm(data);
+  show('member-detail');
 }
 
-function changePass(){
-  const name = document.getElementById('c-name').value;
-  const oldp = document.getElementById('c-old').value;
-  const newp = document.getElementById('c-new').value;
-  const m = members.find(x => x.name === name && x.password === oldp);
-  if(!m){ document.getElementById('c-err').innerText = 'Invalid name or password'; return; }
-  if(!newp){ document.getElementById('c-err').innerText = 'Enter new password'; return; }
-  m.password = newp;
-  save();
-  alert('Password changed');
+async function adminLogin(){
+  if(!supabase){ alert('Database not ready'); return; }
+  const name = document.getElementById('a-name').value.trim();
+  const pass = document.getElementById('a-pass').value;
+  const id = document.getElementById('a-id').value.trim();
+  const {data, error} = await supabase.from('members').select('*').eq('name',name).eq('password',pass).eq('is_admin',true).single();
+  if(error || !data || id !== '123456'){ document.getElementById('a-err').innerText = 'Invalid'; return; }
+  show('admin-dash');
+  loadMembers();
 }
+
+async function addMember(){
+  if(!supabase) return;
+  const name = document.getElementById('new-name').value.trim();
+  if(!name) return;
+  const {error} = await supabase.from('members').insert({
+    name, password:'123456', opening_tf:0, tf_rate:0, opening_gf:0, gf_rate:0,
+    closing_share:0, tf_this_month:Array(12).fill(0), gf_this_month:Array(12).fill(0), is_admin:false
+  });
+  if(!error){ document.getElementById('new-name').value=''; loadMembers(); }
+  else alert('Error: ' + error.message);
+}
+
+async function loadMembers(){
+  if(!supabase) return;
+  const {data} = await supabase.from('members').select('*').order('name');
+  const c = document.getElementById('members-list');
+  c.innerHTML = '';
+  (data||[]).forEach(m => {
+    const d = document.createElement('div');
+    d.className = 'member-row';
+    d.innerHTML = `<span>${m.name}</span><button onclick="openMember('${m.id}')">Open</button>`;
+    c.appendChild(d);
+  });
+}
+
+async function openMember(id){
+  if(!supabase) return;
+  const {data} = await supabase.from('members').select('*').eq('id',id).single();
+  if(data){ current = data; document.getElementById('detail-title').textContent = data.name; fillForm(data); show('member-detail'); }
+}
+
+function fillForm(m){
+  document.getElementById('otf').value = m.opening_tf || 0;
+  document.getElementById('trate').value = m.tf_rate || 0;
+  document.getElementById('ogf').value = m.opening_gf || 0;
+  document.getElementById('grate').value = m.gf_rate || 0;
+  document.getElementById('cshare').value = m.closing_share || 0;
+}
+
+async function saveMember(){
+  if(!current || !supabase) return;
+  const up = {
+    opening_tf: parseFloat(document.getElementById('otf').value)||0,
+    tf_rate: parseFloat(document.getElementById('trate').value)||0,
+    opening_gf: parseFloat(document.getElementById('ogf').value)||0,
+    gf_rate: parseFloat(document.getElementById('grate').value)||0,
+    closing_share: parseFloat(document.getElementById('cshare').value)||0
+  };
+  const {error} = await supabase.from('members').update(up).eq('id', current.id);
+  if(!error){ document.getElementById('detail-msg').innerText = 'Saved'; alert('Saved'); }
+  else alert('Save failed');
+}
+
+function logout(){ current = null; show('security'); }
 </script>
 </body>
 </html>
