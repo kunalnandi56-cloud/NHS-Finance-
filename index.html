@@ -52,10 +52,10 @@ input,select{width:100%;padding:12px;margin:8px 0;border:1px solid #ccc;border-r
     </div>
     <h3>First page</h3>
     <p>Create password. Add 3 members and a 6-digit ID for each. After that only Login or Administrative login.</p>
-    <button class="btn btn-dark" onclick="show('login')">Login</button>
-    <button class="btn btn-pink" onclick="show('admin')">Administrative login</button>
-    <button class="btn btn-yellow" onclick="show('change-id')">Change ID</button>
-    <button class="btn btn-purple" onclick="show('change-pass')">Change password</button>
+    <button class="btn btn-dark" onclick="document.getElementById('screen-main').classList.add('hidden');document.getElementById('screen-login').classList.remove('hidden');loadNames();">Login</button>
+    <button class="btn btn-pink" onclick="document.getElementById('screen-main').classList.add('hidden');document.getElementById('screen-admin').classList.remove('hidden');">Administrative login</button>
+    <button class="btn btn-yellow" onclick="alert('Change ID feature coming')">Change ID</button>
+    <button class="btn btn-purple" onclick="alert('Change password feature coming')">Change password</button>
   </div>
 
   <!-- Member Login -->
