@@ -127,13 +127,14 @@ function showMembers(){
 }
 
 function doAdminLogin(){
+  const name = document.getElementById('a-name').value.trim();
   const pass = document.getElementById('a-pass').value;
   const id = document.getElementById('a-id').value.trim();
-  if(pass === '123456' && id === '123456'){
+  if(name && pass === '123456' && id === '123456'){
     show('admin-dash');
     showMembers();
   } else {
-    document.getElementById('a-err').innerText = 'Invalid password or ID';
+    document.getElementById('a-err').innerText = 'Invalid name, password or ID';
   }
 }
 
