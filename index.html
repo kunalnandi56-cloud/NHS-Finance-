@@ -200,13 +200,17 @@ button{padding:10px 14px;background:#c9a227;border:none;border-radius:8px;font-w
     members.push({name, password:'123456', share:0, tf:0, gf:0, ltl:0, stl:0, form:0, admission:0});
     document.getElementById('m-name').value = '';
     alert('Member added: ' + name);
-    if(typeof showMemberList === 'function') showMemberList();
+    const list = document.getElementById('m-list');
+    list.innerHTML = '';
+    members.forEach((m, i) => {
+      list.innerHTML += '<div style=\"padding:8px 0;border-bottom:1px solid #eee;\">' + (i+1) + '. ' + m.name + '</div>';
+    });
   ">Add member</button>
   <div id="m-list" style="margin-top:15px;"></div>
   <div class="bottom-btns">
-    <button onclick="logout()">Logout</button>
-    <button onclick="show('admin-login')">Back</button>
-    <button onclick="saveData()">Save</button>
+    <button onclick="document.getElementById('add-members').classList.add('hidden');document.getElementById('first').classList.remove('hidden');">Logout</button>
+    <button onclick="document.getElementById('add-members').classList.add('hidden');document.getElementById('admin-login').classList.remove('hidden');">Back</button>
+    <button onclick="localStorage.setItem('nhs_members', JSON.stringify(members));alert('Saved');">Save</button>
   </div>
 </div>
 
