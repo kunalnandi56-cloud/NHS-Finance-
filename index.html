@@ -228,9 +228,29 @@ button{padding:10px 14px;background:#c9a227;border:none;border-radius:8px;font-w
   <select id="ml-name"></select>
   <input type="password" id="ml-pass" placeholder="Password">
   <button class="btn-full" onclick="doMemberLogin()">Login</button>
+  <button class="btn-full" onclick="showPage('rules-view')">Rules and Regulations</button>
+  <button class="btn-full" onclick="showPage('ltl-view')">LTL Application list</button>
   <div class="bottom-btns">
     <button onclick="showPage('first')">Logout</button>
     <button onclick="showPage('main')">Back</button>
+  </div>
+</div>
+
+<div class="card hidden" id="rules-view">
+  <h3>Rules and Regulations</h3>
+  <div id="rules-display" style="white-space:pre-wrap;padding:10px;background:#f9f9f9;border-radius:8px;"></div>
+  <div class="bottom-btns">
+    <button onclick="showPage('first')">Logout</button>
+    <button onclick="showPage('member-login')">Back</button>
+  </div>
+</div>
+
+<div class="card hidden" id="ltl-view">
+  <h3>LTL Application list</h3>
+  <div id="ltl-display" style="white-space:pre-wrap;padding:10px;background:#f9f9f9;border-radius:8px;"></div>
+  <div class="bottom-btns">
+    <button onclick="showPage('first')">Logout</button>
+    <button onclick="showPage('member-login')">Back</button>
   </div>
 </div>
 
