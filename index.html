@@ -8,22 +8,14 @@
 body{font-family:'Times New Roman',Times,serif;background:#e8f0f8;margin:0;padding:20px;font-size:14pt;}
 .header{background:#0d2b4a;color:#fff;text-align:center;padding:15px;border-radius:8px;margin-bottom:20px;}
 .card{background:#fff;padding:20px;border-radius:12px;max-width:600px;margin:15px auto;box-shadow:0 4px 12px rgba(0,0,0,.1);}
-input,select,textarea{width:100%;padding:12px;margin:8px 0;border:1px solid #ccc;border-radius:8px;box-sizing:border-box;font-family:'Times New Roman',Times,serif;font-size:14pt;}
+input,select{width:100%;padding:12px;margin:8px 0;border:1px solid #ccc;border-radius:8px;box-sizing:border-box;font-family:'Times New Roman',Times,serif;font-size:14pt;}
 button{padding:10px 14px;background:#c9a227;border:none;border-radius:8px;font-weight:bold;cursor:pointer;margin:4px;font-family:'Times New Roman',Times,serif;font-size:14pt;}
 .btn-full{width:100%;display:block;}
 .btn-dark{background:#0d2b4a;color:#fff;}
 .btn-pink{background:#f8d7da;color:#721c24;}
-.btn-green{background:#28a745;color:#fff;}
-.btn-red{background:#dc3545;color:#fff;}
-.btn-small{width:auto;display:inline-block;padding:6px 10px;font-size:12pt;}
 .hidden{display:none;}
 .bottom-btns{display:flex;gap:8px;margin-top:20px;}
 .bottom-btns button{flex:1;}
-.member-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #eee;}
-.btn-group{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0;}
-.btn-group button{flex:1;min-width:80px;}
-.year-month{display:flex;gap:10px;}
-.year-month select{flex:1;}
 </style>
 </head>
 <body>
@@ -36,445 +28,99 @@ button{padding:10px 14px;background:#c9a227;border:none;border-radius:8px;font-w
 <div class="card" id="first">
   <h3>Society code</h3>
   <input type="password" id="scode" placeholder="Society code">
-  <button class="btn-full btn-dark" onclick="if(document.getElementById('scode').value.trim()==='123456'){document.getElementById('first').classList.add('hidden');document.getElementById('main').classList.remove('hidden');}else{alert('Invalid society code');}">Open</button>
+  <button class="btn-full btn-dark" onclick="openMain()">Open</button>
   <button class="btn-full" onclick="alert('Install app')">Install app</button>
 </div>
 
 <div class="card hidden" id="main">
   <h3>Main</h3>
-  <button class="btn-full btn-dark" onclick="document.getElementById('main').classList.add('hidden');document.getElementById('member-login').classList.remove('hidden');">Member Login</button>
-  <button class="btn-full btn-pink" onclick="document.getElementById('main').classList.add('hidden');document.getElementById('admin-login').classList.remove('hidden');">Administrator Login</button>
+  <button class="btn-full btn-dark" onclick="showPage('member-login')">Member Login</button>
+  <button class="btn-full btn-pink" onclick="showPage('admin-login')">Administrator Login</button>
   <div class="bottom-btns">
-    <button onclick="document.getElementById('main').classList.add('hidden');document.getElementById('first').classList.remove('hidden');">Logout</button>
-    <button onclick="document.getElementById('main').classList.add('hidden');document.getElementById('first').classList.remove('hidden');">Back</button>
+    <button onclick="showPage('first')">Logout</button>
+    <button onclick="showPage('first')">Back</button>
   </div>
 </div>
 
 <div class="card hidden" id="admin-login">
   <h3>Administrator Login</h3>
-  <div class="year-month" id="ym-admin">
+  <div style="display:flex;gap:10px;">
     <select id="year"><option>2026</option><option>2025</option><option>2027</option></select>
     <select id="month"><option>January</option><option>February</option><option>March</option><option>April</option><option>May</option><option>June</option><option>July</option><option>August</option><option>September</option><option>October</option><option>November</option><option>December</option></select>
   </div>
-  <button class="btn-full" onclick="document.getElementById('admin-login').classList.add('hidden');document.getElementById('interest').classList.remove('hidden');">Interest and principal</button>
-  <button class="btn-full" onclick="document.getElementById('admin-login').classList.add('hidden');document.getElementById('rules').classList.remove('hidden');">Rules and Regulations</button>
-  <button class="btn-full" onclick="document.getElementById('admin-login').classList.add('hidden');document.getElementById('ltl').classList.remove('hidden');">LTL Application list</button>
-  <button class="btn-full btn-dark" onclick="document.getElementById('admin-login').classList.add('hidden');document.getElementById('excel').classList.remove('hidden');showExcel();">Open Excel sheet</button>
-  <button class="btn-full" onclick="document.getElementById('admin-login').classList.add('hidden');document.getElementById('add-members').classList.remove('hidden');showMemberList();">Add members</button>
+  <button class="btn-full" onclick="showPage('add-members')">Add members</button>
+  <button class="btn-full btn-dark" onclick="showPage('excel')">Open Excel sheet</button>
   <div class="bottom-btns">
-    <button onclick="document.getElementById('admin-login').classList.add('hidden');document.getElementById('first').classList.remove('hidden');">Logout</button>
-    <button onclick="document.getElementById('admin-login').classList.add('hidden');document.getElementById('main').classList.remove('hidden');">Back</button>
-    <button onclick="document.getElementById('admin-login').classList.add('hidden');document.getElementById('admin-next').classList.remove('hidden');">Next</button>
-  </div>
-</div>
-
-<div class="card hidden" id="interest">
-  <h3>Interest and principal</h3>
-  <select id="int-member"></select>
-  <div style="display:flex;gap:8px;align-items:center;margin:6px 0;">
-    <button style="background:#0d2b4a;color:#fff;width:120px;">LTL interest</button>
-    <input type="number" id="ltl-int" placeholder="LTL interest">
-  </div>
-  <div style="display:flex;gap:8px;align-items:center;margin:6px 0;">
-    <button style="background:#f8d7da;width:120px;">STL interest</button>
-    <input type="number" id="stl-int" placeholder="STL interest">
-  </div>
-  <div style="display:flex;gap:8px;align-items:center;margin:6px 0;">
-    <button style="background:#d1f2eb;width:120px;">SHARE</button>
-    <input type="number" id="int-share" placeholder="This month addition">
-  </div>
-  <p id="curr-share">Current SHARE: 0</p>
-  <div style="display:flex;gap:8px;align-items:center;margin:6px 0;">
-    <button style="background:#d1f2eb;width:120px;">TF</button>
-    <input type="number" id="int-tf" placeholder="Current TF">
-  </div>
-  <p id="curr-tf">Current TF: 0</p>
-  <div style="display:flex;gap:8px;align-items:center;margin:6px 0;">
-    <button style="background:#fff3cd;width:120px;">GF</button>
-    <input type="number" id="int-gf" placeholder="This month addition">
-  </div>
-  <p id="curr-gf">Current GF: 0</p>
-  <div style="display:flex;gap:8px;align-items:center;margin:6px 0;">
-    <button style="background:#0d2b4a;color:#fff;width:120px;">LTLP</button>
-    <input type="number" id="ltlp" placeholder="Current LTLP">
-  </div>
-  <div style="display:flex;gap:8px;align-items:center;margin:6px 0;">
-    <button style="background:#f8d7da;width:120px;">STLP</button>
-    <input type="number" id="stlp" placeholder="Current STLP">
-  </div>
-  <button class="btn-full" onclick="saveInterest()">Save</button>
-  <button class="btn-full" onclick="alert('Change month')">Change month</button>
-  <button class="btn-full btn-dark" onclick="alert('Audit')">Audit</button>
-  <button class="btn-full" style="background:#d1f2eb;" onclick="alert('Name / account / total')">Name / account / total</button>
-  <button class="btn-full" style="background:#28a745;color:#fff;" onclick="show('excel')">Open Excel sheet</button>
-  <div class="bottom-btns">
-    <button onclick="logout()">Logout</button>
-    <button onclick="show('admin-login')">Back</button>
-    <button onclick="saveData()">Save</button>
-  </div>
-</div>
-
-<div class="card hidden" id="excel">
-  <h3>Excel Sheet — <span id="excel-month">November 2026</span></h3>
-  <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px;">
-    <button class="btn-dark" onclick="changeMonth()">Change month</button>
-    <button class="btn-dark" onclick="downloadExcel()">Download</button>
-    <button style="background:#e2d5f1;" onclick="window.print()">Print</button>
-    <button onclick="saveData()">Save</button>
-    <button style="background:#c9a227;" onclick="editExcel()">Edit</button>
-    <button style="background:#f5cba7;" onclick="show('admin-login')">← Back</button>
-    <button style="background:#d6d8db;" onclick="show('admin-login')">Close</button>
-  </div>
-  <div id="excel-table" style="overflow-x:auto;">
-    <p>Click Open Excel sheet again or refresh to load the table.</p>
-  </div>
-  <div class="bottom-btns">
-    <button onclick="logout()">Logout</button>
-    <button onclick="show('admin-login')">Back</button>
-    <button onclick="saveData()">Save</button>
-  </div>
-</div>
-
-<div class="card hidden" id="rules">
-  <h3>Rules and Regulations</h3>
-  <textarea id="rules-text" rows="8" placeholder="Write rules and regulations"></textarea>
-  <div class="bottom-btns">
-    <button onclick="logout()">Logout</button>
-    <button onclick="show('admin-login')">Back</button>
-    <button onclick="localStorage.setItem('nhs_rules',document.getElementById('rules-text').value);alert('Saved')">Save</button>
-  </div>
-</div>
-
-<div class="card hidden" id="ltl">
-  <h3>LTL Application list</h3>
-  <textarea id="ltl-text" rows="8" placeholder="Write names of members who apply for LTL"></textarea>
-  <div class="bottom-btns">
-    <button onclick="logout()">Logout</button>
-    <button onclick="show('admin-login')">Back</button>
-    <button onclick="localStorage.setItem('nhs_ltl',document.getElementById('ltl-text').value);alert('Saved')">Save</button>
-  </div>
-</div>
-
-<div class="card hidden" id="admin-next">
-  <h3>Administrator Options</h3>
-  <button class="btn-full" onclick="show('choose-admin')">Choose administrator</button>
-  <button class="btn-full" onclick="show('change-admin')">Change administrator</button>
-  <div class="bottom-btns">
-    <button onclick="logout()">Logout</button>
-    <button onclick="show('admin-login')">Back</button>
-  </div>
-</div>
-
-<div class="card hidden" id="choose-admin">
-  <h3>Choose Administrator</h3>
-  <input type="text" id="ca-name" placeholder="Name" oninput="this.value=this.value.toUpperCase()">
-  <input type="password" id="ca-pass" placeholder="Password">
-  <input type="text" id="ca-id" placeholder="ID">
-  <button class="btn-full" onclick="alert('Administrator set')">Set</button>
-  <div class="bottom-btns">
-    <button onclick="logout()">Logout</button>
-    <button onclick="show('admin-next')">Back</button>
-  </div>
-</div>
-
-<div class="card hidden" id="change-admin">
-  <h3>Change Administrator</h3>
-  <input type="text" id="ch-name" placeholder="New Name" oninput="this.value=this.value.toUpperCase()">
-  <input type="password" id="ch-pass" placeholder="New Password">
-  <input type="text" id="ch-id" placeholder="New ID">
-  <button class="btn-full" onclick="alert('Administrator changed')">Update</button>
-  <div class="bottom-btns">
-    <button onclick="logout()">Logout</button>
-    <button onclick="show('admin-next')">Back</button>
+    <button onclick="showPage('first')">Logout</button>
+    <button onclick="showPage('main')">Back</button>
   </div>
 </div>
 
 <div class="card hidden" id="add-members">
   <h3>Add members</h3>
   <input type="text" id="m-name" placeholder="Member name" oninput="this.value=this.value.toUpperCase()">
-  <button class="btn-full" onclick="
-    const name = document.getElementById('m-name').value.trim().toUpperCase();
-    if(!name){ alert('Enter a name'); return; }
-    if(typeof members === 'undefined') members = [];
-    if(members.find(m => m.name === name)){ alert('Name exists'); return; }
-    members.push({name, password:'123456', share:0, tf:0, gf:0, ltl:0, stl:0, form:0, admission:0});
-    document.getElementById('m-name').value = '';
-    alert('Member added: ' + name);
-    const list = document.getElementById('m-list');
-    list.innerHTML = '';
-    members.forEach((m, i) => {
-      list.innerHTML += '<div style=\"padding:8px 0;border-bottom:1px solid #eee;\">' + (i+1) + '. ' + m.name + '</div>';
-    });
-  ">Add member</button>
+  <button class="btn-full" onclick="addMember()">Add member</button>
   <div id="m-list" style="margin-top:15px;"></div>
   <div class="bottom-btns">
-    <button onclick="document.getElementById('add-members').classList.add('hidden');document.getElementById('first').classList.remove('hidden');">Logout</button>
-    <button onclick="document.getElementById('add-members').classList.add('hidden');document.getElementById('admin-login').classList.remove('hidden');">Back</button>
-    <button onclick="localStorage.setItem('nhs_members', JSON.stringify(members));alert('Saved');">Save</button>
+    <button onclick="showPage('first')">Logout</button>
+    <button onclick="showPage('admin-login')">Back</button>
+    <button onclick="saveMembers()">Save</button>
   </div>
 </div>
 
-<div class="card hidden" id="member-detail">
-  <h3 id="detail-title">Member</h3>
-  <div class="btn-group">
-    <button onclick="setField('share')">Share</button>
-    <button onclick="setField('tf')">TF</button>
-    <button onclick="setField('gf')">GF</button>
-    <button class="btn-dark" onclick="setField('ltl')">LTL</button>
-    <button class="btn-pink" onclick="setField('stl')">STL</button>
-    <button style="background:#e2d5f1;" onclick="setField('form')">FORM</button>
-    <button style="background:#d6d8db;" onclick="setField('admission')">ADMISSION</button>
-  </div>
-  <p id="current-field">Select a field</p>
-  <input type="number" id="field-value" placeholder="Value">
-  <button class="btn-full" onclick="saveField()">Save</button>
-  <div id="field-display"></div>
+<div class="card hidden" id="excel">
+  <h3>Excel Sheet</h3>
+  <div id="excel-table"></div>
   <div class="bottom-btns">
-    <button onclick="logout()">Logout</button>
-    <button onclick="show('add-members')">Back</button>
-    <button onclick="saveData()">Save</button>
-  </div>
-</div>
-
-<div class="card hidden" id="member-login">
-  <h3>Member Login</h3>
-  <select id="ml-name"></select>
-  <input type="password" id="ml-pass" placeholder="Password">
-  <button class="btn-full" onclick="doMemberLogin()">Login</button>
-  <div class="bottom-btns">
-    <button onclick="logout()">Logout</button>
-    <button onclick="show('main')">Back</button>
+    <button onclick="showPage('first')">Logout</button>
+    <button onclick="showPage('admin-login')">Back</button>
   </div>
 </div>
 
 <script>
 let members = JSON.parse(localStorage.getItem('nhs_members') || '[]');
-let currentMember = null;
-let currentField = '';
 
-function saveData(){
+function showPage(id){
+  document.querySelectorAll('.card').forEach(c => c.classList.add('hidden'));
+  document.getElementById(id).classList.remove('hidden');
+  if(id === 'add-members') showList();
+  if(id === 'excel') showExcel();
+}
+
+function openMain(){
+  if(document.getElementById('scode').value.trim() === '123456') showPage('main');
+  else alert('Invalid society code');
+}
+
+function addMember(){
+  const name = document.getElementById('m-name').value.trim().toUpperCase();
+  if(!name){ alert('Enter a name'); return; }
+  if(members.find(m => m.name === name)){ alert('Name exists'); return; }
+  members.push({name:name});
+  document.getElementById('m-name').value = '';
+  showList();
+  alert('Member added: ' + name);
+}
+
+function showList(){
+  const div = document.getElementById('m-list');
+  div.innerHTML = '';
+  members.forEach((m, i) => {
+    div.innerHTML += '<div style="padding:8px 0;border-bottom:1px solid #eee;">' + (i+1) + '. ' + m.name + '</div>';
+  });
+}
+
+function saveMembers(){
   localStorage.setItem('nhs_members', JSON.stringify(members));
   alert('Saved');
 }
 
-function show(id){
-  document.querySelectorAll('.card').forEach(c => c.classList.add('hidden'));
-  document.getElementById(id).classList.remove('hidden');
-  // Show year/month on admin pages
-  const ym = document.getElementById('ym-admin');
-  if(ym && ['admin-login','interest','excel','rules','ltl','add-members','admin-next','choose-admin','change-admin'].includes(id)){
-    ym.style.display = 'flex';
-    if(!document.getElementById(id).contains(ym)) document.getElementById(id).insertBefore(ym, document.getElementById(id).firstChild.nextSibling);
-  }
-  if(id === 'add-members') showMemberList();
-  if(id === 'member-login') loadMemberNames();
-  if(id === 'excel') showExcel();
-  if(id === 'interest') loadInterestNames();
-  if(id === 'rules') document.getElementById('rules-text').value = localStorage.getItem('nhs_rules') || '';
-  if(id === 'ltl') document.getElementById('ltl-text').value = localStorage.getItem('nhs_ltl') || '';
-}
-
-function logout(){ show('first'); }
-
-function addMember(){
-  const name = document.getElementById('m-name').value.trim().toUpperCase();
-  if(!name) return;
-  if(members.find(m => m.name === name)){ alert('Name exists'); return; }
-  members.push({name, password:'123456', share:0, tf:0, gf:0, ltl:0, stl:0, form:0, admission:0});
-  document.getElementById('m-name').value = '';
-  showMemberList();
-  alert('Member added');
-}
-
-function showMemberList(){
-  const div = document.getElementById('m-list');
-  div.innerHTML = '';
-  members.forEach((m, i) => {
-    const row = document.createElement('div');
-    row.className = 'member-row';
-    row.innerHTML = `<span>${i+1}. ${m.name}</span>
-      <div>
-        <button class="btn-small btn-green" onclick="openMember(${i})">Open</button>
-        <button class="btn-small btn-red" onclick="deleteMember(${i})">Delete</button>
-      </div>`;
-    div.appendChild(row);
-  });
-}
-
-function deleteMember(i){
-  if(confirm('Delete ' + members[i].name + '?')){
-    members.splice(i, 1);
-    showMemberList();
-  }
-}
-
-function openMember(i){
-  currentMember = i;
-  document.getElementById('detail-title').textContent = members[i].name;
-  showFieldDisplay();
-  show('member-detail');
-}
-
-function setField(field){
-  currentField = field;
-  document.getElementById('current-field').textContent = 'Enter value for ' + field.toUpperCase();
-  document.getElementById('field-value').value = members[currentMember][field] || 0;
-}
-
-function saveField(){
-  if(!currentField || currentMember === null) return;
-  const val = parseFloat(document.getElementById('field-value').value) || 0;
-  members[currentMember][currentField] = val;
-  showFieldDisplay();
-  alert(currentField.toUpperCase() + ' saved: ' + val);
-}
-
-function showFieldDisplay(){
-  if(currentMember === null) return;
-  const m = members[currentMember];
-  document.getElementById('field-display').innerHTML = `
-    <p><b>Share:</b> ${m.share||0} &nbsp; <b>TF:</b> ${m.tf||0} &nbsp; <b>GF:</b> ${m.gf||0}</p>
-    <p><b>LTL:</b> ${m.ltl||0} &nbsp; <b>STL:</b> ${m.stl||0} &nbsp; <b>FORM:</b> ${m.form||0} &nbsp; <b>ADMISSION:</b> ${m.admission||0}</p>
-  `;
-}
-
-function getMonthKey(){
-  const y = document.getElementById('year').value;
-  const m = document.getElementById('month').value;
-  return y + '-' + m;
-}
-
-function saveField(){
-  if(!currentField || currentMember === null) return;
-  const val = parseFloat(document.getElementById('field-value').value) || 0;
-  const key = getMonthKey();
-  if(!members[currentMember].months) members[currentMember].months = {};
-  if(!members[currentMember].months[key]) members[currentMember].months[key] = {};
-  members[currentMember].months[key][currentField] = val;
-  showFieldDisplay();
-  alert(currentField.toUpperCase() + ' saved for ' + key + ': ' + val);
-}
-
-function showFieldDisplay(){
-  if(currentMember === null) return;
-  const m = members[currentMember];
-  const key = getMonthKey();
-  const d = (m.months && m.months[key]) || {};
-  document.getElementById('field-display').innerHTML = `
-    <p><b>Month:</b> ${key}</p>
-    <p><b>Share:</b> ${d.share||0} &nbsp; <b>TF:</b> ${d.tf||0} &nbsp; <b>GF:</b> ${d.gf||0}</p>
-    <p><b>LTL:</b> ${d.ltl||0} &nbsp; <b>STL:</b> ${d.stl||0} &nbsp; <b>FORM:</b> ${d.form||0} &nbsp; <b>ADMISSION:</b> ${d.admission||0}</p>
-  `;
-}
-
 function showExcel(){
-  const key = getMonthKey();
   const div = document.getElementById('excel-table');
-  let html = '<table border="1" style="width:100%;border-collapse:collapse;font-size:12pt;font-family:Times New Roman;">';
-  html += '<tr style="background:#0d2b4a;color:#fff;"><th>NAME</th><th>SHARE</th><th>SHARE THIS MONTH</th><th>TF</th><th>TF THIS MONTH</th><th>GF</th><th>GF THIS MONTH</th><th>LTL</th><th>STL</th><th>LTLP</th><th>LTLI</th><th>LTLB</th><th>STLP</th><th>STLI</th><th>STLB</th><th>FORM</th><th>REGISTRATION</th><th>TOTAL</th></tr>';
-  members.forEach(m => {
-    const d = (m.months && m.months[key]) || {};
-    const total = (d.share||0) + (d.tf||0) + (d.gf||0) + (d.ltl||0) + (d.stl||0);
-    html += `<tr>
-      <td>${m.name}</td>
-      <td>${d.share||0}</td>
-      <td>${d.shareMonth||0}</td>
-      <td>${d.tf||0}</td>
-      <td>${d.tfMonth||0}</td>
-      <td>${d.gf||0}</td>
-      <td>${d.gfMonth||0}</td>
-      <td>${d.ltl||0}</td>
-      <td>${d.stl||0}</td>
-      <td>${d.ltlp||0}</td>
-      <td>${d.ltli||0}</td>
-      <td>${d.ltlb||0}</td>
-      <td>${d.stlp||0}</td>
-      <td>${d.stli||0}</td>
-      <td>${d.stlb||0}</td>
-      <td>${d.form||0}</td>
-      <td>${d.registration||0}</td>
-      <td>${total}</td>
-    </tr>`;
-  });
+  let html = '<table border="1" style="width:100%;border-collapse:collapse;"><tr><th>Name</th></tr>';
+  members.forEach(m => html += '<tr><td>' + m.name + '</td></tr>');
   html += '</table>';
   div.innerHTML = html;
-  document.getElementById('excel-month').textContent = key;
-}
-  const div = document.getElementById('excel-table');
-  let html = '<table border="1" style="width:100%;border-collapse:collapse;font-size:12pt;font-family:Times New Roman;">';
-  html += '<tr style="background:#0d2b4a;color:#fff;"><th>NAME</th><th>SHARE</th><th>SHARE THIS MONTH</th><th>TF</th><th>TF THIS MONTH</th><th>GF</th><th>GF THIS MONTH</th><th>LTL</th><th>STL</th><th>LTLP</th><th>LTLI</th><th>LTLB</th><th>STLP</th><th>STLI</th><th>STLB</th><th>FORM</th><th>REGISTRATION</th><th>TOTAL</th></tr>';
-  members.forEach(m => {
-    const total = (m.share||0) + (m.tf||0) + (m.gf||0) + (m.ltl||0) + (m.stl||0);
-    html += `<tr>
-      <td>${m.name}</td>
-      <td>${m.share||0}</td>
-      <td>${m.shareMonth||0}</td>
-      <td>${m.tf||0}</td>
-      <td>${m.tfMonth||0}</td>
-      <td>${m.gf||0}</td>
-      <td>${m.gfMonth||0}</td>
-      <td>${m.ltl||0}</td>
-      <td>${m.stl||0}</td>
-      <td>${m.ltlp||0}</td>
-      <td>${m.ltli||0}</td>
-      <td>${m.ltlb||0}</td>
-      <td>${m.stlp||0}</td>
-      <td>${m.stli||0}</td>
-      <td>${m.stlb||0}</td>
-      <td>${m.form||0}</td>
-      <td>${m.registration||0}</td>
-      <td>${total}</td>
-    </tr>`;
-  });
-  html += '</table>';
-  div.innerHTML = html;
-}
-
-function loadInterestNames(){
-  const sel = document.getElementById('int-member');
-  sel.innerHTML = '<option value="">Select member name</option>';
-  members.forEach(m => {
-    const o = document.createElement('option');
-    o.value = m.name; o.textContent = m.name; sel.appendChild(o);
-  });
-  sel.onchange = showInterestValues;
-}
-
-function showInterestValues(){
-  const name = document.getElementById('int-member').value;
-  const m = members.find(x => x.name === name);
-  if(!m) return;
-  document.getElementById('curr-share').textContent = 'Current SHARE: ' + (m.share || 0);
-  document.getElementById('curr-tf').textContent = 'Current TF: ' + (m.tf || 0);
-  document.getElementById('curr-gf').textContent = 'Current GF: ' + (m.gf || 0);
-}
-
-function saveInterest(){
-  const name = document.getElementById('int-member').value;
-  const m = members.find(x => x.name === name);
-  if(!m){ alert('Select a member'); return; }
-  m.share = parseFloat(document.getElementById('int-share').value) || m.share || 0;
-  m.tf = parseFloat(document.getElementById('int-tf').value) || m.tf || 0;
-  m.gf = parseFloat(document.getElementById('int-gf').value) || m.gf || 0;
-  alert('Saved for ' + name);
-  showInterestValues();
-}
-
-function loadMemberNames(){
-  const sel = document.getElementById('ml-name');
-  sel.innerHTML = '<option value="">Select Name</option>';
-  members.forEach(m => {
-    const o = document.createElement('option');
-    o.value = m.name; o.textContent = m.name; sel.appendChild(o);
-  });
-}
-
-function doMemberLogin(){
-  const name = document.getElementById('ml-name').value;
-  const pass = document.getElementById('ml-pass').value;
-  const m = members.find(x => x.name === name && x.password === pass);
-  if(m) alert('Login successful for ' + m.name);
-  else alert('Invalid name or password');
 }
 </script>
 </body>
