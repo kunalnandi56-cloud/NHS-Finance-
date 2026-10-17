@@ -382,17 +382,24 @@ function saveInterest(){
   const key = getMonthKey();
   if(!m.months) m.months = {};
   if(!m.months[key]) m.months[key] = {};
-  m.months[key].shareMonth = parseFloat(document.getElementById('int-share').value) || 0;
-  m.months[key].tfMonth = parseFloat(document.getElementById('int-tf').value) || 0;
-  m.months[key].gfMonth = parseFloat(document.getElementById('int-gf').value) || 0;
-  m.months[key].ltlp = parseFloat(document.getElementById('ltlp').value) || 0;
-  m.months[key].stlp = parseFloat(document.getElementById('stlp').value) || 0;
-  m.share = m.months[key].shareMonth || m.share;
-  m.tf = m.months[key].tfMonth || m.tf;
-  m.gf = m.months[key].gfMonth || m.gf;
-  saveMembers();
+  const shareVal = parseFloat(document.getElementById('int-share').value) || 0;
+  const tfVal = parseFloat(document.getElementById('int-tf').value) || 0;
+  const gfVal = parseFloat(document.getElementById('int-gf').value) || 0;
+  const ltlpVal = parseFloat(document.getElementById('ltlp').value) || 0;
+  const stlpVal = parseFloat(document.getElementById('stlp').value) || 0;
+  m.months[key].shareMonth = shareVal;
+  m.months[key].tfMonth = tfVal;
+  m.months[key].gfMonth = gfVal;
+  m.months[key].ltlp = ltlpVal;
+  m.months[key].stlp = stlpVal;
+  m.share = shareVal || m.share;
+  m.tf = tfVal || m.tf;
+  m.gf = gfVal || m.gf;
+  localStorage.setItem('nhs_members', JSON.stringify(members));
+  document.getElementById('curr-share').textContent = 'Current SHARE: ' + shareVal;
+  document.getElementById('curr-tf').textContent = 'Current TF: ' + tfVal;
+  document.getElementById('curr-gf').textContent = 'Current GF: ' + gfVal;
   alert('Saved for ' + name + ' — ' + key);
-  showExcel();
 }
 
 function loadMemberNames(){
