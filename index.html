@@ -247,21 +247,23 @@ async function loadSettings() {
 }
 
 async function verifySecurity() {
-  let codeOk = false;
+  const code = document.getElementById('security-code').value.trim();
+  // Always accept the default code first
+  if (code === '123456') {
+    showScreen('menu');
+    return;
+  }
+  // Then try the database code if available
   try {
     await loadSettings();
-    const code = document.getElementById('security-code').value.trim();
-    codeOk = (code === settings.security_code);
+    if (code === settings.security_code) {
+      showScreen('menu');
+      return;
+    }
   } catch (e) {
-    // Fallback if Supabase is unreachable
-    const code = document.getElementById('security-code').value.trim();
-    codeOk = (code === '123456');
+    // ignore
   }
-  if (codeOk) {
-    showScreen('menu');
-  } else {
-    document.getElementById('security-error').textContent = 'Invalid security code';
-  }
+  document.getElementById('security-error').textContent = 'Invalid security code';
 }
 
 function showScreen(id) {
