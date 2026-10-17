@@ -56,6 +56,7 @@ button{padding:10px 14px;background:#c9a227;border:none;border-radius:8px;font-w
     <select id="year"><option>2026</option><option>2025</option><option>2027</option></select>
     <select id="month"><option>January</option><option>February</option><option>March</option><option>April</option><option>May</option><option>June</option><option>July</option><option>August</option><option>September</option><option>October</option><option>November</option><option>December</option></select>
   </div>
+  <button class="btn-full" onclick="show('interest')">Interest and principal</button>
   <button class="btn-full" onclick="show('rules')">Rules and Regulations</button>
   <button class="btn-full" onclick="show('ltl')">LTL Application list</button>
   <button class="btn-full btn-dark" onclick="show('excel')">Open Excel sheet</button>
@@ -67,7 +68,52 @@ button{padding:10px 14px;background:#c9a227;border:none;border-radius:8px;font-w
   </div>
 </div>
 
-<div class="card hidden" id="excel">
+<div class="card hidden" id="interest">
+  <h3>Interest and principal</h3>
+  <p>Interest is the same for all members. SHARE and GF start at 0 on this page until you type a new amount. TF keeps last month's amount until you change it.</p>
+  <select id="int-member"></select>
+  <div style="display:flex;gap:8px;align-items:center;margin:6px 0;">
+    <button style="background:#0d2b4a;color:#fff;width:120px;">LTL interest</button>
+    <input type="number" id="ltl-int" placeholder="LTL interest">
+  </div>
+  <div style="display:flex;gap:8px;align-items:center;margin:6px 0;">
+    <button style="background:#f8d7da;width:120px;">STL interest</button>
+    <input type="number" id="stl-int" placeholder="STL interest">
+  </div>
+  <div style="display:flex;gap:8px;align-items:center;margin:6px 0;">
+    <button style="background:#d1f2eb;width:120px;">SHARE</button>
+    <input type="number" id="int-share" placeholder="This month addition">
+  </div>
+  <p id="curr-share">Current SHARE: 0</p>
+  <div style="display:flex;gap:8px;align-items:center;margin:6px 0;">
+    <button style="background:#d1f2eb;width:120px;">TF</button>
+    <input type="number" id="int-tf" placeholder="Current TF">
+  </div>
+  <p id="curr-tf">Current TF: 0</p>
+  <div style="display:flex;gap:8px;align-items:center;margin:6px 0;">
+    <button style="background:#fff3cd;width:120px;">GF</button>
+    <input type="number" id="int-gf" placeholder="This month addition">
+  </div>
+  <p id="curr-gf">Current GF: 0</p>
+  <div style="display:flex;gap:8px;align-items:center;margin:6px 0;">
+    <button style="background:#0d2b4a;color:#fff;width:120px;">LTLP</button>
+    <input type="number" id="ltlp" placeholder="Current LTLP">
+  </div>
+  <div style="display:flex;gap:8px;align-items:center;margin:6px 0;">
+    <button style="background:#f8d7da;width:120px;">STLP</button>
+    <input type="number" id="stlp" placeholder="Current STLP">
+  </div>
+  <button class="btn-full" onclick="saveInterest()">Save</button>
+  <button class="btn-full" onclick="alert('Change month')">Change month</button>
+  <button class="btn-full btn-dark" onclick="alert('Audit')">Audit</button>
+  <button class="btn-full" style="background:#d1f2eb;" onclick="alert('Name / account / total')">Name / account / total</button>
+  <button class="btn-full" style="background:#28a745;color:#fff;" onclick="show('excel')">Open Excel sheet</button>
+  <div class="bottom-btns">
+    <button onclick="logout()">Logout</button>
+    <button onclick="show('admin-login')">Back</button>
+    <button onclick="saveData()">Save</button>
+  </div>
+</div>
   <h3>Excel Sheet</h3>
   <div id="excel-table" style="overflow-x:auto;"></div>
   <div class="bottom-btns">
@@ -191,6 +237,7 @@ function show(id){
   document.getElementById(id).classList.remove('hidden');
   if(id === 'add-members') showMemberList();
   if(id === 'member-login') loadMemberNames();
+  if(id === 'interest') loadInterestNames();
   if(id === 'excel') showExcel();
   if(id === 'rules') document.getElementById('rules-text').value = localStorage.getItem('nhs_rules') || '';
   if(id === 'ltl') document.getElementById('ltl-text').value = localStorage.getItem('nhs_ltl') || '';
@@ -265,7 +312,35 @@ function showFieldDisplay(){
   `;
 }
 
-function showExcel(){
+function saveInterest(){
+  const name = document.getElementById('int-member').value;
+  const m = members.find(x => x.name === name);
+  if(!m){ alert('Select a member'); return; }
+  m.share = parseFloat(document.getElementById('int-share').value) || m.share || 0;
+  m.tf = parseFloat(document.getElementById('int-tf').value) || m.tf || 0;
+  m.gf = parseFloat(document.getElementById('int-gf').value) || m.gf || 0;
+  alert('Interest and principal saved for ' + name);
+  showInterestValues();
+}
+
+function showInterestValues(){
+  const name = document.getElementById('int-member').value;
+  const m = members.find(x => x.name === name);
+  if(!m) return;
+  document.getElementById('curr-share').textContent = 'Current SHARE: ' + (m.share || 0);
+  document.getElementById('curr-tf').textContent = 'Current TF: ' + (m.tf || 0);
+  document.getElementById('curr-gf').textContent = 'Current GF: ' + (m.gf || 0);
+}
+
+function loadInterestNames(){
+  const sel = document.getElementById('int-member');
+  sel.innerHTML = '<option value="">Select member name</option>';
+  members.forEach(m => {
+    const o = document.createElement('option');
+    o.value = m.name; o.textContent = m.name; sel.appendChild(o);
+  });
+  sel.onchange = showInterestValues;
+}
   const div = document.getElementById('excel-table');
   let html = '<table border="1" style="width:100%;border-collapse:collapse;font-size:14pt;font-family:Times New Roman;"><tr><th>Name</th><th>Share</th><th>TF</th><th>GF</th><th>FORM</th><th>ADMISSION</th></tr>';
   members.forEach(m => {
