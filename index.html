@@ -42,11 +42,11 @@ button{padding:10px 14px;background:#c9a227;border:none;border-radius:8px;font-w
 
 <div class="card hidden" id="main">
   <h3>Main</h3>
-  <button class="btn-full btn-dark" onclick="show('member-login')">Member Login</button>
+  <button class="btn-full btn-dark" onclick="document.getElementById('main').classList.add('hidden');document.getElementById('member-login').classList.remove('hidden');">Member Login</button>
   <button class="btn-full btn-pink" onclick="document.getElementById('main').classList.add('hidden');document.getElementById('admin-login').classList.remove('hidden');">Administrator Login</button>
   <div class="bottom-btns">
-    <button onclick="logout()">Logout</button>
-    <button onclick="show('first')">Back</button>
+    <button onclick="document.getElementById('main').classList.add('hidden');document.getElementById('first').classList.remove('hidden');">Logout</button>
+    <button onclick="document.getElementById('main').classList.add('hidden');document.getElementById('first').classList.remove('hidden');">Back</button>
   </div>
 </div>
 
