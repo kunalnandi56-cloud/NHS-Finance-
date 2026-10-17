@@ -323,7 +323,68 @@ function showFieldDisplay(){
   `;
 }
 
+function getMonthKey(){
+  const y = document.getElementById('year').value;
+  const m = document.getElementById('month').value;
+  return y + '-' + m;
+}
+
+function saveField(){
+  if(!currentField || currentMember === null) return;
+  const val = parseFloat(document.getElementById('field-value').value) || 0;
+  const key = getMonthKey();
+  if(!members[currentMember].months) members[currentMember].months = {};
+  if(!members[currentMember].months[key]) members[currentMember].months[key] = {};
+  members[currentMember].months[key][currentField] = val;
+  showFieldDisplay();
+  alert(currentField.toUpperCase() + ' saved for ' + key + ': ' + val);
+}
+
+function showFieldDisplay(){
+  if(currentMember === null) return;
+  const m = members[currentMember];
+  const key = getMonthKey();
+  const d = (m.months && m.months[key]) || {};
+  document.getElementById('field-display').innerHTML = `
+    <p><b>Month:</b> ${key}</p>
+    <p><b>Share:</b> ${d.share||0} &nbsp; <b>TF:</b> ${d.tf||0} &nbsp; <b>GF:</b> ${d.gf||0}</p>
+    <p><b>LTL:</b> ${d.ltl||0} &nbsp; <b>STL:</b> ${d.stl||0} &nbsp; <b>FORM:</b> ${d.form||0} &nbsp; <b>ADMISSION:</b> ${d.admission||0}</p>
+  `;
+}
+
 function showExcel(){
+  const key = getMonthKey();
+  const div = document.getElementById('excel-table');
+  let html = '<table border="1" style="width:100%;border-collapse:collapse;font-size:12pt;font-family:Times New Roman;">';
+  html += '<tr style="background:#0d2b4a;color:#fff;"><th>NAME</th><th>SHARE</th><th>SHARE THIS MONTH</th><th>TF</th><th>TF THIS MONTH</th><th>GF</th><th>GF THIS MONTH</th><th>LTL</th><th>STL</th><th>LTLP</th><th>LTLI</th><th>LTLB</th><th>STLP</th><th>STLI</th><th>STLB</th><th>FORM</th><th>REGISTRATION</th><th>TOTAL</th></tr>';
+  members.forEach(m => {
+    const d = (m.months && m.months[key]) || {};
+    const total = (d.share||0) + (d.tf||0) + (d.gf||0) + (d.ltl||0) + (d.stl||0);
+    html += `<tr>
+      <td>${m.name}</td>
+      <td>${d.share||0}</td>
+      <td>${d.shareMonth||0}</td>
+      <td>${d.tf||0}</td>
+      <td>${d.tfMonth||0}</td>
+      <td>${d.gf||0}</td>
+      <td>${d.gfMonth||0}</td>
+      <td>${d.ltl||0}</td>
+      <td>${d.stl||0}</td>
+      <td>${d.ltlp||0}</td>
+      <td>${d.ltli||0}</td>
+      <td>${d.ltlb||0}</td>
+      <td>${d.stlp||0}</td>
+      <td>${d.stli||0}</td>
+      <td>${d.stlb||0}</td>
+      <td>${d.form||0}</td>
+      <td>${d.registration||0}</td>
+      <td>${total}</td>
+    </tr>`;
+  });
+  html += '</table>';
+  div.innerHTML = html;
+  document.getElementById('excel-month').textContent = key;
+}
   const div = document.getElementById('excel-table');
   let html = '<table border="1" style="width:100%;border-collapse:collapse;font-size:12pt;font-family:Times New Roman;">';
   html += '<tr style="background:#0d2b4a;color:#fff;"><th>NAME</th><th>SHARE</th><th>SHARE THIS MONTH</th><th>TF</th><th>TF THIS MONTH</th><th>GF</th><th>GF THIS MONTH</th><th>LTL</th><th>STL</th><th>LTLP</th><th>LTLI</th><th>LTLB</th><th>STLP</th><th>STLI</th><th>STLB</th><th>FORM</th><th>REGISTRATION</th><th>TOTAL</th></tr>';
