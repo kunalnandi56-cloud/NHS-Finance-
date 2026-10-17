@@ -52,7 +52,7 @@ button{padding:10px 14px;background:#c9a227;border:none;border-radius:8px;font-w
 
 <div class="card hidden" id="admin-login">
   <h3>Administrator Login</h3>
-  <div class="year-month">
+  <div class="year-month" id="ym-admin">
     <select id="year"><option>2026</option><option>2025</option><option>2027</option></select>
     <select id="month"><option>January</option><option>February</option><option>March</option><option>April</option><option>May</option><option>June</option><option>July</option><option>August</option><option>September</option><option>October</option><option>November</option><option>December</option></select>
   </div>
@@ -245,6 +245,12 @@ function saveData(){
 function show(id){
   document.querySelectorAll('.card').forEach(c => c.classList.add('hidden'));
   document.getElementById(id).classList.remove('hidden');
+  // Show year/month on admin pages
+  const ym = document.getElementById('ym-admin');
+  if(ym && ['admin-login','interest','excel','rules','ltl','add-members','admin-next','choose-admin','change-admin'].includes(id)){
+    ym.style.display = 'flex';
+    if(!document.getElementById(id).contains(ym)) document.getElementById(id).insertBefore(ym, document.getElementById(id).firstChild.nextSibling);
+  }
   if(id === 'add-members') showMemberList();
   if(id === 'member-login') loadMemberNames();
   if(id === 'excel') showExcel();
