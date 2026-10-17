@@ -380,8 +380,9 @@ function showExcel(){
   members.forEach(m => {
     const d = (m.months && m.months[key]) || {};
     const prev = (m.months && m.months[prevKey]) || {};
-    const ltl = prev.ltlb || d.ltl || 0;
-    const stl = prev.stlb || d.stl || 0;
+    // Current LTL = previous LTLB, or stored LTL if first month
+    const ltl = (prev.ltlb !== undefined) ? prev.ltlb : (d.ltl || m.ltl || 0);
+    const stl = (prev.stlb !== undefined) ? prev.stlb : (d.stl || m.stl || 0);
     const share = (m.share || 0) + (d.shareMonth || 0);
     const tf = (m.tf || 0) + (d.tfMonth || 0);
     const gf = (m.gf || 0) + (d.gfMonth || 0);
