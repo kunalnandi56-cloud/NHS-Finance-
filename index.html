@@ -5,102 +5,46 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Nhseccs Private Banking</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>
-// Make supabase optional so the page never breaks
-let supabaseClient = null;
-try {
-  if (window.supabase) {
-    supabaseClient = window.supabase.createClient(
-      'https://jmmbtmtocsnzvpantqpd.supabase.co',
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImptbWJ0bXRvY3NuenZwYW50cXBkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTIyMDU0NzMsImV4cCI6MjEwNzc4MTQ3M30.tEkXvFRh2voYPBil6fTI0BXmub8Nh479dHoNNUbfdrY'
-    );
-  }
-} catch (e) { console.log('Supabase not available'); }
-const supabase = supabaseClient;
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg: #f0f7ff;
-    --card: #ffffff;
-    --gold: #c9a227;
-    --gold-dark: #8b6914;
-    --text: #1a2a4a;
-    --muted: #4a5a7a;
-    --danger: #e53935;
-    --success: #43a047;
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    font-family: 'Inter', system-ui, sans-serif;
-    background: linear-gradient(135deg, #e8f4ff 0%, #f5f9ff 100%);
-    color: var(--text);
-    min-height: 100vh;
-    padding: 20px;
-    font-size: 14px;
-  }
-  .app { max-width: 960px; margin: 0 auto; }
-  .logo { text-align: center; margin-bottom: 20px; }
-  .logo h1 { font-family: 'Playfair Display', serif; font-size: 26px; color: var(--gold-dark); }
-  .logo p { font-size: 12px; letter-spacing: 2px; color: var(--muted); }
-  .card {
-    background: var(--card);
-    border-radius: 16px;
-    padding: 22px;
-    box-shadow: 0 8px 30px rgba(0,0,0,0.08);
-    margin-bottom: 16px;
-  }
-  h2 { text-align: center; margin-bottom: 8px; font-size: 20px; }
-  .subtitle { text-align: center; color: var(--muted); margin-bottom: 18px; }
-  .input-group { margin-bottom: 14px; }
-  label { display: block; margin-bottom: 6px; color: var(--muted); font-weight: 500; }
-  input, select {
-    width: 100%; padding: 12px; border: 1px solid #c5d9f0; border-radius: 10px;
-    background: #f5f9ff; font-size: 14px;
-  }
-  .btn-3d {
-    display: inline-block;
-    background: linear-gradient(180deg, #e6c35c 0%, #c9a227 100%);
-    color: #1a2a4a;
-    border: none;
-    border-radius: 12px;
-    padding: 12px 20px;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    box-shadow: 0 6px 0 #8b6914, 0 8px 15px rgba(0,0,0,0.2);
-    margin: 4px;
-  }
-  .btn-3d:active { transform: translateY(4px); box-shadow: 0 2px 0 #8b6914; }
-  .btn-full { width: 100%; display: block; text-align: center; }
-  .btn-small { padding: 8px 14px; font-size: 13px; }
-  .btn-danger { background: linear-gradient(180deg, #ff6b6b 0%, #e53935 100%); color: white; box-shadow: 0 6px 0 #b71c1c; }
-  .menu-btn {
-    display: block; width: 100%; background: #f5f9ff;
-    border: 1px solid #c5d9f0; padding: 14px; border-radius: 12px;
-    margin-bottom: 8px; text-align: left; font-size: 15px; cursor: pointer;
-  }
-  .error { color: var(--danger); text-align: center; margin-top: 10px; }
-  .success { color: var(--success); text-align: center; margin-top: 10px; }
-  .hidden { display: none !important; }
-  .member-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #eee; }
-  table { width: 100%; border-collapse: collapse; margin-top: 16px; font-size: 13px; }
-  th, td { border: 1px solid #d0e4ff; padding: 8px 4px; text-align: center; }
-  th { background: #e3f2fd; color: #1565c0; }
-  td input { width: 100%; padding: 4px; text-align: right; }
-  .totals-row { font-weight: 700; background: #fff8e1; }
-  .summary-box { margin-top: 16px; padding: 14px; background: #f5f9ff; border-radius: 12px; border: 1px solid #d0e4ff; }
-  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-  .back-btn { position: absolute; top: 16px; left: 16px; }
-  @media (max-width: 640px) { .grid-2 { grid-template-columns: 1fr; } }
+  :root { --bg:#f0f7ff; --card:#fff; --gold:#c9a227; --gold-dark:#8b6914; --text:#1a2a4a; --muted:#4a5a7a; --danger:#e53935; --success:#43a047; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:'Inter',system-ui,sans-serif; background:linear-gradient(135deg,#e8f4ff,#f5f9ff); color:var(--text); min-height:100vh; padding:20px; font-size:14px; }
+  .app { max-width:960px; margin:0 auto; }
+  .logo { text-align:center; margin-bottom:20px; }
+  .logo h1 { font-family:'Playfair Display',serif; font-size:26px; color:var(--gold-dark); }
+  .logo p { font-size:12px; letter-spacing:2px; color:var(--muted); }
+  .card { background:var(--card); border-radius:16px; padding:22px; box-shadow:0 8px 30px rgba(0,0,0,.08); margin-bottom:16px; }
+  h2 { text-align:center; margin-bottom:8px; font-size:20px; }
+  .subtitle { text-align:center; color:var(--muted); margin-bottom:18px; }
+  .input-group { margin-bottom:14px; }
+  label { display:block; margin-bottom:6px; color:var(--muted); font-weight:500; }
+  input,select { width:100%; padding:12px; border:1px solid #c5d9f0; border-radius:10px; background:#f5f9ff; font-size:14px; }
+  .btn-3d { display:inline-block; background:linear-gradient(180deg,#e6c35c,#c9a227); color:#1a2a4a; border:none; border-radius:12px; padding:12px 20px; font-size:14px; font-weight:600; cursor:pointer; box-shadow:0 6px 0 #8b6914,0 8px 15px rgba(0,0,0,.2); margin:4px; }
+  .btn-3d:active { transform:translateY(4px); box-shadow:0 2px 0 #8b6914; }
+  .btn-full { width:100%; display:block; text-align:center; }
+  .btn-small { padding:8px 14px; font-size:13px; }
+  .btn-danger { background:linear-gradient(180deg,#ff6b6b,#e53935); color:#fff; box-shadow:0 6px 0 #b71c1c; }
+  .menu-btn { display:block; width:100%; background:#f5f9ff; border:1px solid #c5d9f0; padding:14px; border-radius:12px; margin-bottom:8px; text-align:left; font-size:15px; cursor:pointer; }
+  .error { color:var(--danger); text-align:center; margin-top:10px; }
+  .success { color:var(--success); text-align:center; margin-top:10px; }
+  .hidden { display:none !important; }
+  .member-row { display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid #eee; }
+  table { width:100%; border-collapse:collapse; margin-top:16px; font-size:13px; }
+  th,td { border:1px solid #d0e4ff; padding:8px 4px; text-align:center; }
+  th { background:#e3f2fd; color:#1565c0; }
+  td input { width:100%; padding:4px; text-align:right; }
+  .totals-row { font-weight:700; background:#fff8e1; }
+  .summary-box { margin-top:16px; padding:14px; background:#f5f9ff; border-radius:12px; border:1px solid #d0e4ff; }
+  .grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .back-btn { position:absolute; top:16px; left:16px; }
+  @media (max-width:640px) { .grid-2 { grid-template-columns:1fr; } }
 </style>
 </head>
 <body>
 <div class="app">
-  <div class="logo">
-    <h1>Nhseccs</h1>
-    <p>PRIVATE BANKING</p>
-  </div>
+  <div class="logo"><h1>Nhseccs</h1><p>PRIVATE BANKING</p></div>
 
   <div id="screen-security" class="card">
     <h2>Secure Access</h2>
@@ -123,14 +67,8 @@ const supabase = supabaseClient;
   <div id="screen-member-login" class="card hidden">
     <button class="btn-3d btn-small back-btn" onclick="showScreen('menu')">Back</button>
     <h2>Member Login</h2>
-    <div class="input-group">
-      <label>Choose Your Name</label>
-      <select id="member-select-name"></select>
-    </div>
-    <div class="input-group">
-      <label>Password</label>
-      <input type="password" id="member-password">
-    </div>
+    <div class="input-group"><label>Choose Your Name</label><select id="member-select-name"></select></div>
+    <div class="input-group"><label>Password</label><input type="password" id="member-password"></div>
     <button class="btn-3d btn-full" onclick="memberLogin()">Login</button>
     <div id="login-error" class="error"></div>
   </div>
@@ -138,18 +76,9 @@ const supabase = supabaseClient;
   <div id="screen-admin-login" class="card hidden">
     <button class="btn-3d btn-small back-btn" onclick="showScreen('menu')">Back</button>
     <h2>Administrator Login</h2>
-    <div class="input-group">
-      <label>Name of Administrator</label>
-      <input type="text" id="admin-name">
-    </div>
-    <div class="input-group">
-      <label>Password</label>
-      <input type="password" id="admin-password">
-    </div>
-    <div class="input-group">
-      <label>ID (6 digits)</label>
-      <input type="text" id="admin-id" maxlength="6">
-    </div>
+    <div class="input-group"><label>Name of Administrator</label><input type="text" id="admin-name"></div>
+    <div class="input-group"><label>Password</label><input type="password" id="admin-password"></div>
+    <div class="input-group"><label>ID (6 digits)</label><input type="text" id="admin-id" maxlength="6"></div>
     <button class="btn-3d btn-full" onclick="adminLogin()">Authenticate</button>
     <div id="admin-error" class="error"></div>
   </div>
@@ -176,56 +105,18 @@ const supabase = supabaseClient;
       <button class="btn-3d btn-small" onclick="saveMemberDetail()">Save</button>
     </div>
     <div class="grid-2">
-      <div class="input-group">
-        <label>Opening of Thrift Fund</label>
-        <input type="number" id="opening-tf" step="0.01" oninput="liveUpdate()">
-      </div>
-      <div class="input-group">
-        <label>Rate of Interest (TF %)</label>
-        <input type="number" id="tf-rate" step="0.01" oninput="liveUpdate()">
-      </div>
-      <div class="input-group">
-        <label>Opening of Garrunty Fund</label>
-        <input type="number" id="opening-gf" step="0.01" oninput="liveUpdate()">
-      </div>
-      <div class="input-group">
-        <label>Rate of Interest (GF %)</label>
-        <input type="number" id="gf-rate" step="0.01" oninput="liveUpdate()">
-      </div>
-      <div class="input-group">
-        <label>Closing Share</label>
-        <input type="number" id="closing-share" step="0.01" oninput="liveUpdate()">
-      </div>
+      <div class="input-group"><label>Opening of Thrift Fund</label><input type="number" id="opening-tf" step="0.01" oninput="liveUpdate()"></div>
+      <div class="input-group"><label>Rate of Interest (TF %)</label><input type="number" id="tf-rate" step="0.01" oninput="liveUpdate()"></div>
+      <div class="input-group"><label>Opening of Garrunty Fund</label><input type="number" id="opening-gf" step="0.01" oninput="liveUpdate()"></div>
+      <div class="input-group"><label>Rate of Interest (GF %)</label><input type="number" id="gf-rate" step="0.01" oninput="liveUpdate()"></div>
+      <div class="input-group"><label>Closing Share</label><input type="number" id="closing-share" step="0.01" oninput="liveUpdate()"></div>
     </div>
-    <div class="input-group">
-      <label>Circulating Share Value</label>
-      <input type="number" id="circulating-share" step="0.01" oninput="liveUpdate()">
-    </div>
+    <div class="input-group"><label>Circulating Share Value</label><input type="number" id="circulating-share" step="0.01" oninput="liveUpdate()"></div>
     <div style="overflow-x:auto;">
       <table>
-        <thead>
-          <tr>
-            <th>Month</th>
-            <th>TF this month</th>
-            <th>Closing TF</th>
-            <th>TF Interest</th>
-            <th>GF this month</th>
-            <th>Closing GF</th>
-            <th>GF Interest</th>
-          </tr>
-        </thead>
+        <thead><tr><th>Month</th><th>TF this month</th><th>Closing TF</th><th>TF Interest</th><th>GF this month</th><th>Closing GF</th><th>GF Interest</th></tr></thead>
         <tbody id="funds-tbody"></tbody>
-        <tfoot>
-          <tr class="totals-row">
-            <td>Total</td>
-            <td id="total-tf-month"></td>
-            <td id="total-closing-tf"></td>
-            <td id="total-tf-int"></td>
-            <td id="total-gf-month"></td>
-            <td id="total-closing-gf"></td>
-            <td id="total-gf-int"></td>
-          </tr>
-        </tfoot>
+        <tfoot><tr class="totals-row"><td>Total</td><td id="total-tf-month"></td><td id="total-closing-tf"></td><td id="total-tf-int"></td><td id="total-gf-month"></td><td id="total-closing-gf"></td><td id="total-gf-int"></td></tr></tfoot>
       </table>
     </div>
     <div class="summary-box">
@@ -241,112 +132,95 @@ const supabase = supabaseClient;
 </div>
 
 <script>
-// supabase client is created safely above
+let supabase = null;
+try {
+  if (window.supabase) {
+    supabase = window.supabase.createClient(
+      'https://jmmbtmtocsnzvpantqpd.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImptbWJ0bXRvY3NuenZwYW50cXBkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTIyMDU0NzMsImV4cCI6MjEwNzc4MTQ3M30.tEkXvFRh2voYPBil6fTI0BXmub8Nh479dHoNNUbfdrY'
+    );
+  }
+} catch(e) {}
 
 const MONTHS = ["April","May","June","July","August","September","October","November","December","January","February","March"];
 const I_VALUES = [12,11,10,9,8,7,6,5,4,3,2,1];
-
-let currentMember = null;
-let isEditing = false;
-let currentUser = null;
-let settings = { security_code: '123456', circulating_share: 0, current_admin_id: '123456' };
-
-async function loadSettings() {
-  const { data } = await supabase.from('app_settings').select('*').eq('id', 1).single();
-  if (data) settings = data;
-}
+let currentMember = null, isEditing = false, currentUser = null;
+let settings = { security_code:'123456', circulating_share:0, current_admin_id:'123456' };
 
 function verifySecurity() {
   const code = document.getElementById('security-code').value.trim();
-  if (code === '123456') {
-    showScreen('menu');
-  } else {
-    document.getElementById('security-error').textContent = 'Invalid security code';
-  }
+  if (code === '123456') showScreen('menu');
+  else document.getElementById('security-error').textContent = 'Invalid security code';
 }
 
 function showScreen(id) {
   document.querySelectorAll('.card').forEach(el => el.classList.add('hidden'));
-  const el = document.getElementById('screen-' + id);
+  const el = document.getElementById('screen-'+id);
   if (el) el.classList.remove('hidden');
   if (id === 'member-login') populateMemberSelect();
 }
 
 async function populateMemberSelect() {
+  if (!supabase) return;
   const { data } = await supabase.from('members').select('name').order('name');
   const sel = document.getElementById('member-select-name');
   sel.innerHTML = '<option value="">Select Name</option>';
-  (data || []).forEach(m => {
+  (data||[]).forEach(m => {
     const opt = document.createElement('option');
-    opt.value = m.name;
-    opt.textContent = m.name;
-    sel.appendChild(opt);
+    opt.value = m.name; opt.textContent = m.name; sel.appendChild(opt);
   });
 }
 
 async function memberLogin() {
+  if (!supabase) { alert('Database not ready'); return; }
   const name = document.getElementById('member-select-name').value;
   const pass = document.getElementById('member-password').value;
-  const { data } = await supabase.from('members').select('*').eq('name', name).eq('password', pass).single();
-  if (data) {
-    currentUser = data;
-    openMemberView(data, true);
-  } else {
-    document.getElementById('login-error').textContent = 'Invalid name or password';
-  }
+  const { data } = await supabase.from('members').select('*').eq('name',name).eq('password',pass).single();
+  if (data) { currentUser = data; openMemberView(data, true); }
+  else document.getElementById('login-error').textContent = 'Invalid name or password';
 }
 
 async function adminLogin() {
+  if (!supabase) { alert('Database not ready'); return; }
   const name = document.getElementById('admin-name').value.trim();
   const pass = document.getElementById('admin-password').value;
   const id = document.getElementById('admin-id').value.trim();
-  await loadSettings();
-  const { data } = await supabase.from('members').select('*').eq('name', name).eq('password', pass).eq('is_admin', true).single();
-  if (data && id === settings.current_admin_id) {
-    renderMembersList();
-    showScreen('admin-dashboard');
-  } else {
-    document.getElementById('admin-error').textContent = 'Invalid credentials';
-  }
+  const { data } = await supabase.from('members').select('*').eq('name',name).eq('password',pass).eq('is_admin',true).single();
+  if (data && id === settings.current_admin_id) { renderMembersList(); showScreen('admin-dashboard'); }
+  else document.getElementById('admin-error').textContent = 'Invalid credentials';
 }
 
 async function addMember() {
+  if (!supabase) return;
   const name = document.getElementById('new-member-name').value.trim();
   if (!name) return;
-  const { error } = await supabase.from('members').insert({
-    name, password: '123456', opening_tf: 0, tf_rate: 0, opening_gf: 0, gf_rate: 0,
-    closing_share: 0, tf_this_month: Array(12).fill(0), gf_this_month: Array(12).fill(0)
-  });
-  if (!error) {
-    document.getElementById('new-member-name').value = '';
-    renderMembersList();
-  }
+  await supabase.from('members').insert({ name, password:'123456', opening_tf:0, tf_rate:0, opening_gf:0, gf_rate:0, closing_share:0, tf_this_month:Array(12).fill(0), gf_this_month:Array(12).fill(0) });
+  document.getElementById('new-member-name').value = '';
+  renderMembersList();
 }
 
 async function renderMembersList() {
+  if (!supabase) return;
   const { data } = await supabase.from('members').select('*').order('name');
   const container = document.getElementById('members-list');
   container.innerHTML = '';
-  (data || []).forEach(m => {
+  (data||[]).forEach(m => {
     const div = document.createElement('div');
     div.className = 'member-row';
-    div.innerHTML = `<span>${m.name}</span>
-      <div>
-        <button class="btn-3d btn-small" onclick="openMemberById('${m.id}')">Open</button>
-        <button class="btn-3d btn-small btn-danger" onclick="deleteMember('${m.id}')">Delete</button>
-      </div>`;
+    div.innerHTML = `<span>${m.name}</span><div><button class="btn-3d btn-small" onclick="openMemberById('${m.id}')">Open</button><button class="btn-3d btn-small btn-danger" onclick="deleteMember('${m.id}')">Delete</button></div>`;
     container.appendChild(div);
   });
 }
 
 async function deleteMember(id) {
-  if (!confirm('Delete this member?')) return;
+  if (!confirm('Delete this member?') || !supabase) return;
   await supabase.from('members').delete().eq('id', id);
   renderMembersList();
 }
 
 async function openMemberById(id) {
-  const { data } = await supabase.from('members').select('*').eq('id', id).single();
+  if (!supabase) return;
+  const { data } = await supabase.from('members').select('*').eq('id',id).single();
   if (data) openMemberView(data, false);
 }
 
@@ -367,85 +241,56 @@ function openMemberView(m, isMemberView) {
 }
 
 function setInputsDisabled(disabled) {
-  ['opening-tf','tf-rate','opening-gf','gf-rate','closing-share','circulating-share'].forEach(id => {
-    document.getElementById(id).disabled = disabled;
-  });
+  ['opening-tf','tf-rate','opening-gf','gf-rate','closing-share','circulating-share'].forEach(id => document.getElementById(id).disabled = disabled);
   document.querySelectorAll('#funds-tbody input').forEach(inp => inp.disabled = disabled);
-  document.getElementById('edit-btn').textContent = disabled ? 'Edit' : 'Cancel';
 }
 
-function toggleEdit() {
-  isEditing = !isEditing;
-  setInputsDisabled(!isEditing);
-}
+function toggleEdit() { isEditing = !isEditing; setInputsDisabled(!isEditing); }
 
 function getVisibleMonths() {
   const now = new Date();
-  const monthIndex = now.getMonth(); // 0=Jan ... 11=Dec
-  // Financial year April=0 ... March=11
+  const monthIndex = now.getMonth();
   let fyMonth = monthIndex >= 3 ? monthIndex - 3 : monthIndex + 9;
-  // Successor month of current
-  let maxVisible = Math.min(fyMonth + 1, 11);
-  return maxVisible;
+  return Math.min(fyMonth + 1, 11);
 }
 
 function renderFundsTable(m, isMemberView = false) {
   const tbody = document.getElementById('funds-tbody');
   tbody.innerHTML = '';
-  let runningTF = parseFloat(m.opening_tf) || 0;
-  let runningGF = parseFloat(m.opening_gf) || 0;
-  let sumTFMonth = 0, sumGFMonth = 0, sumTFInt = 0, sumGFInt = 0;
+  let runningTF = parseFloat(m.opening_tf)||0, runningGF = parseFloat(m.opening_gf)||0;
+  let sumTFMonth=0, sumGFMonth=0, sumTFInt=0, sumGFInt=0;
   const maxMonth = isMemberView ? getVisibleMonths() : 11;
 
   MONTHS.forEach((month, i) => {
     if (i > maxMonth) return;
-    const tfMonth = parseFloat(m.tf_this_month?.[i]) || 0;
-    const gfMonth = parseFloat(m.gf_this_month?.[i]) || 0;
-    runningTF += tfMonth;
-    runningGF += gfMonth;
-    const rateTF = parseFloat(m.tf_rate) || 0;
-    const rateGF = parseFloat(m.gf_rate) || 0;
-    const tfInt = Math.round(tfMonth * (rateTF / 100) * (I_VALUES[i] / 12));
-    const gfInt = Math.round(gfMonth * (rateGF / 100) * (I_VALUES[i] / 12));
-    sumTFMonth += tfMonth;
-    sumGFMonth += gfMonth;
-    sumTFInt += tfInt;
-    sumGFInt += gfInt;
+    const tfMonth = parseFloat(m.tf_this_month?.[i])||0;
+    const gfMonth = parseFloat(m.gf_this_month?.[i])||0;
+    runningTF += tfMonth; runningGF += gfMonth;
+    const tfInt = Math.round(tfMonth * ((parseFloat(m.tf_rate)||0)/100) * (I_VALUES[i]/12));
+    const gfInt = Math.round(gfMonth * ((parseFloat(m.gf_rate)||0)/100) * (I_VALUES[i]/12));
+    sumTFMonth += tfMonth; sumGFMonth += gfMonth; sumTFInt += tfInt; sumGFInt += gfInt;
 
     const tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td>${month}</td>
-      <td><input type="number" step="0.01" value="${tfMonth || ''}" data-type="tf" data-idx="${i}" ${isEditing && !isMemberView ? '' : 'disabled'} oninput="liveUpdate()"></td>
-      <td class="closing-tf">${runningTF.toFixed(2)}</td>
-      <td class="tf-int">${tfInt}</td>
-      <td><input type="number" step="0.01" value="${gfMonth || ''}" data-type="gf" data-idx="${i}" ${isEditing && !isMemberView ? '' : 'disabled'} oninput="liveUpdate()"></td>
-      <td class="closing-gf">${runningGF.toFixed(2)}</td>
-      <td class="gf-int">${gfInt}</td>`;
+    tr.innerHTML = `<td>${month}</td>
+      <td><input type="number" step="0.01" value="${tfMonth||''}" data-type="tf" data-idx="${i}" ${isEditing&&!isMemberView?'':'disabled'} oninput="liveUpdate()"></td>
+      <td class="closing-tf">${runningTF.toFixed(2)}</td><td class="tf-int">${tfInt}</td>
+      <td><input type="number" step="0.01" value="${gfMonth||''}" data-type="gf" data-idx="${i}" ${isEditing&&!isMemberView?'':'disabled'} oninput="liveUpdate()"></td>
+      <td class="closing-gf">${runningGF.toFixed(2)}</td><td class="gf-int">${gfInt}</td>`;
     tbody.appendChild(tr);
   });
-
   updateTotalsAndSummary(sumTFMonth, runningTF, sumTFInt, sumGFMonth, runningGF, sumGFInt, m);
 }
 
 function liveUpdate() {
   if (!currentMember) return;
-  const temp = { ...currentMember };
-  temp.opening_tf = parseFloat(document.getElementById('opening-tf').value) || 0;
-  temp.tf_rate = parseFloat(document.getElementById('tf-rate').value) || 0;
-  temp.opening_gf = parseFloat(document.getElementById('opening-gf').value) || 0;
-  temp.gf_rate = parseFloat(document.getElementById('gf-rate').value) || 0;
-  temp.closing_share = parseFloat(document.getElementById('closing-share').value) || 0;
-  settings.circulating_share = parseFloat(document.getElementById('circulating-share').value) || 0;
-
-  document.querySelectorAll('#funds-tbody input[data-type="tf"]').forEach(inp => {
-    const idx = parseInt(inp.dataset.idx);
-    temp.tf_this_month[idx] = parseFloat(inp.value) || 0;
-  });
-  document.querySelectorAll('#funds-tbody input[data-type="gf"]').forEach(inp => {
-    const idx = parseInt(inp.dataset.idx);
-    temp.gf_this_month[idx] = parseFloat(inp.value) || 0;
-  });
-
+  const temp = {...currentMember};
+  temp.opening_tf = parseFloat(document.getElementById('opening-tf').value)||0;
+  temp.tf_rate = parseFloat(document.getElementById('tf-rate').value)||0;
+  temp.opening_gf = parseFloat(document.getElementById('opening-gf').value)||0;
+  temp.gf_rate = parseFloat(document.getElementById('gf-rate').value)||0;
+  temp.closing_share = parseFloat(document.getElementById('closing-share').value)||0;
+  document.querySelectorAll('#funds-tbody input[data-type="tf"]').forEach(inp => temp.tf_this_month[parseInt(inp.dataset.idx)] = parseFloat(inp.value)||0);
+  document.querySelectorAll('#funds-tbody input[data-type="gf"]').forEach(inp => temp.gf_this_month[parseInt(inp.dataset.idx)] = parseFloat(inp.value)||0);
   renderFundsTable(temp, false);
 }
 
@@ -456,66 +301,40 @@ function updateTotalsAndSummary(sumTFMonth, closingTF, sumTFInt, sumGFMonth, clo
   document.getElementById('total-gf-month').textContent = sumGFMonth.toFixed(2);
   document.getElementById('total-closing-gf').textContent = closingGF.toFixed(2);
   document.getElementById('total-gf-int').textContent = sumGFInt;
-
-  const intOpeningTF = Math.round((parseFloat(m.opening_tf) || 0) * ((parseFloat(m.tf_rate) || 0) / 100));
-  const intOpeningGF = Math.round((parseFloat(m.opening_gf) || 0) * ((parseFloat(m.gf_rate) || 0) / 100));
+  const intOpeningTF = Math.round((parseFloat(m.opening_tf)||0)*((parseFloat(m.tf_rate)||0)/100));
+  const intOpeningGF = Math.round((parseFloat(m.opening_gf)||0)*((parseFloat(m.gf_rate)||0)/100));
   document.getElementById('int-opening-tf').textContent = intOpeningTF;
   document.getElementById('int-opening-gf').textContent = intOpeningGF;
   document.getElementById('total-int-tf').textContent = sumTFInt + intOpeningTF;
   document.getElementById('total-int-gf').textContent = sumGFInt + intOpeningGF;
-
-  const circ = parseFloat(document.getElementById('circulating-share').value) || 0;
-  const shareVal = parseFloat(m.closing_share) || 0;
-  // Simplified dividend for now
-  document.getElementById('share-dividend').textContent = Math.round((circ / 100) * shareVal) || 0;
+  const circ = parseFloat(document.getElementById('circulating-share').value)||0;
+  const shareVal = parseFloat(m.closing_share)||0;
+  document.getElementById('share-dividend').textContent = Math.round((circ/100)*shareVal)||0;
 }
 
 async function saveMemberDetail() {
-  if (!currentMember) return;
+  if (!currentMember || !supabase) return;
   const update = {
-    opening_tf: parseFloat(document.getElementById('opening-tf').value) || 0,
-    tf_rate: parseFloat(document.getElementById('tf-rate').value) || 0,
-    opening_gf: parseFloat(document.getElementById('opening-gf').value) || 0,
-    gf_rate: parseFloat(document.getElementById('gf-rate').value) || 0,
-    closing_share: parseFloat(document.getElementById('closing-share').value) || 0,
+    opening_tf: parseFloat(document.getElementById('opening-tf').value)||0,
+    tf_rate: parseFloat(document.getElementById('tf-rate').value)||0,
+    opening_gf: parseFloat(document.getElementById('opening-gf').value)||0,
+    gf_rate: parseFloat(document.getElementById('gf-rate').value)||0,
+    closing_share: parseFloat(document.getElementById('closing-share').value)||0,
     tf_this_month: currentMember.tf_this_month || Array(12).fill(0),
     gf_this_month: currentMember.gf_this_month || Array(12).fill(0)
   };
-
-  document.querySelectorAll('#funds-tbody input[data-type="tf"]').forEach(inp => {
-    const idx = parseInt(inp.dataset.idx);
-    update.tf_this_month[idx] = parseFloat(inp.value) || 0;
-  });
-  document.querySelectorAll('#funds-tbody input[data-type="gf"]').forEach(inp => {
-    const idx = parseInt(inp.dataset.idx);
-    update.gf_this_month[idx] = parseFloat(inp.value) || 0;
-  });
-
+  document.querySelectorAll('#funds-tbody input[data-type="tf"]').forEach(inp => update.tf_this_month[parseInt(inp.dataset.idx)] = parseFloat(inp.value)||0);
+  document.querySelectorAll('#funds-tbody input[data-type="gf"]').forEach(inp => update.gf_this_month[parseInt(inp.dataset.idx)] = parseFloat(inp.value)||0);
   await supabase.from('members').update(update).eq('id', currentMember.id);
-  await supabase.from('app_settings').update({ circulating_share: parseFloat(document.getElementById('circulating-share').value) || 0 }).eq('id', 1);
-
+  await supabase.from('app_settings').update({ circulating_share: parseFloat(document.getElementById('circulating-share').value)||0 }).eq('id', 1);
   document.getElementById('detail-msg').textContent = 'Saved successfully';
   alert('Data saved');
-  const { data } = await supabase.from('members').select('*').eq('id', currentMember.id).single();
-  if (data) currentMember = data;
 }
 
-function backToAdmin() {
-  renderMembersList();
-  showScreen('admin-dashboard');
-}
+function backToAdmin() { renderMembersList(); showScreen('admin-dashboard'); }
+function logout() { currentUser = null; currentMember = null; showScreen('security'); }
 
-function logout() {
-  currentUser = null;
-  currentMember = null;
-  showScreen('security');
-}
-
-document.getElementById('security-code').addEventListener('keypress', e => {
-  if (e.key === 'Enter') verifySecurity();
-});
-
-loadSettings();
+document.getElementById('security-code').addEventListener('keypress', e => { if (e.key==='Enter') verifySecurity(); });
 </script>
 </body>
 </html>
