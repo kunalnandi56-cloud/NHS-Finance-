@@ -46,15 +46,10 @@ button{width:100%;padding:12px;background:#c9a227;border:none;border-radius:8px;
 
 <div class="card hidden" id="admin-login">
   <h3>Administrator Login</h3>
+  <input type="text" id="a-name" placeholder="Name">
   <input type="password" id="a-pass" placeholder="Password">
   <input type="text" id="a-id" placeholder="6-digit ID" maxlength="6">
   <button class="btn-pink" onclick="doAdminLogin()">Administrative login</button>
-  <button onclick="alert('Change ID')">Change ID</button>
-  <button onclick="alert('Change password')">Change password</button>
-  <button onclick="alert('Rules and Regulations')">Rules and Regulations</button>
-  <button onclick="alert('Application')">Application</button>
-  <button onclick="alert('LTL Application list')">LTL Application list</button>
-  <button class="btn-dark" onclick="alert('Edit wrongly entered data')">Edit wrongly entered data</button>
   <div id="a-err" class="error"></div>
   <button onclick="goMenu()">Back</button>
 </div>
