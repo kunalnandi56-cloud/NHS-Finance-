@@ -36,7 +36,7 @@ button{padding:10px 14px;background:#c9a227;border:none;border-radius:8px;font-w
 <div class="card" id="first">
   <h3>Society code</h3>
   <input type="password" id="scode" placeholder="Society code">
-  <button class="btn-full btn-dark" onclick="openMain()">Open</button>
+  <button class="btn-full btn-dark" onclick="if(document.getElementById('scode').value.trim()==='123456'){document.getElementById('first').classList.add('hidden');document.getElementById('main').classList.remove('hidden');}else{alert('Invalid society code');}">Open</button>
   <button class="btn-full" onclick="alert('Install app')">Install app</button>
 </div>
 
@@ -70,7 +70,6 @@ button{padding:10px 14px;background:#c9a227;border:none;border-radius:8px;font-w
 
 <div class="card hidden" id="interest">
   <h3>Interest and principal</h3>
-  <p>Interest is the same for all members. SHARE and GF start at 0 on this page until you type a new amount. TF keeps last month's amount until you change it.</p>
   <select id="int-member"></select>
   <div style="display:flex;gap:8px;align-items:center;margin:6px 0;">
     <button style="background:#0d2b4a;color:#fff;width:120px;">LTL interest</button>
@@ -114,6 +113,8 @@ button{padding:10px 14px;background:#c9a227;border:none;border-radius:8px;font-w
     <button onclick="saveData()">Save</button>
   </div>
 </div>
+
+<div class="card hidden" id="excel">
   <h3>Excel Sheet</h3>
   <div id="excel-table" style="overflow-x:auto;"></div>
   <div class="bottom-btns">
@@ -237,15 +238,10 @@ function show(id){
   document.getElementById(id).classList.remove('hidden');
   if(id === 'add-members') showMemberList();
   if(id === 'member-login') loadMemberNames();
-  if(id === 'interest') loadInterestNames();
   if(id === 'excel') showExcel();
+  if(id === 'interest') loadInterestNames();
   if(id === 'rules') document.getElementById('rules-text').value = localStorage.getItem('nhs_rules') || '';
   if(id === 'ltl') document.getElementById('ltl-text').value = localStorage.getItem('nhs_ltl') || '';
-}
-
-function openMain(){
-  if(document.getElementById('scode').value.trim() === '123456') show('main');
-  else alert('Invalid society code');
 }
 
 function logout(){ show('first'); }
@@ -312,24 +308,14 @@ function showFieldDisplay(){
   `;
 }
 
-function saveInterest(){
-  const name = document.getElementById('int-member').value;
-  const m = members.find(x => x.name === name);
-  if(!m){ alert('Select a member'); return; }
-  m.share = parseFloat(document.getElementById('int-share').value) || m.share || 0;
-  m.tf = parseFloat(document.getElementById('int-tf').value) || m.tf || 0;
-  m.gf = parseFloat(document.getElementById('int-gf').value) || m.gf || 0;
-  alert('Interest and principal saved for ' + name);
-  showInterestValues();
-}
-
-function showInterestValues(){
-  const name = document.getElementById('int-member').value;
-  const m = members.find(x => x.name === name);
-  if(!m) return;
-  document.getElementById('curr-share').textContent = 'Current SHARE: ' + (m.share || 0);
-  document.getElementById('curr-tf').textContent = 'Current TF: ' + (m.tf || 0);
-  document.getElementById('curr-gf').textContent = 'Current GF: ' + (m.gf || 0);
+function showExcel(){
+  const div = document.getElementById('excel-table');
+  let html = '<table border="1" style="width:100%;border-collapse:collapse;font-size:14pt;font-family:Times New Roman;"><tr><th>Name</th><th>Share</th><th>TF</th><th>GF</th><th>FORM</th><th>ADMISSION</th></tr>';
+  members.forEach(m => {
+    html += `<tr><td>${m.name}</td><td>${m.share||0}</td><td>${m.tf||0}</td><td>${m.gf||0}</td><td>${m.form||0}</td><td>${m.admission||0}</td></tr>`;
+  });
+  html += '</table>';
+  div.innerHTML = html;
 }
 
 function loadInterestNames(){
@@ -341,13 +327,25 @@ function loadInterestNames(){
   });
   sel.onchange = showInterestValues;
 }
-  const div = document.getElementById('excel-table');
-  let html = '<table border="1" style="width:100%;border-collapse:collapse;font-size:14pt;font-family:Times New Roman;"><tr><th>Name</th><th>Share</th><th>TF</th><th>GF</th><th>FORM</th><th>ADMISSION</th></tr>';
-  members.forEach(m => {
-    html += `<tr><td>${m.name}</td><td>${m.share||0}</td><td>${m.tf||0}</td><td>${m.gf||0}</td><td>${m.form||0}</td><td>${m.admission||0}</td></tr>`;
-  });
-  html += '</table>';
-  div.innerHTML = html;
+
+function showInterestValues(){
+  const name = document.getElementById('int-member').value;
+  const m = members.find(x => x.name === name);
+  if(!m) return;
+  document.getElementById('curr-share').textContent = 'Current SHARE: ' + (m.share || 0);
+  document.getElementById('curr-tf').textContent = 'Current TF: ' + (m.tf || 0);
+  document.getElementById('curr-gf').textContent = 'Current GF: ' + (m.gf || 0);
+}
+
+function saveInterest(){
+  const name = document.getElementById('int-member').value;
+  const m = members.find(x => x.name === name);
+  if(!m){ alert('Select a member'); return; }
+  m.share = parseFloat(document.getElementById('int-share').value) || m.share || 0;
+  m.tf = parseFloat(document.getElementById('int-tf').value) || m.tf || 0;
+  m.gf = parseFloat(document.getElementById('int-gf').value) || m.gf || 0;
+  alert('Saved for ' + name);
+  showInterestValues();
 }
 
 function loadMemberNames(){
