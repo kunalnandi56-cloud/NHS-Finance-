@@ -6,7 +6,6 @@
 <title>Nhseccs Private Banking</title>
 <style>
 body{font-family:'Times New Roman',Times,serif;background:#e8f0f8;margin:0;padding:20px;font-size:14pt;}
-body::before{content:'';position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:280px;height:280px;background:url('logo.png') no-repeat center/contain;opacity:0.1;z-index:-1;pointer-events:none;}
 .header{background:#0d2b4a;color:#fff;text-align:center;padding:15px;border-radius:8px;margin-bottom:20px;}
 .card{background:#fff;padding:20px;border-radius:12px;max-width:600px;margin:15px auto;box-shadow:0 4px 12px rgba(0,0,0,.1);}
 input,select,textarea{width:100%;padding:12px;margin:8px 0;border:1px solid #ccc;border-radius:8px;box-sizing:border-box;font-family:'Times New Roman',Times,serif;font-size:14pt;}
@@ -53,9 +52,9 @@ button{padding:10px 14px;background:#c9a227;border:none;border-radius:8px;font-w
 
 <div class="card hidden" id="admin-login">
   <h3>Administrator Login</h3>
-  <div class="year-month">
+  <div class="year-month" id="ym-admin">
     <select id="year"><option>2026</option><option>2025</option><option>2027</option></select>
-    <select id="month"><option>January</option><option>February</option><option>March</option><option>April</option><option>May</option><option>June</option><option>July</option><option>August</option><option>September</option><option>October</option><option>November</option><option>December</option></select>
+    <select id="month"><option>April</option><option>May</option><option>June</option><option>July</option><option>August</option><option>September</option><option>October</option><option>November</option><option>December</option><option>January</option><option>February</option><option>March</option></select>
   </div>
   <button class="btn-full" onclick="showPage('interest')">Interest and principal</button>
   <button class="btn-full" onclick="showPage('rules')">Rules and Regulations</button>
@@ -74,11 +73,11 @@ button{padding:10px 14px;background:#c9a227;border:none;border-radius:8px;font-w
   <select id="int-member"></select>
   <div style="display:flex;gap:8px;align-items:center;margin:6px 0;">
     <button style="background:#0d2b4a;color:#fff;width:120px;">LTL interest</button>
-    <input type="number" id="ltl-int" placeholder="LTL interest">
+    <input type="number" id="ltl-int" value="7">
   </div>
   <div style="display:flex;gap:8px;align-items:center;margin:6px 0;">
     <button style="background:#f8d7da;width:120px;">STL interest</button>
-    <input type="number" id="stl-int" placeholder="STL interest">
+    <input type="number" id="stl-int" value="9">
   </div>
   <div style="display:flex;gap:8px;align-items:center;margin:6px 0;">
     <button style="background:#d1f2eb;width:120px;">SHARE</button>
@@ -87,7 +86,7 @@ button{padding:10px 14px;background:#c9a227;border:none;border-radius:8px;font-w
   <p id="curr-share">Current SHARE: 0</p>
   <div style="display:flex;gap:8px;align-items:center;margin:6px 0;">
     <button style="background:#d1f2eb;width:120px;">TF</button>
-    <input type="number" id="int-tf" placeholder="this month addition">
+    <input type="number" id="int-tf" placeholder="This month addition">
   </div>
   <p id="curr-tf">Current TF: 0</p>
   <div style="display:flex;gap:8px;align-items:center;margin:6px 0;">
@@ -97,11 +96,11 @@ button{padding:10px 14px;background:#c9a227;border:none;border-radius:8px;font-w
   <p id="curr-gf">Current GF: 0</p>
   <div style="display:flex;gap:8px;align-items:center;margin:6px 0;">
     <button style="background:#0d2b4a;color:#fff;width:120px;">LTLP</button>
-    <input type="number" id="ltlp" placeholder="Current LTLP">
+    <input type="number" id="ltlp" placeholder="LTLP">
   </div>
   <div style="display:flex;gap:8px;align-items:center;margin:6px 0;">
     <button style="background:#f8d7da;width:120px;">STLP</button>
-    <input type="number" id="stlp" placeholder="Current STLP">
+    <input type="number" id="stlp" placeholder="STLP">
   </div>
   <button class="btn-full" onclick="saveInterest()">Save</button>
   <button class="btn-full" onclick="alert('Change month')">Change month</button>
@@ -118,8 +117,8 @@ button{padding:10px 14px;background:#c9a227;border:none;border-radius:8px;font-w
 <div class="card hidden" id="excel">
   <h3>Excel Sheet</h3>
   <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px;">
-    <button class="btn-dark" onclick="changeMonth()">Change month</button>
-    <button class="btn-dark" onclick="downloadExcel()">Download</button>
+    <button class="btn-dark" onclick="alert('Change month')">Change month</button>
+    <button class="btn-dark" onclick="alert('Download')">Download</button>
     <button style="background:#e2d5f1;" onclick="window.print()">Print</button>
     <button onclick="saveMembers()">Save</button>
     <button style="background:#c9a227;" onclick="alert('Edit')">Edit</button>
@@ -202,6 +201,7 @@ button{padding:10px 14px;background:#c9a227;border:none;border-radius:8px;font-w
 
 <div class="card hidden" id="member-detail">
   <h3 id="detail-title">Member</h3>
+  <p id="detail-month" style="font-weight:bold;"></p>
   <div class="btn-group">
     <button onclick="setField('share')">Share</button>
     <button onclick="setField('tf')">TF</button>
@@ -241,8 +241,7 @@ let currentField = '';
 function showPage(id){
   document.querySelectorAll('.card').forEach(c => c.classList.add('hidden'));
   document.getElementById(id).classList.remove('hidden');
-  // Add year/month to admin pages
-  const ym = document.querySelector('.year-month');
+  const ym = document.getElementById('ym-admin');
   if(ym && ['admin-login','interest','excel','rules','ltl','add-members','admin-next','choose-admin','change-admin','member-detail'].includes(id)){
     const target = document.getElementById(id);
     if(!target.contains(ym)) target.insertBefore(ym, target.children[1] || null);
@@ -258,6 +257,10 @@ function showPage(id){
 function openMain(){
   if(document.getElementById('scode').value.trim() === '123456') showPage('main');
   else alert('Invalid society code');
+}
+
+function getMonthKey(){
+  return document.getElementById('year').value + '-' + document.getElementById('month').value;
 }
 
 function addMember(){
@@ -281,14 +284,6 @@ function showList(){
   });
 }
 
-function openMemberNow(i){
-  currentMember = i;
-  document.getElementById('detail-title').textContent = members[i].name;
-  if(document.getElementById('detail-month')) document.getElementById('detail-month').textContent = 'Year: ' + document.getElementById('year').value + ' | Month: ' + document.getElementById('month').value;
-  showFieldDisplay();
-  showPage('member-detail');
-}
-
 function deleteMember(i){
   if(confirm('Delete ' + members[i].name + '?')){
     members.splice(i, 1);
@@ -296,7 +291,7 @@ function deleteMember(i){
   }
 }
 
-function openMember(i){
+function openMemberNow(i){
   currentMember = i;
   document.getElementById('detail-title').textContent = members[i].name;
   document.getElementById('detail-month').textContent = 'Year: ' + document.getElementById('year').value + ' | Month: ' + document.getElementById('month').value;
@@ -329,8 +324,28 @@ function showFieldDisplay(){
   document.getElementById('field-display').innerHTML = '<p><b>Month:</b> ' + key + '</p><p><b>Share:</b> ' + (d.share||0) + ' &nbsp; <b>TF:</b> ' + (d.tf||0) + ' &nbsp; <b>GF:</b> ' + (d.gf||0) + '</p>';
 }
 
-function getMonthKey(){
-  return document.getElementById('year').value + '-' + document.getElementById('month').value;
+function saveInterest(){
+  const name = document.getElementById('int-member').value;
+  const m = members.find(x => x.name === name);
+  if(!m){ alert('Select a member'); return; }
+  const key = getMonthKey();
+  if(!m.months) m.months = {};
+  if(!m.months[key]) m.months[key] = {};
+  const shareVal = parseFloat(document.getElementById('int-share').value) || 0;
+  const tfVal = parseFloat(document.getElementById('int-tf').value) || 0;
+  const gfVal = parseFloat(document.getElementById('int-gf').value) || 0;
+  const ltlpVal = parseFloat(document.getElementById('ltlp').value) || 0;
+  const stlpVal = parseFloat(document.getElementById('stlp').value) || 0;
+  m.months[key].shareMonth = shareVal;
+  m.months[key].tfMonth = tfVal;
+  m.months[key].gfMonth = gfVal;
+  m.months[key].ltlp = ltlpVal;
+  m.months[key].stlp = stlpVal;
+  localStorage.setItem('nhs_members', JSON.stringify(members));
+  document.getElementById('curr-share').textContent = 'Current SHARE: ' + shareVal;
+  document.getElementById('curr-tf').textContent = 'Current TF: ' + tfVal;
+  document.getElementById('curr-gf').textContent = 'Current GF: ' + gfVal;
+  alert('Saved for ' + name + ' — ' + key);
 }
 
 function showExcel(){
@@ -353,8 +368,8 @@ function showExcel(){
     const share = (m.share || 0) + (d.shareMonth || 0);
     const tf = (m.tf || 0) + (d.tfMonth || 0);
     const gf = (m.gf || 0) + (d.gfMonth || 0);
-    const ltlRate = 7;
-    const stlRate = 9;
+    const ltlRate = parseFloat(document.getElementById('ltl-int').value) || 7;
+    const stlRate = parseFloat(document.getElementById('stl-int').value) || 9;
     const ltli = Math.round(ltl * (ltlRate/100) * (1/12));
     const ltlb = ltl - (d.ltlp||0);
     const stli = Math.round(stl * (stlRate/100) * (1/12));
@@ -366,15 +381,6 @@ function showExcel(){
   div.innerHTML = html;
 }
 
-function changeMonth(){
-  const m = prompt('Enter month:', document.getElementById('excel-month').textContent);
-  if(m) document.getElementById('excel-month').textContent = m;
-}
-
-function downloadExcel(){
-  alert('Download feature: copy the table data');
-}
-
 function loadInterestNames(){
   const sel = document.getElementById('int-member');
   sel.innerHTML = '<option value="">Select member name</option>';
@@ -382,33 +388,6 @@ function loadInterestNames(){
     const o = document.createElement('option');
     o.value = m.name; o.textContent = m.name; sel.appendChild(o);
   });
-}
-
-function saveInterest(){
-  const name = document.getElementById('int-member').value;
-  const m = members.find(x => x.name === name);
-  if(!m){ alert('Select a member'); return; }
-  const key = getMonthKey();
-  if(!m.months) m.months = {};
-  if(!m.months[key]) m.months[key] = {};
-  const shareVal = parseFloat(document.getElementById('int-share').value) || 0;
-  const tfVal = parseFloat(document.getElementById('int-tf').value) || 0;
-  const gfVal = parseFloat(document.getElementById('int-gf').value) || 0;
-  const ltlpVal = parseFloat(document.getElementById('ltlp').value) || 0;
-  const stlpVal = parseFloat(document.getElementById('stlp').value) || 0;
-  m.months[key].shareMonth = shareVal;
-  m.months[key].tfMonth = tfVal;
-  m.months[key].gfMonth = gfVal;
-  m.months[key].ltlp = ltlpVal;
-  m.months[key].stlp = stlpVal;
-  m.share = shareVal || m.share;
-  m.tf = tfVal || m.tf;
-  m.gf = gfVal || m.gf;
-  localStorage.setItem('nhs_members', JSON.stringify(members));
-  document.getElementById('curr-share').textContent = 'Current SHARE: ' + shareVal;
-  document.getElementById('curr-tf').textContent = 'Current TF: ' + tfVal;
-  document.getElementById('curr-gf').textContent = 'Current GF: ' + gfVal;
-  alert('Saved for ' + name + ' — ' + key);
 }
 
 function loadMemberNames(){
