@@ -270,9 +270,17 @@ function showList(){
   members.forEach((m, i) => {
     const row = document.createElement('div');
     row.className = 'member-row';
-    row.innerHTML = '<span>' + (i+1) + '. ' + m.name + '</span><div><button class="btn-small btn-green" onclick="openMember(' + i + ')">Open</button><button class="btn-small btn-red" onclick="deleteMember(' + i + ')">Delete</button></div>';
+    row.innerHTML = '<span>' + (i+1) + '. ' + m.name + '</span><div><button class="btn-small btn-green" onclick="openMemberNow(' + i + ')">Open</button><button class="btn-small btn-red" onclick="deleteMember(' + i + ')">Delete</button></div>';
     div.appendChild(row);
   });
+}
+
+function openMemberNow(i){
+  currentMember = i;
+  document.getElementById('detail-title').textContent = members[i].name;
+  document.getElementById('detail-month').textContent = 'Year: ' + document.getElementById('year').value + ' | Month: ' + document.getElementById('month').value;
+  showFieldDisplay();
+  showPage('member-detail');
 }
 
 function deleteMember(i){
