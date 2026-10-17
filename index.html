@@ -38,7 +38,7 @@ button{padding:10px 14px;background:#c9a227;border:none;border-radius:8px;font-w
   <h3>Society code</h3>
   <input type="password" id="scode" placeholder="Society code">
   <button class="btn-full btn-dark" onclick="openMain()">Open</button>
-  <button class="btn-full" onclick="alert('Install app')">Install app</button>
+  <button class="btn-full" onclick="alert('To install: open browser menu and choose Add to Home Screen')">Install app</button>
 </div>
 
 <div class="card hidden" id="main">
@@ -330,11 +330,12 @@ function getMonthKey(){
 function showExcel(){
   const key = getMonthKey();
   const div = document.getElementById('excel-table');
-  let html = '<table border="1" style="width:100%;border-collapse:collapse;font-size:12pt;"><tr style="background:#0d2b4a;color:#fff;"><th>NAME</th><th>SHARE</th><th>TF</th><th>GF</th><th>LTL</th><th>STL</th><th>FORM</th><th>TOTAL</th></tr>';
+  let html = '<table border="1" style="width:100%;border-collapse:collapse;font-size:11pt;">';
+  html += '<tr style="background:#0d2b4a;color:#fff;"><th>NAME</th><th>ACCT</th><th>SHARE</th><th>SHARE THIS MONTH</th><th>TF</th><th>TF THIS MONTH</th><th>GF</th><th>GF THIS MONTH</th><th>LTL</th><th>STL</th><th>LTLP</th><th>LTLI</th><th>LTLB</th><th>STLP</th><th>STLI</th><th>STLB</th><th>FORM</th><th>REGISTRATION</th><th>TOTAL</th></tr>';
   members.forEach(m => {
     const d = (m.months && m.months[key]) || {};
-    const total = (d.share||0) + (d.tf||0) + (d.gf||0) + (d.ltl||0) + (d.stl||0);
-    html += '<tr><td>' + m.name + '</td><td>' + (d.share||0) + '</td><td>' + (d.tf||0) + '</td><td>' + (d.gf||0) + '</td><td>' + (d.ltl||0) + '</td><td>' + (d.stl||0) + '</td><td>' + (d.form||0) + '</td><td>' + total + '</td></tr>';
+    const total = (d.share||0)+(d.tf||0)+(d.gf||0)+(d.ltl||0)+(d.stl||0);
+    html += '<tr><td>'+m.name+'</td><td>'+(d.acct||'')+'</td><td>'+(d.share||0)+'</td><td>'+(d.shareMonth||0)+'</td><td>'+(d.tf||0)+'</td><td>'+(d.tfMonth||0)+'</td><td>'+(d.gf||0)+'</td><td>'+(d.gfMonth||0)+'</td><td>'+(d.ltl||0)+'</td><td>'+(d.stl||0)+'</td><td>'+(d.ltlp||0)+'</td><td>'+(d.ltli||0)+'</td><td>'+(d.ltlb||0)+'</td><td>'+(d.stlp||0)+'</td><td>'+(d.stli||0)+'</td><td>'+(d.stlb||0)+'</td><td>'+(d.form||0)+'</td><td>'+(d.registration||0)+'</td><td>'+total+'</td></tr>';
   });
   html += '</table>';
   div.innerHTML = html;
