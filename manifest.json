@@ -1,19 +1,14 @@
 {
   "name": "Nhseccs Private Banking",
   "short_name": "Nhseccs",
-  "start_url": "/",
+  "start_url": "https://kunalnandi56-cloud.github.io/NHS-Finance-/",
   "display": "standalone",
   "background_color": "#e8f0f8",
   "theme_color": "#0d2b4a",
   "icons": [
     {
-      "src": "logo.png",
+      "src": "https://kunalnandi56-cloud.github.io/NHS-Finance-/logo.png",
       "sizes": "192x192",
-      "type": "image/png"
-    },
-    {
-      "src": "logo.png",
-      "sizes": "512x512",
       "type": "image/png"
     }
   ]
