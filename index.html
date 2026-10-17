@@ -350,8 +350,8 @@ function saveInterest(){
   if(mIdx > 0) prevKey = year + '-' + monthsOrder[mIdx-1];
   else if(mIdx === 0) prevKey = (parseInt(year)-1) + '-March';
   const prev = (m.months && m.months[prevKey]) || {};
-  const ltl = prev.ltlb || m.ltl || 0;
-  const stl = prev.stlb || m.stl || 0;
+  const ltl = (prev.ltlb !== undefined && prev.ltlb !== null) ? prev.ltlb : (m.ltl || 0);
+  const stl = (prev.stlb !== undefined && prev.stlb !== null) ? prev.stlb : (m.stl || 0);
   const ltlRate = parseFloat(document.getElementById('ltl-int').value) || 7;
   const stlRate = parseFloat(document.getElementById('stl-int').value) || 9;
   m.months[key].ltli = Math.round(ltl * (ltlRate/100) * (1/12));
@@ -380,7 +380,6 @@ function showExcel(){
   members.forEach(m => {
     const d = (m.months && m.months[key]) || {};
     const prev = (m.months && m.months[prevKey]) || {};
-    // Use stored LTLB from previous month if it exists
     let ltl = 0;
     let stl = 0;
     if(prev.ltlb !== undefined && prev.ltlb !== null) ltl = prev.ltlb;
