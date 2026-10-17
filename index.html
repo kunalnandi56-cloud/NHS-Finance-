@@ -30,6 +30,17 @@ button{padding:10px 16px;background:#c9a227;border:none;border-radius:8px;font-w
   <h2>Welcome</h2>
   <button class="btn-full" onclick="show('member')">Member Login</button>
   <button class="btn-full" onclick="show('admin')">Administrator Login</button>
+  <button class="btn-full" onclick="show('create')">Create First Member / Admin</button>
+</div>
+
+<div class="card hidden" id="create">
+  <h2>Create Member</h2>
+  <input type="text" id="c-name" placeholder="Member Name">
+  <input type="password" id="c-pass" placeholder="Password" value="123456">
+  <label><input type="checkbox" id="c-admin"> Make this member an Administrator</label>
+  <button class="btn-full" onclick="createMember()">Create</button>
+  <div id="c-msg" class="error"></div>
+  <button onclick="show('menu')">Back</button>
 </div>
 
 <div class="card hidden" id="member">
