@@ -32,7 +32,7 @@ th{background:#e3f2fd;}
 <div class="card" id="security">
   <h3>Security Gate</h3>
   <input type="password" id="sec-code" placeholder="6-digit security code" maxlength="6">
-  <button class="btn-full btn-dark" onclick="checkSecurity()">Continue</button>
+  <button class="btn-full btn-dark" onclick="if(document.getElementById('sec-code').value.trim()==='123456'){document.getElementById('security').classList.add('hidden');document.getElementById('menu').classList.remove('hidden');}else{document.getElementById('sec-err').innerText='Invalid security code';}">Continue</button>
   <div id="sec-err" class="error"></div>
 </div>
 
