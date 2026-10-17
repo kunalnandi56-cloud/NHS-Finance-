@@ -3,27 +3,19 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NHS ECCS - Secure Member Banking</title>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<title>NHS ECCS</title>
 <style>
 body{font-family:Arial,sans-serif;background:#e8f0f8;margin:0;padding:0;}
 .header{background:#0d2b4a;color:#fff;text-align:center;padding:12px;}
 .header h1{font-size:16px;margin:4px 0;}
-.header p{font-size:12px;margin:2px 0;}
 .container{max-width:600px;margin:20px auto;padding:0 15px;}
 .card{background:#fff;border-radius:12px;padding:20px;box-shadow:0 4px 15px rgba(0,0,0,.1);margin-bottom:15px;}
-input,select{width:100%;padding:12px;margin:8px 0;border:1px solid #ccc;border-radius:8px;box-sizing:border-box;}
-.btn{display:block;width:100%;padding:14px;border:none;border-radius:8px;font-weight:bold;cursor:pointer;margin:6px 0;text-align:center;}
+input{width:100%;padding:12px;margin:8px 0;border:1px solid #ccc;border-radius:8px;box-sizing:border-box;}
+.btn{display:block;width:100%;padding:14px;border:none;border-radius:8px;font-weight:bold;cursor:pointer;margin:6px 0;}
 .btn-dark{background:#0d2b4a;color:#fff;}
 .btn-pink{background:#f8d7da;color:#721c24;}
-.btn-yellow{background:#fff3cd;color:#856404;}
-.btn-purple{background:#e2d5f1;color:#4a2c6a;}
 .btn-gold{background:#c9a227;color:#1a2a4a;}
-.btn-red{background:#8b1e3f;color:#fff;}
 .hidden{display:none;}
-.error{color:red;text-align:center;margin-top:8px;}
-.top-bar{display:flex;gap:10px;margin-bottom:15px;}
-.top-bar button{flex:1;}
 </style>
 </head>
 <body>
@@ -35,135 +27,37 @@ input,select{width:100%;padding:12px;margin:8px 0;border:1px solid #ccc;border-r
 </div>
 
 <div class="container">
-  <!-- Society Code -->
-  <div id="screen-code" class="card">
+  <div id="s1" class="card">
     <h2>Society code</h2>
-    <p>This link is only for the 50 members of NHS ECCS. Enter the society code first.</p>
-    <input type="password" id="soc-code" placeholder="Society code">
-    <button class="btn btn-dark" onclick="if(document.getElementById('soc-code').value.trim()==='123456'){document.getElementById('screen-code').classList.add('hidden');document.getElementById('screen-main').classList.remove('hidden');}else{document.getElementById('code-err').innerText='Invalid society code';}">Open</button>
-    <div id="code-err" class="error"></div>
+    <p>Enter the society code first.</p>
+    <input type="password" id="code" placeholder="Society code">
+    <button class="btn btn-dark" onclick="if(document.getElementById('code').value.trim()==='123456'){document.getElementById('s1').classList.add('hidden');document.getElementById('s2').classList.remove('hidden');}else{alert('Invalid code');}">Open</button>
   </div>
 
-  <!-- Main Menu -->
-  <div id="screen-main" class="card hidden">
-    <div class="top-bar">
-      <button class="btn btn-gold" onclick="alert('Install app feature coming')">Install app</button>
-      <button class="btn btn-red" onclick="logout()">LOGOUT</button>
-    </div>
+  <div id="s2" class="card hidden">
     <h3>First page</h3>
-    <p>Create password. Add 3 members and a 6-digit ID for each. After that only Login or Administrative login.</p>
-    <button class="btn btn-dark" onclick="document.getElementById('screen-main').classList.add('hidden');document.getElementById('screen-login').classList.remove('hidden');loadNames();">Login</button>
-    <button class="btn btn-pink" onclick="document.getElementById('screen-main').classList.add('hidden');document.getElementById('screen-admin').classList.remove('hidden');">Administrative login</button>
-    <button class="btn btn-yellow" onclick="alert('Change ID feature coming')">Change ID</button>
-    <button class="btn btn-purple" onclick="alert('Change password feature coming')">Change password</button>
+    <button class="btn btn-dark" onclick="document.getElementById('s2').classList.add('hidden');document.getElementById('s3').classList.remove('hidden');">Login</button>
+    <button class="btn btn-pink" onclick="document.getElementById('s2').classList.add('hidden');document.getElementById('s4').classList.remove('hidden');">Administrative login</button>
+    <button class="btn btn-gold" onclick="alert('Change ID')">Change ID</button>
+    <button class="btn btn-gold" onclick="alert('Change password')">Change password</button>
   </div>
 
-  <!-- Member Login -->
-  <div id="screen-login" class="card hidden">
+  <div id="s3" class="card hidden">
     <h2>Login</h2>
-    <select id="m-name"></select>
-    <input type="password" id="m-pass" placeholder="Password">
-    <button class="btn btn-dark" onclick="memberLogin()">Login</button>
-    <div id="m-err" class="error"></div>
-    <button class="btn btn-gold" onclick="show('main')">Back</button>
+    <input type="text" placeholder="Name">
+    <input type="password" placeholder="Password">
+    <button class="btn btn-dark" onclick="alert('Member login - database next')">Login</button>
+    <button class="btn btn-gold" onclick="document.getElementById('s3').classList.add('hidden');document.getElementById('s2').classList.remove('hidden');">Back</button>
   </div>
 
-  <!-- Admin Login -->
-  <div id="screen-admin" class="card hidden">
+  <div id="s4" class="card hidden">
     <h2>Administrative login</h2>
-    <p>Only the 3 administrative members. Password and 6-digit ID both required.</p>
-    <input type="password" id="a-pass" placeholder="Password">
-    <input type="text" id="a-id" placeholder="6-digit ID" maxlength="6">
-    <button class="btn btn-pink" onclick="adminLogin()">Administrative login</button>
-    <div id="a-err" class="error"></div>
-    <button class="btn btn-gold" onclick="show('main')">Back</button>
-  </div>
-
-  <!-- Create / Add Member -->
-  <div id="screen-create" class="card hidden">
-    <h2>Add Member</h2>
-    <input type="text" id="c-name" placeholder="Member Name">
-    <input type="password" id="c-pass" placeholder="Password" value="123456">
-    <label><input type="checkbox" id="c-admin"> Make Administrator</label>
-    <button class="btn btn-dark" onclick="createMember()">Create</button>
-    <div id="c-msg" class="error"></div>
-    <button class="btn btn-gold" onclick="show('main')">Back</button>
+    <p>Password and 6-digit ID both required.</p>
+    <input type="password" id="apass" placeholder="Password">
+    <input type="text" id="aid" placeholder="6-digit ID" maxlength="6">
+    <button class="btn btn-pink" onclick="if(document.getElementById('apass').value==='123456' && document.getElementById('aid').value==='123456'){alert('Admin login successful');document.getElementById('s4').classList.add('hidden');document.getElementById('s2').classList.remove('hidden');}else{alert('Invalid');}">Administrative login</button>
+    <button class="btn btn-gold" onclick="document.getElementById('s4').classList.add('hidden');document.getElementById('s2').classList.remove('hidden');">Back</button>
   </div>
 </div>
-
-<script>
-let supabase = null;
-try {
-  if (window.supabase) {
-    supabase = window.supabase.createClient(
-      'https://jmmbtmtocsnzvpantqpd.supabase.co',
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImptbWJ0bXRvY3NuenZwYW50cXBkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTIyMDU0NzMsImV4cCI6MjEwNzc4MTQ3M30.tEkXvFRh2voYPBil6fTI0BXmub8Nh479dHoNNUbfdrY'
-    );
-  }
-} catch(e){}
-
-function show(id){
-  document.querySelectorAll('.card').forEach(c => c.classList.add('hidden'));
-  document.getElementById('screen-'+id).classList.remove('hidden');
-  if(id==='login') loadNames();
-}
-
-function checkCode(){
-  if(document.getElementById('soc-code').value.trim()==='123456') show('main');
-  else document.getElementById('code-err').innerText = 'Invalid society code';
-}
-
-async function loadNames(){
-  if(!supabase) return;
-  const {data} = await supabase.from('members').select('name').order('name');
-  const sel = document.getElementById('m-name');
-  sel.innerHTML = '<option value="">Select Name</option>';
-  (data||[]).forEach(m => {
-    const o = document.createElement('option');
-    o.value = m.name; o.textContent = m.name; sel.appendChild(o);
-  });
-}
-
-async function memberLogin(){
-  if(!supabase){ alert('Database not ready'); return; }
-  const name = document.getElementById('m-name').value;
-  const pass = document.getElementById('m-pass').value;
-  const {data, error} = await supabase.from('members').select('*').eq('name',name).eq('password',pass).single();
-  if(error || !data){ document.getElementById('m-err').innerText = 'Invalid'; return; }
-  alert('Login successful for ' + data.name);
-  show('main');
-}
-
-function adminLoginNow(){
-  alert('Admin login button clicked');
-  adminLogin();
-}
-  if(!supabase){ alert('Database not ready'); return; }
-  const pass = document.getElementById('a-pass').value;
-  const id = document.getElementById('a-id').value.trim();
-  const {data, error} = await supabase.from('members').select('*').eq('password',pass).eq('is_admin',true).single();
-  if(error || !data || id !== '123456'){ document.getElementById('a-err').innerText = 'Invalid'; return; }
-  alert('Admin login successful');
-  show('create');
-}
-
-async function createMember(){
-  if(!supabase){ alert('Database not ready'); return; }
-  const name = document.getElementById('c-name').value.trim();
-  const pass = document.getElementById('c-pass').value.trim() || '123456';
-  const isAdmin = document.getElementById('c-admin').checked;
-  if(!name){ document.getElementById('c-msg').innerText = 'Enter name'; return; }
-  const {error} = await supabase.from('members').insert({name, password:pass, is_admin:isAdmin});
-  if(!error){
-    document.getElementById('c-msg').innerText = 'Member created';
-    alert('Created successfully');
-    document.getElementById('c-name').value = '';
-  } else {
-    document.getElementById('c-msg').innerText = 'Error: ' + error.message;
-  }
-}
-
-function logout(){ show('code'); }
-</script>
 </body>
 </html>
