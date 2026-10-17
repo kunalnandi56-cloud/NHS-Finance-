@@ -241,6 +241,12 @@ let currentField = '';
 function showPage(id){
   document.querySelectorAll('.card').forEach(c => c.classList.add('hidden'));
   document.getElementById(id).classList.remove('hidden');
+  // Add year/month to admin pages
+  const ym = document.querySelector('.year-month');
+  if(ym && ['admin-login','interest','excel','rules','ltl','add-members','admin-next','choose-admin','change-admin','member-detail'].includes(id)){
+    const target = document.getElementById(id);
+    if(!target.contains(ym)) target.insertBefore(ym, target.children[1] || null);
+  }
   if(id === 'add-members') showList();
   if(id === 'member-login') loadMemberNames();
   if(id === 'excel') showExcel();
