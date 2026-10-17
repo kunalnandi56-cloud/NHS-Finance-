@@ -400,6 +400,7 @@ function showExcel(){
   });
   html += '</table>';
   div.innerHTML = html;
+  document.getElementById('debug-info').textContent = 'Current key: ' + key + ' | Previous key: ' + prevKey + ' | Members: ' + members.length;
 }
 
 function loadInterestNames(){
