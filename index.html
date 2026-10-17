@@ -370,7 +370,20 @@ function saveInterest(){
   const name = document.getElementById('int-member').value;
   const m = members.find(x => x.name === name);
   if(!m){ alert('Select a member'); return; }
-  alert('Saved for ' + name);
+  const key = getMonthKey();
+  if(!m.months) m.months = {};
+  if(!m.months[key]) m.months[key] = {};
+  m.months[key].shareMonth = parseFloat(document.getElementById('int-share').value) || 0;
+  m.months[key].tfMonth = parseFloat(document.getElementById('int-tf').value) || 0;
+  m.months[key].gfMonth = parseFloat(document.getElementById('int-gf').value) || 0;
+  m.months[key].ltlp = parseFloat(document.getElementById('ltlp').value) || 0;
+  m.months[key].stlp = parseFloat(document.getElementById('stlp').value) || 0;
+  m.share = m.months[key].shareMonth || m.share;
+  m.tf = m.months[key].tfMonth || m.tf;
+  m.gf = m.months[key].gfMonth || m.gf;
+  saveMembers();
+  alert('Saved for ' + name + ' — ' + key);
+  showExcel();
 }
 
 function loadMemberNames(){
