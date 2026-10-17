@@ -341,6 +341,23 @@ function saveInterest(){
   m.months[key].gfMonth = gfVal;
   m.months[key].ltlp = ltlpVal;
   m.months[key].stlp = stlpVal;
+  // Calculate and store LTLB/STLB for carry-forward
+  const monthsOrder = ['April','May','June','July','August','September','October','November','December','January','February','March'];
+  const month = document.getElementById('month').value;
+  const year = document.getElementById('year').value;
+  const mIdx = monthsOrder.indexOf(month);
+  let prevKey = key;
+  if(mIdx > 0) prevKey = year + '-' + monthsOrder[mIdx-1];
+  else if(mIdx === 0) prevKey = (parseInt(year)-1) + '-March';
+  const prev = (m.months && m.months[prevKey]) || {};
+  const ltl = prev.ltlb || m.ltl || 0;
+  const stl = prev.stlb || m.stl || 0;
+  const ltlRate = parseFloat(document.getElementById('ltl-int').value) || 7;
+  const stlRate = parseFloat(document.getElementById('stl-int').value) || 9;
+  m.months[key].ltli = Math.round(ltl * (ltlRate/100) * (1/12));
+  m.months[key].ltlb = ltl - ltlpVal;
+  m.months[key].stli = Math.round(stl * (stlRate/100) * (1/12));
+  m.months[key].stlb = stl - stlpVal;
   localStorage.setItem('nhs_members', JSON.stringify(members));
   document.getElementById('curr-share').textContent = 'Current SHARE: ' + shareVal;
   document.getElementById('curr-tf').textContent = 'Current TF: ' + tfVal;
