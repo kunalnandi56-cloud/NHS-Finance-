@@ -134,7 +134,10 @@ async function memberLogin(){
   show('main');
 }
 
-async function adminLogin(){
+function adminLoginNow(){
+  alert('Admin login button clicked');
+  adminLogin();
+}
   if(!supabase){ alert('Database not ready'); return; }
   const pass = document.getElementById('a-pass').value;
   const id = document.getElementById('a-id').value.trim();
