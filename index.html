@@ -337,11 +337,14 @@ function showExcel(){
   members.forEach(m => {
     const key = year + '-' + document.getElementById('month').value;
     const d = (m.months && m.months[key]) || {};
-    const share = d.share || m.share || 0;
-    const tf = d.tf || m.tf || 0;
-    const gf = d.gf || m.gf || 0;
-    const total = (d.shareMonth||0) + (d.tfMonth||0) + (d.gfMonth||0) + (d.ltlp||0) + (d.ltli||0) + (d.stlp||0) + (d.stli||0) + (d.form||0) + (d.registration||0);
-    html += '<tr><td>'+m.name+'</td><td>'+(d.acct||'')+'</td><td>'+share+'</td><td>'+(d.shareMonth||0)+'</td><td>'+tf+'</td><td>'+(d.tfMonth||0)+'</td><td>'+gf+'</td><td>'+(d.gfMonth||0)+'</td><td>'+(d.ltl||0)+'</td><td>'+(d.stl||0)+'</td><td>'+(d.ltlp||0)+'</td><td>'+(d.ltli||0)+'</td><td>'+(d.ltlb||0)+'</td><td>'+(d.stlp||0)+'</td><td>'+(d.stli||0)+'</td><td>'+(d.stlb||0)+'</td><td>'+(d.form||0)+'</td><td>'+(d.registration||0)+'</td><td>'+total+'</td></tr>';
+    const ltlRate = 7;
+    const stlRate = 9;
+    const ltli = Math.round((d.ltl||0) * (ltlRate/100) * (1/12));
+    const ltlb = (d.ltl||0) - (d.ltlp||0);
+    const stli = Math.round((d.stl||0) * (stlRate/100) * (1/12));
+    const stlb = (d.stl||0) - (d.stlp||0);
+    const total = (d.shareMonth||0) + (d.tfMonth||0) + (d.gfMonth||0) + (d.ltlp||0) + ltli + (d.stlp||0) + stli + (d.form||0) + (d.registration||0);
+    html += '<tr><td>'+m.name+'</td><td>'+(d.acct||'')+'</td><td>'+(d.share||m.share||0)+'</td><td>'+(d.shareMonth||0)+'</td><td>'+(d.tf||m.tf||0)+'</td><td>'+(d.tfMonth||0)+'</td><td>'+(d.gf||m.gf||0)+'</td><td>'+(d.gfMonth||0)+'</td><td>'+(d.ltl||0)+'</td><td>'+(d.stl||0)+'</td><td>'+(d.ltlp||0)+'</td><td>'+ltli+'</td><td>'+ltlb+'</td><td>'+(d.stlp||0)+'</td><td>'+stli+'</td><td>'+stlb+'</td><td>'+(d.form||0)+'</td><td>'+(d.registration||0)+'</td><td>'+total+'</td></tr>';
   });
   html += '</table>';
   div.innerHTML = html;
