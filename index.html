@@ -1,63 +1,126 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>NHS ECCS</title>
 <style>
-body{font-family:Arial,sans-serif;background:#e8f0f8;margin:0;padding:0;}
-.header{background:#0d2b4a;color:#fff;text-align:center;padding:12px;}
-.header h1{font-size:16px;margin:4px 0;}
-.container{max-width:600px;margin:20px auto;padding:0 15px;}
-.card{background:#fff;border-radius:12px;padding:20px;box-shadow:0 4px 15px rgba(0,0,0,.1);margin-bottom:15px;}
+body{font-family:Arial;background:#e8f0f8;margin:0;padding:20px;}
+.header{background:#0d2b4a;color:#fff;text-align:center;padding:15px;border-radius:8px;margin-bottom:20px;}
+.card{background:#fff;padding:20px;border-radius:12px;max-width:500px;margin:15px auto;box-shadow:0 4px 12px rgba(0,0,0,.1);}
 input{width:100%;padding:12px;margin:8px 0;border:1px solid #ccc;border-radius:8px;box-sizing:border-box;}
-.btn{display:block;width:100%;padding:14px;border:none;border-radius:8px;font-weight:bold;cursor:pointer;margin:6px 0;}
-.btn-dark{background:#0d2b4a;color:#fff;}
-.btn-pink{background:#f8d7da;color:#721c24;}
-.btn-gold{background:#c9a227;color:#1a2a4a;}
+button{width:100%;padding:12px;background:#c9a227;border:none;border-radius:8px;font-weight:bold;cursor:pointer;margin:6px 0;}
 .hidden{display:none;}
+.error{color:red;text-align:center;}
 </style>
 </head>
 <body>
 <div class="header">
-  <div style="background:#0d2b4a;color:#fff;display:inline-block;padding:4px 12px;border-radius:4px;font-size:12px;">NHS ECCS · SECURE MEMBER BANKING</div>
-  <h1>NEBADHAI HIGH SCHOOL</h1>
-  <h1>Employees Co-operative Credit Society Limited</h1>
-  <p>Duttapukur · Barasat-I · North 24 Parganas</p>
+  <h2>NHS ECCS · SECURE MEMBER BANKING</h2>
+  <h3>NEBADHAI HIGH SCHOOL</h3>
+  <p>Employees Co-operative Credit Society Limited</p>
 </div>
 
-<div class="container">
-  <div id="s1" class="card">
-    <h2>Society code</h2>
-    <p>Enter the society code first.</p>
-    <input type="password" id="code" placeholder="Society code">
-    <button class="btn btn-dark" onclick="if(document.getElementById('code').value.trim()==='123456'){document.getElementById('s1').classList.add('hidden');document.getElementById('s2').classList.remove('hidden');}else{alert('Invalid code');}">Open</button>
-  </div>
-
-  <div id="s2" class="card hidden">
-    <h3>First page</h3>
-    <button class="btn btn-dark" onclick="document.getElementById('s2').classList.add('hidden');document.getElementById('s3').classList.remove('hidden');">Login</button>
-    <button class="btn btn-pink" onclick="document.getElementById('s2').classList.add('hidden');document.getElementById('s4').classList.remove('hidden');">Administrative login</button>
-    <button class="btn btn-gold" onclick="alert('Change ID')">Change ID</button>
-    <button class="btn btn-gold" onclick="alert('Change password')">Change password</button>
-  </div>
-
-  <div id="s3" class="card hidden">
-    <h2>Login</h2>
-    <input type="text" placeholder="Name">
-    <input type="password" placeholder="Password">
-    <button class="btn btn-dark" onclick="alert('Member login - database next')">Login</button>
-    <button class="btn btn-gold" onclick="document.getElementById('s3').classList.add('hidden');document.getElementById('s2').classList.remove('hidden');">Back</button>
-  </div>
-
-  <div id="s4" class="card hidden">
-    <h2>Administrative login</h2>
-    <p>Password and 6-digit ID both required.</p>
-    <input type="password" id="apass" placeholder="Password">
-    <input type="text" id="aid" placeholder="6-digit ID" maxlength="6">
-    <button class="btn btn-pink" onclick="if(document.getElementById('apass').value==='123456' && document.getElementById('aid').value==='123456'){alert('Admin login successful');document.getElementById('s4').classList.add('hidden');document.getElementById('s2').classList.remove('hidden');}else{alert('Invalid');}">Administrative login</button>
-    <button class="btn btn-gold" onclick="document.getElementById('s4').classList.add('hidden');document.getElementById('s2').classList.remove('hidden');">Back</button>
-  </div>
+<div class="card" id="code">
+  <h3>Society code</h3>
+  <input type="password" id="scode" placeholder="Society code">
+  <button onclick="if(document.getElementById('scode').value==='123456'){document.getElementById('code').classList.add('hidden');document.getElementById('main').classList.remove('hidden');}else{alert('Invalid');}">Open</button>
 </div>
+
+<div class="card hidden" id="main">
+  <h3>Main</h3>
+  <button onclick="document.getElementById('main').classList.add('hidden');document.getElementById('add').classList.remove('hidden');">Add Administrators (max 3)</button>
+  <button onclick="document.getElementById('main').classList.add('hidden');document.getElementById('login').classList.remove('hidden');loadNames();">Member Login</button>
+  <button onclick="document.getElementById('main').classList.add('hidden');document.getElementById('changep').classList.remove('hidden');">Change Password</button>
+</div>
+
+<div class="card hidden" id="add">
+  <h3>Add Administrators</h3>
+  <p>Add up to 3 members who will be administrators. Default password is 123456.</p>
+  <input type="text" id="aname" placeholder="Administrator Name">
+  <button onclick="addAdmin()">Add Administrator</button>
+  <div id="alist"></div>
+  <button onclick="document.getElementById('add').classList.add('hidden');document.getElementById('main').classList.remove('hidden');">Back</button>
+</div>
+
+<div class="card hidden" id="login">
+  <h3>Member Login</h3>
+  <select id="mname"></select>
+  <input type="password" id="mpass" placeholder="Password">
+  <button onclick="doLogin()">Login</button>
+  <div id="lerr" class="error"></div>
+  <button onclick="document.getElementById('login').classList.add('hidden');document.getElementById('main').classList.remove('hidden');">Back</button>
+</div>
+
+<div class="card hidden" id="changep">
+  <h3>Change Password</h3>
+  <select id="cname"></select>
+  <input type="password" id="oldp" placeholder="Current Password">
+  <input type="password" id="newp" placeholder="New Password">
+  <button onclick="changePass()">Update Password</button>
+  <div id="cerr" class="error"></div>
+  <button onclick="document.getElementById('changep').classList.add('hidden');document.getElementById('main').classList.remove('hidden');">Back</button>
+</div>
+
+<script>
+const members = JSON.parse(localStorage.getItem('nhs_members') || '[]');
+
+function save(){ localStorage.setItem('nhs_members', JSON.stringify(members)); }
+
+function addAdmin(){
+  const name = document.getElementById('aname').value.trim();
+  if(!name) return;
+  if(members.filter(m=>m.isAdmin).length >= 3){ alert('Maximum 3 administrators'); return; }
+  if(members.find(m=>m.name===name)){ alert('Name already exists'); return; }
+  members.push({name, password:'123456', isAdmin:true});
+  save();
+  document.getElementById('aname').value='';
+  showAdmins();
+  alert('Administrator added. Password is 123456');
+}
+
+function showAdmins(){
+  const div = document.getElementById('alist');
+  div.innerHTML = '<h4>Current Administrators:</h4>';
+  members.filter(m=>m.isAdmin).forEach(m => {
+    div.innerHTML += '<div>' + m.name + ' (password: 123456)</div>';
+  });
+}
+
+function loadNames(){
+  const sel = document.getElementById('mname');
+  sel.innerHTML = '<option value="">Select Name</option>';
+  members.forEach(m => {
+    const o = document.createElement('option');
+    o.value = m.name; o.textContent = m.name; sel.appendChild(o);
+  });
+  const csel = document.getElementById('cname');
+  csel.innerHTML = sel.innerHTML;
+}
+
+function doLogin(){
+  const name = document.getElementById('mname').value;
+  const pass = document.getElementById('mpass').value;
+  const m = members.find(x => x.name===name && x.password===pass);
+  if(m){ alert('Login successful for ' + m.name); }
+  else { document.getElementById('lerr').innerText = 'Invalid name or password'; }
+}
+
+function changePass(){
+  const name = document.getElementById('cname').value;
+  const oldp = document.getElementById('oldp').value;
+  const newp = document.getElementById('newp').value;
+  const m = members.find(x => x.name===name && x.password===oldp);
+  if(!m){ document.getElementById('cerr').innerText = 'Invalid name or current password'; return; }
+  if(!newp){ document.getElementById('cerr').innerText = 'Enter new password'; return; }
+  m.password = newp;
+  save();
+  alert('Password changed successfully');
+  document.getElementById('oldp').value='';
+  document.getElementById('newp').value='';
+}
+
+showAdmins();
+</script>
 </body>
 </html>
