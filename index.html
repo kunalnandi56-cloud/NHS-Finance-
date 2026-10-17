@@ -5,11 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Nhseccs Private Banking</title>
 <style>
-body{font-family:Arial;background:#e8f0f8;margin:0;padding:20px;}
+body{font-family:'Times New Roman',Times,serif;background:#e8f0f8;margin:0;padding:20px;font-size:14pt;}
 .header{background:#0d2b4a;color:#fff;text-align:center;padding:15px;border-radius:8px;margin-bottom:20px;}
+.header h2,.header h3{font-size:18pt;}
 .card{background:#fff;padding:20px;border-radius:12px;max-width:500px;margin:15px auto;box-shadow:0 4px 12px rgba(0,0,0,.1);}
-input,select{width:100%;padding:12px;margin:8px 0;border:1px solid #ccc;border-radius:8px;box-sizing:border-box;}
-button{width:100%;padding:12px;background:#c9a227;border:none;border-radius:8px;font-weight:bold;cursor:pointer;margin:6px 0;}
+input,select,textarea{width:100%;padding:12px;margin:8px 0;border:1px solid #ccc;border-radius:8px;box-sizing:border-box;font-family:'Times New Roman',Times,serif;font-size:14pt;}
+button{width:100%;padding:12px;background:#c9a227;border:none;border-radius:8px;font-weight:bold;cursor:pointer;margin:6px 0;font-family:'Times New Roman',Times,serif;font-size:14pt;}
 .btn-dark{background:#0d2b4a;color:#fff;}
 .btn-pink{background:#f8d7da;color:#721c24;}
 .btn-small{width:auto;display:inline-block;padding:8px 12px;}
@@ -18,15 +19,18 @@ button{width:100%;padding:12px;background:#c9a227;border:none;border-radius:8px;
 .bottom-btns button{flex:1;}
 .pass-row{display:flex;gap:8px;}
 .pass-row input{flex:1;}
+.year-month{display:flex;gap:10px;}
+.year-month select{flex:1;}
 </style>
 </head>
 <body>
 <div class="header">
   <h2>Nhseccs Private Banking</h2>
-  <p>NEBADHAI HIGH SCHOOL Employees Co-operative Credit Society Limited</p>
+  <h3>NEBADHAI HIGH SCHOOL</h3>
+  <p>Employees Co-operative Credit Society Limited</p>
+  <p>Duttapukur · Barasat-I · North 24 Parganas</p>
 </div>
 
-<!-- First Page -->
 <div class="card" id="first">
   <h3>Society code</h3>
   <div class="pass-row">
@@ -34,10 +38,9 @@ button{width:100%;padding:12px;background:#c9a227;border:none;border-radius:8px;
     <button class="btn-small" onclick="toggleShow('scode')">Show</button>
   </div>
   <button class="btn-dark" onclick="openMain()">Open</button>
-  <button onclick="alert('Install app feature')">Install app</button>
+  <button onclick="alert('Install app')">Install app</button>
 </div>
 
-<!-- Main -->
 <div class="card hidden" id="main">
   <h3>Main</h3>
   <button class="btn-dark" onclick="show('member-login')">Member Login</button>
@@ -48,18 +51,17 @@ button{width:100%;padding:12px;background:#c9a227;border:none;border-radius:8px;
   </div>
 </div>
 
-<!-- Admin Login -->
 <div class="card hidden" id="admin-login">
   <h3>Administrator Login</h3>
-  <div class="pass-row">
-    <input type="password" id="a-pass" placeholder="Password">
-    <button class="btn-small" onclick="toggleShow('a-pass')">Show</button>
+  <div class="year-month">
+    <select id="year"><option>2026</option><option>2025</option><option>2027</option></select>
+    <select id="month"><option>January</option><option>February</option><option>March</option><option>April</option><option>May</option><option>June</option><option>July</option><option>August</option><option>September</option><option>October</option><option>November</option><option>December</option></select>
   </div>
-  <div class="pass-row">
-    <input type="password" id="a-id" placeholder="6-digit ID" maxlength="6">
-    <button class="btn-small" onclick="toggleShow('a-id')">Show</button>
-  </div>
-  <button class="btn-pink" onclick="doAdminLogin()">Administrative login</button>
+  <button onclick="alert('Month changed to ' + document.getElementById('month').value)">Change month</button>
+  <button onclick="show('rules')">Rules and Regulations</button>
+  <button onclick="show('ltl')">LTL Application list</button>
+  <button onclick="alert('Open month')">Open month</button>
+  <button class="btn-dark" onclick="alert('Edit data')">Edit data</button>
   <button onclick="show('add-members')">Add members</button>
   <div class="bottom-btns">
     <button onclick="logout()">Logout</button>
@@ -68,7 +70,26 @@ button{width:100%;padding:12px;background:#c9a227;border:none;border-radius:8px;
   </div>
 </div>
 
-<!-- Admin Next -->
+<div class="card hidden" id="rules">
+  <h3>Rules and Regulations</h3>
+  <textarea id="rules-text" rows="8" placeholder="Write rules and regulations here"></textarea>
+  <div class="bottom-btns">
+    <button onclick="logout()">Logout</button>
+    <button onclick="show('admin-login')">Back</button>
+    <button onclick="saveRules()">Save</button>
+  </div>
+</div>
+
+<div class="card hidden" id="ltl">
+  <h3>LTL Application list</h3>
+  <textarea id="ltl-text" rows="8" placeholder="Write names of members who apply for LTL"></textarea>
+  <div class="bottom-btns">
+    <button onclick="logout()">Logout</button>
+    <button onclick="show('admin-login')">Back</button>
+    <button onclick="saveLtl()">Save</button>
+  </div>
+</div>
+
 <div class="card hidden" id="admin-next">
   <h3>Administrator Options</h3>
   <button onclick="show('choose-admin')">Choose administrator</button>
@@ -80,16 +101,15 @@ button{width:100%;padding:12px;background:#c9a227;border:none;border-radius:8px;
   </div>
 </div>
 
-<!-- Choose Admin -->
 <div class="card hidden" id="choose-admin">
   <h3>Choose Administrator</h3>
-  <input type="text" id="ca-name" placeholder="Administrator Name">
+  <input type="text" id="ca-name" placeholder="Administrator Name" oninput="this.value=this.value.toUpperCase()">
   <div class="pass-row">
     <input type="password" id="ca-pass" placeholder="Password">
     <button class="btn-small" onclick="toggleShow('ca-pass')">Show</button>
   </div>
   <div class="pass-row">
-    <input type="password" id="ca-id" placeholder="6-digit ID" maxlength="6">
+    <input type="password" id="ca-id" placeholder="ID (min 6 characters)">
     <button class="btn-small" onclick="toggleShow('ca-id')">Show</button>
   </div>
   <button onclick="chooseAdmin()">Set Administrator</button>
@@ -100,16 +120,15 @@ button{width:100%;padding:12px;background:#c9a227;border:none;border-radius:8px;
   </div>
 </div>
 
-<!-- Change Admin -->
 <div class="card hidden" id="change-admin">
   <h3>Change Administrator</h3>
-  <input type="text" id="ch-name" placeholder="New Administrator Name">
+  <input type="text" id="ch-name" placeholder="New Administrator Name" oninput="this.value=this.value.toUpperCase()">
   <div class="pass-row">
     <input type="password" id="ch-pass" placeholder="New Password">
     <button class="btn-small" onclick="toggleShow('ch-pass')">Show</button>
   </div>
   <div class="pass-row">
-    <input type="password" id="ch-id" placeholder="New 6-digit ID" maxlength="6">
+    <input type="password" id="ch-id" placeholder="New ID (min 6 characters)">
     <button class="btn-small" onclick="toggleShow('ch-id')">Show</button>
   </div>
   <button onclick="changeAdmin()">Update Administrator</button>
@@ -120,10 +139,9 @@ button{width:100%;padding:12px;background:#c9a227;border:none;border-radius:8px;
   </div>
 </div>
 
-<!-- Add Members -->
 <div class="card hidden" id="add-members">
   <h3>Add Members</h3>
-  <input type="text" id="m-name" placeholder="Member Name">
+  <input type="text" id="m-name" placeholder="Member Name" oninput="this.value=this.value.toUpperCase()">
   <button onclick="addMember()">Add Member</button>
   <div id="m-list"></div>
   <div class="bottom-btns">
@@ -133,7 +151,6 @@ button{width:100%;padding:12px;background:#c9a227;border:none;border-radius:8px;
   </div>
 </div>
 
-<!-- Member Login -->
 <div class="card hidden" id="member-login">
   <h3>Member Login</h3>
   <select id="ml-name"></select>
@@ -150,7 +167,7 @@ button{width:100%;padding:12px;background:#c9a227;border:none;border-radius:8px;
 
 <script>
 let members = JSON.parse(localStorage.getItem('nhs_members') || '[]');
-let admin = JSON.parse(localStorage.getItem('nhs_admin') || '{"name":"Admin","password":"123456","id":"123456"}');
+let admin = JSON.parse(localStorage.getItem('nhs_admin') || '{"name":"ADMIN","password":"123456","id":"123456"}');
 
 function saveData(){
   localStorage.setItem('nhs_members', JSON.stringify(members));
@@ -158,11 +175,23 @@ function saveData(){
   alert('Saved');
 }
 
+function saveRules(){
+  localStorage.setItem('nhs_rules', document.getElementById('rules-text').value);
+  alert('Rules saved');
+}
+
+function saveLtl(){
+  localStorage.setItem('nhs_ltl', document.getElementById('ltl-text').value);
+  alert('LTL list saved');
+}
+
 function show(id){
   document.querySelectorAll('.card').forEach(c => c.classList.add('hidden'));
   document.getElementById(id).classList.remove('hidden');
   if(id === 'member-login') loadMemberNames();
   if(id === 'add-members') showMemberList();
+  if(id === 'rules') document.getElementById('rules-text').value = localStorage.getItem('nhs_rules') || '';
+  if(id === 'ltl') document.getElementById('ltl-text').value = localStorage.getItem('nhs_ltl') || '';
 }
 
 function openMain(){
@@ -178,8 +207,8 @@ function toggleShow(id){
 }
 
 function doAdminLogin(){
-  const pass = document.getElementById('a-pass').value;
-  const id = document.getElementById('a-id').value.trim();
+  const pass = document.getElementById('a-pass') ? document.getElementById('a-pass').value : '';
+  const id = document.getElementById('a-id') ? document.getElementById('a-id').value.trim() : '';
   if(pass === admin.password && id === admin.id){
     alert('Admin login successful');
     show('admin-next');
@@ -189,7 +218,7 @@ function doAdminLogin(){
 }
 
 function addMember(){
-  const name = document.getElementById('m-name').value.trim();
+  const name = document.getElementById('m-name').value.trim().toUpperCase();
   if(!name) return;
   if(members.find(m => m.name === name)){ alert('Name exists'); return; }
   members.push({name, password:'123456'});
@@ -205,20 +234,20 @@ function showMemberList(){
 }
 
 function chooseAdmin(){
-  const name = document.getElementById('ca-name').value.trim();
+  const name = document.getElementById('ca-name').value.trim().toUpperCase();
   const pass = document.getElementById('ca-pass').value;
   const id = document.getElementById('ca-id').value.trim();
-  if(!name || !pass || !id){ alert('Fill all fields'); return; }
+  if(!name || pass.length < 6 || id.length < 6){ alert('Name required. Password and ID must be at least 6 characters.'); return; }
   admin = {name, password:pass, id};
   alert('Administrator set: ' + name);
   saveData();
 }
 
 function changeAdmin(){
-  const name = document.getElementById('ch-name').value.trim();
+  const name = document.getElementById('ch-name').value.trim().toUpperCase();
   const pass = document.getElementById('ch-pass').value;
   const id = document.getElementById('ch-id').value.trim();
-  if(!name || !pass || !id){ alert('Fill all fields'); return; }
+  if(!name || pass.length < 6 || id.length < 6){ alert('Name required. Password and ID must be at least 6 characters.'); return; }
   admin = {name, password:pass, id};
   alert('Administrator changed to: ' + name);
   saveData();
