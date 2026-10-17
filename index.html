@@ -8,7 +8,7 @@
 body{font-family:Arial;background:#e8f0f8;margin:0;padding:20px;}
 .header{background:#0d2b4a;color:#fff;text-align:center;padding:15px;border-radius:8px;margin-bottom:20px;}
 .card{background:#fff;padding:20px;border-radius:12px;max-width:500px;margin:15px auto;box-shadow:0 4px 12px rgba(0,0,0,.1);}
-input{width:100%;padding:12px;margin:8px 0;border:1px solid #ccc;border-radius:8px;box-sizing:border-box;}
+input,select{width:100%;padding:12px;margin:8px 0;border:1px solid #ccc;border-radius:8px;box-sizing:border-box;}
 button{width:100%;padding:12px;background:#c9a227;border:none;border-radius:8px;font-weight:bold;cursor:pointer;margin:6px 0;}
 .hidden{display:none;}
 .error{color:red;text-align:center;}
@@ -30,17 +30,27 @@ button{width:100%;padding:12px;background:#c9a227;border:none;border-radius:8px;
 <div class="card hidden" id="main">
   <h3>Main</h3>
   <button onclick="document.getElementById('main').classList.add('hidden');document.getElementById('add').classList.remove('hidden');">Add Administrators (max 3)</button>
+  <button onclick="document.getElementById('main').classList.add('hidden');document.getElementById('addmem').classList.remove('hidden');">Add Members</button>
   <button onclick="document.getElementById('main').classList.add('hidden');document.getElementById('login').classList.remove('hidden');loadNames();">Member Login</button>
   <button onclick="document.getElementById('main').classList.add('hidden');document.getElementById('changep').classList.remove('hidden');">Change Password</button>
 </div>
 
 <div class="card hidden" id="add">
   <h3>Add Administrators</h3>
-  <p>Add up to 3 members who will be administrators. Default password is 123456.</p>
+  <p>Add up to 3 administrators. Default password is 123456.</p>
   <input type="text" id="aname" placeholder="Administrator Name">
   <button onclick="addAdmin()">Add Administrator</button>
   <div id="alist"></div>
   <button onclick="document.getElementById('add').classList.add('hidden');document.getElementById('main').classList.remove('hidden');">Back</button>
+</div>
+
+<div class="card hidden" id="addmem">
+  <h3>Add Members</h3>
+  <p>Add regular members. Default password is 123456.</p>
+  <input type="text" id="mname-add" placeholder="Member Name">
+  <button onclick="addMember()">Add Member</button>
+  <div id="mlist"></div>
+  <button onclick="document.getElementById('addmem').classList.add('hidden');document.getElementById('main').classList.remove('hidden');">Back</button>
 </div>
 
 <div class="card hidden" id="login">
@@ -64,7 +74,6 @@ button{width:100%;padding:12px;background:#c9a227;border:none;border-radius:8px;
 
 <script>
 const members = JSON.parse(localStorage.getItem('nhs_members') || '[]');
-
 function save(){ localStorage.setItem('nhs_members', JSON.stringify(members)); }
 
 function addAdmin(){
@@ -82,9 +91,24 @@ function addAdmin(){
 function showAdmins(){
   const div = document.getElementById('alist');
   div.innerHTML = '<h4>Current Administrators:</h4>';
-  members.filter(m=>m.isAdmin).forEach(m => {
-    div.innerHTML += '<div>' + m.name + ' (password: 123456)</div>';
-  });
+  members.filter(m=>m.isAdmin).forEach(m => div.innerHTML += '<div>' + m.name + '</div>');
+}
+
+function addMember(){
+  const name = document.getElementById('mname-add').value.trim();
+  if(!name) return;
+  if(members.find(m=>m.name===name)){ alert('Name already exists'); return; }
+  members.push({name, password:'123456', isAdmin:false});
+  save();
+  document.getElementById('mname-add').value='';
+  showMembers();
+  alert('Member added. Password is 123456');
+}
+
+function showMembers(){
+  const div = document.getElementById('mlist');
+  div.innerHTML = '<h4>Current Members:</h4>';
+  members.filter(m=>!m.isAdmin).forEach(m => div.innerHTML += '<div>' + m.name + '</div>');
 }
 
 function loadNames(){
@@ -94,15 +118,18 @@ function loadNames(){
     const o = document.createElement('option');
     o.value = m.name; o.textContent = m.name; sel.appendChild(o);
   });
-  const csel = document.getElementById('cname');
-  csel.innerHTML = sel.innerHTML;
+  document.getElementById('cname').innerHTML = sel.innerHTML;
 }
 
 function doLogin(){
   const name = document.getElementById('mname').value;
   const pass = document.getElementById('mpass').value;
   const m = members.find(x => x.name===name && x.password===pass);
-  if(m){ alert('Login successful for ' + m.name); }
+  if(m){ 
+    document.getElementById('welcome-name').textContent = 'Welcome ' + m.name;
+    document.getElementById('login').classList.add('hidden');
+    document.getElementById('memberpage').classList.remove('hidden');
+  }
   else { document.getElementById('lerr').innerText = 'Invalid name or password'; }
 }
 
@@ -116,11 +143,10 @@ function changePass(){
   m.password = newp;
   save();
   alert('Password changed successfully');
-  document.getElementById('oldp').value='';
-  document.getElementById('newp').value='';
 }
 
 showAdmins();
+showMembers();
 </script>
 </body>
 </html>
