@@ -1,33 +1,202 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Nhseccs</title>
+<title>Nhseccs Private Banking</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-body{font-family:Arial;background:#e8f4ff;padding:20px;text-align:center;}
-.box{background:#fff;padding:30px;border-radius:12px;max-width:400px;margin:40px auto;box-shadow:0 4px 15px rgba(0,0,0,.1);}
-input{width:90%;padding:12px;margin:10px 0;border:1px solid #ccc;border-radius:8px;}
-button{width:90%;padding:12px;background:#c9a227;border:none;border-radius:8px;font-weight:bold;cursor:pointer;}
-.error{color:red;}
+body{font-family:Arial,sans-serif;background:#e8f4ff;padding:20px;}
+.card{background:#fff;border-radius:12px;padding:20px;max-width:700px;margin:15px auto;box-shadow:0 4px 15px rgba(0,0,0,.1);}
+h1,h2{text-align:center;color:#8b6914;}
+input,select{width:100%;padding:10px;margin:6px 0;border:1px solid #ccc;border-radius:8px;box-sizing:border-box;}
+button{padding:10px 16px;background:#c9a227;border:none;border-radius:8px;font-weight:bold;cursor:pointer;margin:4px;}
+.btn-full{width:100%;}
+.error{color:red;text-align:center;margin-top:8px;}
 .hidden{display:none;}
+.member-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #eee;}
 </style>
 </head>
 <body>
-<div class="box" id="sec">
+<div class="card" id="sec">
   <h1>Nhseccs</h1>
-  <h3>Secure Access</h3>
+  <h2>Secure Access</h2>
   <input type="password" id="code" placeholder="Security Code" maxlength="6">
-  <br>
-  <button onclick="if(document.getElementById('code').value.trim()==='123456'){document.getElementById('sec').style.display='none';document.getElementById('menu').style.display='block';}else{document.getElementById('err').innerText='Invalid';}">Continue</button>
+  <button class="btn-full" onclick="check()">Continue</button>
   <div id="err" class="error"></div>
 </div>
 
-<div class="box hidden" id="menu">
+<div class="card hidden" id="menu">
   <h2>Welcome</h2>
-  <button onclick="alert('Member Login - full version next')">Member Login</button>
-  <br><br>
-  <button onclick="alert('Administrator Login - full version next')">Administrator Login</button>
+  <button class="btn-full" onclick="show('member')">Member Login</button>
+  <button class="btn-full" onclick="show('admin')">Administrator Login</button>
 </div>
+
+<div class="card hidden" id="member">
+  <h2>Member Login</h2>
+  <select id="mname"></select>
+  <input type="password" id="mpass" placeholder="Password">
+  <button class="btn-full" onclick="memberLogin()">Login</button>
+  <div id="merr" class="error"></div>
+  <button onclick="show('menu')">Back</button>
+</div>
+
+<div class="card hidden" id="admin">
+  <h2>Administrator Login</h2>
+  <input type="text" id="aname" placeholder="Administrator Name">
+  <input type="password" id="apass" placeholder="Password">
+  <input type="text" id="aid" placeholder="ID (6 digits)" maxlength="6">
+  <button class="btn-full" onclick="adminLogin()">Authenticate</button>
+  <div id="aerr" class="error"></div>
+  <button onclick="show('menu')">Back</button>
+</div>
+
+<div class="card hidden" id="dashboard">
+  <h2>Administrator Dashboard</h2>
+  <div style="display:flex;gap:8px;">
+    <input type="text" id="newname" placeholder="New member name" style="flex:1;">
+    <button onclick="addMember()">Add</button>
+  </div>
+  <div id="mlist" style="margin-top:15px;"></div>
+  <button onclick="logout()">Logout</button>
+</div>
+
+<div class="card hidden" id="detail">
+  <h2 id="dtitle">Member</h2>
+  <button onclick="saveMember()">Save</button>
+  <button onclick="backDash()">Back</button>
+  <div style="margin-top:10px;">
+    <label>Opening TF</label><input type="number" id="otf">
+    <label>TF Rate %</label><input type="number" id="trate">
+    <label>Opening GF</label><input type="number" id="ogf">
+    <label>GF Rate %</label><input type="number" id="grate">
+    <label>Closing Share</label><input type="number" id="cshare">
+  </div>
+  <div id="msg" class="error"></div>
+</div>
+
+<script>
+let supabase = null;
+try {
+  if (window.supabase) {
+    supabase = window.supabase.createClient(
+      'https://jmmbtmtocsnzvpantqpd.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImptbWJ0bXRvY3NuenZwYW50cXBkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTIyMDU0NzMsImV4cCI6MjEwNzc4MTQ3M30.tEkXvFRh2voYPBil6fTI0BXmub8Nh479dHoNNUbfdrY'
+    );
+  }
+} catch(e){ console.log(e); }
+
+let current = null;
+
+function show(id){
+  document.querySelectorAll('.card').forEach(c => c.classList.add('hidden'));
+  document.getElementById(id).classList.remove('hidden');
+  if(id === 'member') loadNames();
+  if(id === 'dashboard') loadMembers();
+}
+
+function check(){
+  if(document.getElementById('code').value.trim() === '123456') show('menu');
+  else document.getElementById('err').innerText = 'Invalid security code';
+}
+
+async function loadNames(){
+  if(!supabase) return;
+  const {data, error} = await supabase.from('members').select('name').order('name');
+  if(error){ console.log(error); return; }
+  const sel = document.getElementById('mname');
+  sel.innerHTML = '<option value="">Select Name</option>';
+  (data||[]).forEach(m => {
+    const o = document.createElement('option');
+    o.value = m.name; o.textContent = m.name; sel.appendChild(o);
+  });
+}
+
+async function memberLogin(){
+  if(!supabase){ alert('Database connection not ready. Please refresh.'); return; }
+  const name = document.getElementById('mname').value;
+  const pass = document.getElementById('mpass').value;
+  if(!name || !pass){ document.getElementById('merr').innerText = 'Enter name and password'; return; }
+  const {data, error} = await supabase.from('members').select('*').eq('name', name).eq('password', pass).single();
+  if(error || !data){ document.getElementById('merr').innerText = 'Invalid name or password'; return; }
+  current = data;
+  show('detail');
+  document.getElementById('dtitle').textContent = data.name + ' (Your Account)';
+  fillForm(data);
+}
+
+async function adminLogin(){
+  if(!supabase){ alert('Database connection not ready. Please refresh.'); return; }
+  const name = document.getElementById('aname').value.trim();
+  const pass = document.getElementById('apass').value;
+  const id = document.getElementById('aid').value.trim();
+  if(!name || !pass || !id){ document.getElementById('aerr').innerText = 'Fill all fields'; return; }
+  const {data, error} = await supabase.from('members').select('*').eq('name', name).eq('password', pass).eq('is_admin', true).single();
+  if(error || !data || id !== '123456'){ document.getElementById('aerr').innerText = 'Invalid credentials'; return; }
+  show('dashboard');
+}
+
+async function addMember(){
+  if(!supabase) return;
+  const name = document.getElementById('newname').value.trim();
+  if(!name) return;
+  const {error} = await supabase.from('members').insert({
+    name, password: '123456', opening_tf: 0, tf_rate: 0, opening_gf: 0, gf_rate: 0,
+    closing_share: 0, tf_this_month: Array(12).fill(0), gf_this_month: Array(12).fill(0), is_admin: false
+  });
+  if(!error){ document.getElementById('newname').value = ''; loadMembers(); }
+  else alert('Could not add member: ' + error.message);
+}
+
+async function loadMembers(){
+  if(!supabase) return;
+  const {data} = await supabase.from('members').select('*').order('name');
+  const c = document.getElementById('mlist');
+  c.innerHTML = '';
+  (data||[]).forEach(m => {
+    const d = document.createElement('div');
+    d.className = 'member-row';
+    d.innerHTML = `<span>${m.name}</span><div><button onclick="openM('${m.id}')">Open</button><button onclick="delM('${m.id}')">Delete</button></div>`;
+    c.appendChild(d);
+  });
+}
+
+async function delM(id){
+  if(!confirm('Delete this member?') || !supabase) return;
+  await supabase.from('members').delete().eq('id', id);
+  loadMembers();
+}
+
+async function openM(id){
+  if(!supabase) return;
+  const {data} = await supabase.from('members').select('*').eq('id', id).single();
+  if(data){ current = data; show('detail'); document.getElementById('dtitle').textContent = data.name; fillForm(data); }
+}
+
+function fillForm(m){
+  document.getElementById('otf').value = m.opening_tf || 0;
+  document.getElementById('trate').value = m.tf_rate || 0;
+  document.getElementById('ogf').value = m.opening_gf || 0;
+  document.getElementById('grate').value = m.gf_rate || 0;
+  document.getElementById('cshare').value = m.closing_share || 0;
+}
+
+async function saveMember(){
+  if(!current || !supabase) return;
+  const up = {
+    opening_tf: parseFloat(document.getElementById('otf').value) || 0,
+    tf_rate: parseFloat(document.getElementById('trate').value) || 0,
+    opening_gf: parseFloat(document.getElementById('ogf').value) || 0,
+    gf_rate: parseFloat(document.getElementById('grate').value) || 0,
+    closing_share: parseFloat(document.getElementById('cshare').value) || 0
+  };
+  const {error} = await supabase.from('members').update(up).eq('id', current.id);
+  if(!error){ document.getElementById('msg').innerText = 'Saved successfully'; alert('Data saved'); }
+  else alert('Save failed: ' + error.message);
+}
+
+function backDash(){ show('dashboard'); }
+function logout(){ current = null; show('sec'); }
+</script>
 </body>
 </html>
