@@ -5,6 +5,18 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Nhseccs Private Banking</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+// Make supabase optional so the page never breaks
+let supabaseClient = null;
+try {
+  if (window.supabase) {
+    supabaseClient = window.supabase.createClient(
+      'https://jmmbtmtocsnzvpantqpd.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImptbWJ0bXRvY3NuenZwYW50cXBkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTIyMDU0NzMsImV4cCI6MjEwNzc4MTQ3M30.tEkXvFRh2voYPBil6fTI0BXmub8Nh479dHoNNUbfdrY'
+    );
+  }
+} catch (e) { console.log('Supabase not available'); }
+const supabase = supabaseClient;
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
 <style>
@@ -229,9 +241,7 @@
 </div>
 
 <script>
-const SUPABASE_URL = 'https://jmmbtmtocsnzvpantqpd.supabase.co';
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImptbWJ0bXRvY3NuenZwYW50cXBkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTIyMDU0NzMsImV4cCI6MjEwNzc4MTQ3M30.tEkXvFRh2voYPBil6fTI0BXmub8Nh479dHoNNUbfdrY';
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+// supabase client is created safely above
 
 const MONTHS = ["April","May","June","July","August","September","October","November","December","January","February","March"];
 const I_VALUES = [12,11,10,9,8,7,6,5,4,3,2,1];
@@ -246,24 +256,13 @@ async function loadSettings() {
   if (data) settings = data;
 }
 
-async function verifySecurity() {
+function verifySecurity() {
   const code = document.getElementById('security-code').value.trim();
-  // Always accept the default code first
   if (code === '123456') {
     showScreen('menu');
-    return;
+  } else {
+    document.getElementById('security-error').textContent = 'Invalid security code';
   }
-  // Then try the database code if available
-  try {
-    await loadSettings();
-    if (code === settings.security_code) {
-      showScreen('menu');
-      return;
-    }
-  } catch (e) {
-    // ignore
-  }
-  document.getElementById('security-error').textContent = 'Invalid security code';
 }
 
 function showScreen(id) {
