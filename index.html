@@ -192,7 +192,16 @@ button{padding:10px 14px;background:#c9a227;border:none;border-radius:8px;font-w
 <div class="card hidden" id="add-members">
   <h3>Add members</h3>
   <input type="text" id="m-name" placeholder="Member name" oninput="this.value=this.value.toUpperCase()">
-  <button class="btn-full" onclick="addMemberNow()">Add member</button>
+  <button class="btn-full" onclick="
+    const name = document.getElementById('m-name').value.trim().toUpperCase();
+    if(!name){ alert('Enter a name'); return; }
+    if(typeof members === 'undefined') members = [];
+    if(members.find(m => m.name === name)){ alert('Name exists'); return; }
+    members.push({name, password:'123456', share:0, tf:0, gf:0, ltl:0, stl:0, form:0, admission:0});
+    document.getElementById('m-name').value = '';
+    alert('Member added: ' + name);
+    if(typeof showMemberList === 'function') showMemberList();
+  ">Add member</button>
   <div id="m-list" style="margin-top:15px;"></div>
   <div class="bottom-btns">
     <button onclick="logout()">Logout</button>
