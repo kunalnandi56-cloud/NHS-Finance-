@@ -31,11 +31,27 @@ button{width:100%;padding:12px;background:#c9a227;border:none;border-radius:8px;
   <h3>Main</h3>
   <button onclick="document.getElementById('main').classList.add('hidden');document.getElementById('add').classList.remove('hidden');">Add Administrators (max 3)</button>
   <button onclick="document.getElementById('main').classList.add('hidden');document.getElementById('addmem').classList.remove('hidden');">Add Members</button>
+  <button onclick="document.getElementById('main').classList.add('hidden');document.getElementById('adminlogin').classList.remove('hidden');">Administrative Login</button>
   <button onclick="document.getElementById('main').classList.add('hidden');document.getElementById('login').classList.remove('hidden');loadNames();">Member Login</button>
   <button onclick="document.getElementById('main').classList.add('hidden');document.getElementById('changep').classList.remove('hidden');">Change Password</button>
 </div>
 
-<div class="card hidden" id="add">
+<div class="card hidden" id="adminlogin">
+  <h3>Administrative Login</h3>
+  <input type="password" id="admin-pass" placeholder="Password">
+  <input type="text" id="admin-id" placeholder="6-digit ID" maxlength="6">
+  <button onclick="doAdminLogin()">Login</button>
+  <div id="aerr" class="error"></div>
+  <button onclick="document.getElementById('adminlogin').classList.add('hidden');document.getElementById('main').classList.remove('hidden');">Back</button>
+</div>
+
+<div class="card hidden" id="adminpage">
+  <h3>Administrator Dashboard</h3>
+  <p>You are logged in as administrator.</p>
+  <button onclick="document.getElementById('adminpage').classList.add('hidden');document.getElementById('add').classList.remove('hidden');">Add Administrators</button>
+  <button onclick="document.getElementById('adminpage').classList.add('hidden');document.getElementById('addmem').classList.remove('hidden');">Add Members</button>
+  <button onclick="document.getElementById('adminpage').classList.add('hidden');document.getElementById('main').classList.remove('hidden');">Back to Main</button>
+</div>
   <h3>Add Administrators</h3>
   <p>Add up to 3 administrators. Default password is 123456.</p>
   <input type="text" id="aname" placeholder="Administrator Name">
@@ -121,7 +137,16 @@ function loadNames(){
   document.getElementById('cname').innerHTML = sel.innerHTML;
 }
 
-function doLogin(){
+function doAdminLogin(){
+  const pass = document.getElementById('admin-pass').value;
+  const id = document.getElementById('admin-id').value.trim();
+  if(pass === '123456' && id === '123456'){
+    document.getElementById('adminlogin').classList.add('hidden');
+    document.getElementById('adminpage').classList.remove('hidden');
+  } else {
+    document.getElementById('aerr').innerText = 'Invalid password or ID';
+  }
+}
   const name = document.getElementById('mname').value;
   const pass = document.getElementById('mpass').value;
   const m = members.find(x => x.name===name && x.password===pass);
