@@ -22,7 +22,7 @@ button{padding:10px 16px;background:#c9a227;border:none;border-radius:8px;font-w
   <h1>Nhseccs</h1>
   <h2>Secure Access</h2>
   <input type="password" id="code" placeholder="Security Code" maxlength="6">
-  <button class="btn-full" onclick="check()">Continue</button>
+  <button class="btn-full" onclick="if(document.getElementById('code').value.trim()==='123456'){document.getElementById('sec').classList.add('hidden');document.getElementById('menu').classList.remove('hidden');}else{document.getElementById('err').innerText='Invalid security code';}">Continue</button>
   <div id="err" class="error"></div>
 </div>
 
