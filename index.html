@@ -115,13 +115,13 @@ button{padding:10px 14px;background:#c9a227;border:none;border-radius:8px;font-w
 </div>
 
 <div class="card hidden" id="excel">
-  <h3>Excel Sheet</h3>
+  <h3>Excel Sheet — <span id="excel-month">November 2026</span></h3>
   <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px;">
-    <button class="btn-dark" onclick="alert('Change month')">Change month</button>
-    <button class="btn-dark" onclick="alert('Download')">Download</button>
+    <button class="btn-dark" onclick="changeMonth()">Change month</button>
+    <button class="btn-dark" onclick="downloadExcel()">Download</button>
     <button style="background:#e2d5f1;" onclick="window.print()">Print</button>
     <button onclick="saveData()">Save</button>
-    <button style="background:#c9a227;" onclick="alert('Edit')">Edit</button>
+    <button style="background:#c9a227;" onclick="editExcel()">Edit</button>
     <button style="background:#f5cba7;" onclick="show('admin-login')">← Back</button>
     <button style="background:#d6d8db;" onclick="show('admin-login')">Close</button>
   </div>
