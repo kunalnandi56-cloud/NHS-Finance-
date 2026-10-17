@@ -278,7 +278,7 @@ function showList(){
 function openMemberNow(i){
   currentMember = i;
   document.getElementById('detail-title').textContent = members[i].name;
-  document.getElementById('detail-month').textContent = 'Year: ' + document.getElementById('year').value + ' | Month: ' + document.getElementById('month').value;
+  if(document.getElementById('detail-month')) document.getElementById('detail-month').textContent = 'Year: ' + document.getElementById('year').value + ' | Month: ' + document.getElementById('month').value;
   showFieldDisplay();
   showPage('member-detail');
 }
