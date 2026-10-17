@@ -22,6 +22,8 @@ button{padding:10px 14px;background:#c9a227;border:none;border-radius:8px;font-w
 .member-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #eee;}
 .btn-group{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0;}
 .btn-group button{flex:1;min-width:80px;}
+.year-month{display:flex;gap:10px;}
+.year-month select{flex:1;}
 </style>
 </head>
 <body>
@@ -50,10 +52,74 @@ button{padding:10px 14px;background:#c9a227;border:none;border-radius:8px;font-w
 
 <div class="card hidden" id="admin-login">
   <h3>Administrator Login</h3>
+  <div class="year-month">
+    <select id="year"><option>2026</option><option>2025</option><option>2027</option></select>
+    <select id="month"><option>January</option><option>February</option><option>March</option><option>April</option><option>May</option><option>June</option><option>July</option><option>August</option><option>September</option><option>October</option><option>November</option><option>December</option></select>
+  </div>
+  <button class="btn-full" onclick="alert('Month changed')">Change month</button>
+  <button class="btn-full" onclick="show('rules')">Rules and Regulations</button>
+  <button class="btn-full" onclick="show('ltl')">LTL Application list</button>
+  <button class="btn-full" onclick="alert('Open month')">Open month</button>
+  <button class="btn-full btn-dark" onclick="alert('Edit data')">Edit data</button>
   <button class="btn-full" onclick="show('add-members')">Add members</button>
   <div class="bottom-btns">
     <button onclick="logout()">Logout</button>
     <button onclick="show('main')">Back</button>
+    <button onclick="show('admin-next')">Next</button>
+  </div>
+</div>
+
+<div class="card hidden" id="rules">
+  <h3>Rules and Regulations</h3>
+  <textarea id="rules-text" rows="8" placeholder="Write rules and regulations"></textarea>
+  <div class="bottom-btns">
+    <button onclick="logout()">Logout</button>
+    <button onclick="show('admin-login')">Back</button>
+    <button onclick="localStorage.setItem('nhs_rules',document.getElementById('rules-text').value);alert('Saved')">Save</button>
+  </div>
+</div>
+
+<div class="card hidden" id="ltl">
+  <h3>LTL Application list</h3>
+  <textarea id="ltl-text" rows="8" placeholder="Write names of members who apply for LTL"></textarea>
+  <div class="bottom-btns">
+    <button onclick="logout()">Logout</button>
+    <button onclick="show('admin-login')">Back</button>
+    <button onclick="localStorage.setItem('nhs_ltl',document.getElementById('ltl-text').value);alert('Saved')">Save</button>
+  </div>
+</div>
+
+<div class="card hidden" id="admin-next">
+  <h3>Administrator Options</h3>
+  <button class="btn-full" onclick="show('choose-admin')">Choose administrator</button>
+  <button class="btn-full" onclick="show('change-admin')">Change administrator</button>
+  <div class="bottom-btns">
+    <button onclick="logout()">Logout</button>
+    <button onclick="show('admin-login')">Back</button>
+  </div>
+</div>
+
+<div class="card hidden" id="choose-admin">
+  <h3>Choose Administrator</h3>
+  <input type="text" id="ca-name" placeholder="Name" oninput="this.value=this.value.toUpperCase()">
+  <input type="password" id="ca-pass" placeholder="Password">
+  <input type="text" id="ca-id" placeholder="ID">
+  <button class="btn-full" onclick="alert('Administrator set')">Set</button>
+  <div class="bottom-btns">
+    <button onclick="logout()">Logout</button>
+    <button onclick="show('admin-next')">Back</button>
+  </div>
+</div>
+
+<div class="card hidden" id="change-admin">
+  <h3>Change Administrator</h3>
+  <input type="text" id="ch-name" placeholder="New Name" oninput="this.value=this.value.toUpperCase()">
+  <input type="password" id="ch-pass" placeholder="New Password">
+  <input type="text" id="ch-id" placeholder="New ID">
+  <button class="btn-full" onclick="alert('Administrator changed')">Update</button>
+  <div class="bottom-btns">
+    <button onclick="logout()">Logout</button>
+    <button onclick="show('admin-next')">Back</button>
   </div>
 </div>
 
@@ -91,6 +157,17 @@ button{padding:10px 14px;background:#c9a227;border:none;border-radius:8px;font-w
   </div>
 </div>
 
+<div class="card hidden" id="member-login">
+  <h3>Member Login</h3>
+  <select id="ml-name"></select>
+  <input type="password" id="ml-pass" placeholder="Password">
+  <button class="btn-full" onclick="doMemberLogin()">Login</button>
+  <div class="bottom-btns">
+    <button onclick="logout()">Logout</button>
+    <button onclick="show('main')">Back</button>
+  </div>
+</div>
+
 <script>
 let members = JSON.parse(localStorage.getItem('nhs_members') || '[]');
 let currentMember = null;
@@ -105,6 +182,9 @@ function show(id){
   document.querySelectorAll('.card').forEach(c => c.classList.add('hidden'));
   document.getElementById(id).classList.remove('hidden');
   if(id === 'add-members') showMemberList();
+  if(id === 'member-login') loadMemberNames();
+  if(id === 'rules') document.getElementById('rules-text').value = localStorage.getItem('nhs_rules') || '';
+  if(id === 'ltl') document.getElementById('ltl-text').value = localStorage.getItem('nhs_ltl') || '';
 }
 
 function openMain(){
@@ -171,9 +251,26 @@ function showFieldDisplay(){
   if(currentMember === null) return;
   const m = members[currentMember];
   document.getElementById('field-display').innerHTML = `
-    <p><b>Share:</b> ${m.share || 0} &nbsp; <b>TF:</b> ${m.tf || 0} &nbsp; <b>GF:</b> ${m.gf || 0}</p>
-    <p><b>LTL:</b> ${m.ltl || 0} &nbsp; <b>STL:</b> ${m.stl || 0} &nbsp; <b>FORM:</b> ${m.form || 0} &nbsp; <b>ADMISSION:</b> ${m.admission || 0}</p>
+    <p><b>Share:</b> ${m.share||0} &nbsp; <b>TF:</b> ${m.tf||0} &nbsp; <b>GF:</b> ${m.gf||0}</p>
+    <p><b>LTL:</b> ${m.ltl||0} &nbsp; <b>STL:</b> ${m.stl||0} &nbsp; <b>FORM:</b> ${m.form||0} &nbsp; <b>ADMISSION:</b> ${m.admission||0}</p>
   `;
+}
+
+function loadMemberNames(){
+  const sel = document.getElementById('ml-name');
+  sel.innerHTML = '<option value="">Select Name</option>';
+  members.forEach(m => {
+    const o = document.createElement('option');
+    o.value = m.name; o.textContent = m.name; sel.appendChild(o);
+  });
+}
+
+function doMemberLogin(){
+  const name = document.getElementById('ml-name').value;
+  const pass = document.getElementById('ml-pass').value;
+  const m = members.find(x => x.name === name && x.password === pass);
+  if(m) alert('Login successful for ' + m.name);
+  else alert('Invalid name or password');
 }
 </script>
 </body>
