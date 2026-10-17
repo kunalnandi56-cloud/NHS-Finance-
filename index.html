@@ -46,7 +46,7 @@
 <div class="app">
   <div class="logo"><h1>Nhseccs</h1><p>PRIVATE BANKING</p></div>
 
-  <div id="screen-security" class="card">
+  <div id="screen-security" class="card" style="display:block;">
     <h2>Secure Access</h2>
     <p class="subtitle">Enter security code</p>
     <div class="input-group">
@@ -57,14 +57,14 @@
     <div id="security-error" class="error"></div>
   </div>
 
-  <div id="screen-menu" class="card hidden">
+  <div id="screen-menu" class="card" style="display:none;">
     <button class="btn-3d btn-small back-btn" onclick="showScreen('security')">Back</button>
     <h2>Welcome</h2>
     <button class="menu-btn" onclick="showScreen('member-login')">Member Login</button>
     <button class="menu-btn" onclick="showScreen('admin-login')">Administrator Login</button>
   </div>
 
-  <div id="screen-member-login" class="card hidden">
+  <div id="screen-member-login" class="card" style="display:none;">
     <button class="btn-3d btn-small back-btn" onclick="showScreen('menu')">Back</button>
     <h2>Member Login</h2>
     <div class="input-group"><label>Choose Your Name</label><select id="member-select-name"></select></div>
@@ -83,7 +83,7 @@
     <div id="admin-error" class="error"></div>
   </div>
 
-  <div id="screen-admin-dashboard" class="card hidden">
+  <div id="screen-admin-dashboard" class="card" style="display:none;">
     <button class="btn-3d btn-small back-btn" onclick="showScreen('menu')">Back</button>
     <h2>Administrator Dashboard</h2>
     <div class="input-group">
@@ -97,7 +97,7 @@
     <button class="btn-3d" onclick="logout()">Logout</button>
   </div>
 
-  <div id="screen-member-detail" class="card hidden">
+  <div id="screen-member-detail" class="card" style="display:none;">
     <button class="btn-3d btn-small back-btn" onclick="backToAdmin()">Back</button>
     <h2 id="detail-title">Member</h2>
     <div style="text-align:right;margin-bottom:10px;">
@@ -154,9 +154,9 @@ function verifySecurity() {
 }
 
 function showScreen(id) {
-  document.querySelectorAll('.card').forEach(el => el.classList.add('hidden'));
-  const el = document.getElementById('screen-'+id);
-  if (el) el.classList.remove('hidden');
+  document.querySelectorAll('.card').forEach(el => el.style.display = 'none');
+  const el = document.getElementById('screen-' + id);
+  if (el) el.style.display = 'block';
   if (id === 'member-login') populateMemberSelect();
 }
 
