@@ -208,6 +208,25 @@ async function saveMember(){
 
 function backDash(){ show('dashboard'); }
 function logout(){ current = null; show('sec'); }
+
+async function createMember(){
+  if(!supabase){ alert('Database not ready. Refresh the page.'); return; }
+  const name = document.getElementById('c-name').value.trim();
+  const pass = document.getElementById('c-pass').value.trim() || '123456';
+  const isAdmin = document.getElementById('c-admin').checked;
+  if(!name){ document.getElementById('c-msg').innerText = 'Enter a name'; return; }
+  const {error} = await supabase.from('members').insert({
+    name, password: pass, opening_tf:0, tf_rate:0, opening_gf:0, gf_rate:0,
+    closing_share:0, tf_this_month:Array(12).fill(0), gf_this_month:Array(12).fill(0), is_admin: isAdmin
+  });
+  if(!error){
+    document.getElementById('c-msg').innerText = 'Member created successfully';
+    alert('Created. You can now login.');
+    document.getElementById('c-name').value = '';
+  } else {
+    document.getElementById('c-msg').innerText = 'Error: ' + error.message;
+  }
+}
 </script>
 </body>
 </html>
