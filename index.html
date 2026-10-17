@@ -1,158 +1,61 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Nhseccs Private Banking</title>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
 <style>
-body{font-family:Inter,sans-serif;background:#e8f4ff;padding:20px;font-size:14px;}
-.app{max-width:960px;margin:0 auto;}
-.logo{text-align:center;margin-bottom:20px;}
-.logo h1{font-family:'Playfair Display',serif;color:#8b6914;}
-.card{background:#fff;border-radius:16px;padding:22px;box-shadow:0 8px 30px rgba(0,0,0,.08);margin-bottom:16px;}
-h2{text-align:center;margin-bottom:8px;}
-.subtitle{text-align:center;color:#4a5a7a;margin-bottom:18px;}
-.input-group{margin-bottom:14px;}
-label{display:block;margin-bottom:6px;color:#4a5a7a;}
-input,select{width:100%;padding:12px;border:1px solid #c5d9f0;border-radius:10px;background:#f5f9ff;}
-.btn{display:block;width:100%;background:linear-gradient(#e6c35c,#c9a227);border:none;border-radius:12px;padding:12px;font-weight:600;cursor:pointer;margin:4px 0;}
-.btn-small{width:auto;display:inline-block;padding:8px 14px;}
-.menu-btn{display:block;width:100%;background:#f5f9ff;border:1px solid #c5d9f0;padding:14px;border-radius:12px;margin-bottom:8px;text-align:left;cursor:pointer;}
-.error{color:#e53935;text-align:center;margin-top:10px;}
+body{font-family:Arial,sans-serif;background:#e8f4ff;padding:20px;}
+.card{background:#fff;border-radius:12px;padding:20px;max-width:500px;margin:20px auto;box-shadow:0 4px 15px rgba(0,0,0,.1);}
+h1{text-align:center;color:#8b6914;}
+input{width:100%;padding:12px;margin:8px 0;border:1px solid #ccc;border-radius:8px;box-sizing:border-box;}
+button{width:100%;padding:12px;background:#c9a227;border:none;border-radius:8px;font-weight:bold;cursor:pointer;margin-top:10px;}
+.error{color:red;text-align:center;}
+.hidden{display:none;}
 </style>
 </head>
 <body>
-<div class="app">
-  <div class="logo"><h1>Nhseccs</h1><p>PRIVATE BANKING</p></div>
+<div class="card" id="sec">
+  <h1>Nhseccs</h1>
+  <h2 style="text-align:center;">Secure Access</h2>
+  <input type="password" id="code" placeholder="Security Code" maxlength="6">
+  <button onclick="check()">Continue</button>
+  <div id="err" class="error"></div>
+</div>
 
-  <div id="screen-security" class="card">
-    <h2>Secure Access</h2>
-    <p class="subtitle">Enter security code</p>
-    <div class="input-group"><label>Security Code</label><input type="password" id="security-code" maxlength="6"></div>
-    <button class="btn" onclick="verifySecurity()">Continue</button>
-    <div id="security-error" class="error"></div>
-  </div>
+<div class="card hidden" id="menu">
+  <h2 style="text-align:center;">Welcome</h2>
+  <button onclick="show('member')">Member Login</button>
+  <button onclick="show('admin')">Administrator Login</button>
+</div>
 
-  <div id="screen-menu" class="card" style="display:none;">
-    <h2>Welcome</h2>
-    <button class="menu-btn" onclick="showScreen('member-login')">Member Login</button>
-    <button class="menu-btn" onclick="showScreen('admin-login')">Administrator Login</button>
-  </div>
+<div class="card hidden" id="member">
+  <h2>Member Login</h2>
+  <input type="text" id="mname" placeholder="Name">
+  <input type="password" id="mpass" placeholder="Password">
+  <button onclick="alert('Member login will work after full setup')">Login</button>
+  <button onclick="show('menu')">Back</button>
+</div>
 
-  <div id="screen-member-login" class="card" style="display:none;">
-    <h2>Member Login</h2>
-    <div class="input-group"><label>Name</label><select id="member-select-name"></select></div>
-    <div class="input-group"><label>Password</label><input type="password" id="member-password"></div>
-    <button class="btn" onclick="memberLogin()">Login</button>
-    <div id="login-error" class="error"></div>
-  </div>
-
-  <div id="screen-admin-login" class="card" style="display:none;">
-    <h2>Administrator Login</h2>
-    <div class="input-group"><label>Name</label><input type="text" id="admin-name"></div>
-    <div class="input-group"><label>Password</label><input type="password" id="admin-password"></div>
-    <div class="input-group"><label>ID</label><input type="text" id="admin-id" maxlength="6"></div>
-    <button class="btn" onclick="adminLogin()">Authenticate</button>
-    <div id="admin-error" class="error"></div>
-  </div>
-
-  <div id="screen-admin-dashboard" class="card" style="display:none;">
-    <h2>Administrator Dashboard</h2>
-    <div class="input-group">
-      <label>Add Member</label>
-      <div style="display:flex;gap:8px;"><input type="text" id="new-member-name" style="flex:1;"><button class="btn btn-small" onclick="addMember()">Add</button></div>
-    </div>
-    <div id="members-list"></div>
-    <button class="btn" onclick="logout()">Logout</button>
-  </div>
-
-  <div id="screen-member-detail" class="card" style="display:none;">
-    <h2 id="detail-title">Member</h2>
-    <button class="btn btn-small" onclick="saveMemberDetail()">Save</button>
-    <p>Member detail page (calculations will work after login)</p>
-    <div id="detail-msg"></div>
-  </div>
+<div class="card hidden" id="admin">
+  <h2>Administrator Login</h2>
+  <input type="text" id="aname" placeholder="Name">
+  <input type="password" id="apass" placeholder="Password">
+  <input type="text" id="aid" placeholder="ID" maxlength="6">
+  <button onclick="alert('Admin login will work after full setup')">Authenticate</button>
+  <button onclick="show('menu')">Back</button>
 </div>
 
 <script>
-let supabase = null;
-try {
-  if (window.supabase) {
-    supabase = window.supabase.createClient(
-      'https://jmmbtmtocsnzvpantqpd.supabase.co',
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImptbWJ0bXRvY3NuenZwYW50cXBkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTIyMDU0NzMsImV4cCI6MjEwNzc4MTQ3M30.tEkXvFRh2voYPBil6fTI0BXmub8Nh479dHoNNUbfdrY'
-    );
-  }
-} catch(e){}
-
-function showScreen(id) {
-  document.querySelectorAll('.card').forEach(el => el.style.display = 'none');
-  document.getElementById('screen-' + id).style.display = 'block';
-  if (id === 'member-login') populateMemberSelect();
+function show(id){
+  document.querySelectorAll('.card').forEach(c=>c.classList.add('hidden'));
+  document.getElementById(id).classList.remove('hidden');
 }
-
-function verifySecurity() {
-  const code = document.getElementById('security-code').value.trim();
-  if (code === '123456') showScreen('menu');
-  else document.getElementById('security-error').textContent = 'Invalid security code';
+function check(){
+  var c = document.getElementById('code').value.trim();
+  if(c==='123456'){ show('menu'); }
+  else { document.getElementById('err').innerText = 'Invalid security code'; }
 }
-
-async function populateMemberSelect() {
-  if (!supabase) return;
-  const {data} = await supabase.from('members').select('name').order('name');
-  const sel = document.getElementById('member-select-name');
-  sel.innerHTML = '<option value="">Select Name</option>';
-  (data||[]).forEach(m => {
-    const opt = document.createElement('option');
-    opt.value = m.name; opt.textContent = m.name; sel.appendChild(opt);
-  });
-}
-
-async function memberLogin() {
-  if (!supabase) { alert('Database not ready'); return; }
-  const name = document.getElementById('member-select-name').value;
-  const pass = document.getElementById('member-password').value;
-  const {data} = await supabase.from('members').select('*').eq('name',name).eq('password',pass).single();
-  if (data) { showScreen('member-detail'); document.getElementById('detail-title').textContent = data.name; }
-  else document.getElementById('login-error').textContent = 'Invalid';
-}
-
-async function adminLogin() {
-  if (!supabase) { alert('Database not ready'); return; }
-  const name = document.getElementById('admin-name').value.trim();
-  const pass = document.getElementById('admin-password').value;
-  const id = document.getElementById('admin-id').value.trim();
-  const {data} = await supabase.from('members').select('*').eq('name',name).eq('password',pass).eq('is_admin',true).single();
-  if (data && id === '123456') { showScreen('admin-dashboard'); renderMembersList(); }
-  else document.getElementById('admin-error').textContent = 'Invalid';
-}
-
-async function addMember() {
-  if (!supabase) return;
-  const name = document.getElementById('new-member-name').value.trim();
-  if (!name) return;
-  await supabase.from('members').insert({name, password:'123456', opening_tf:0, tf_rate:0, opening_gf:0, gf_rate:0, closing_share:0, tf_this_month:Array(12).fill(0), gf_this_month:Array(12).fill(0)});
-  document.getElementById('new-member-name').value = '';
-  renderMembersList();
-}
-
-async function renderMembersList() {
-  if (!supabase) return;
-  const {data} = await supabase.from('members').select('*').order('name');
-  const container = document.getElementById('members-list');
-  container.innerHTML = '';
-  (data||[]).forEach(m => {
-    const div = document.createElement('div');
-    div.innerHTML = m.name + ' <button class="btn btn-small" onclick="openMember(\'' + m.id + '\')">Open</button>';
-    container.appendChild(div);
-  });
-}
-
-function openMember(id) { showScreen('member-detail'); }
-function saveMemberDetail() { alert('Saved'); }
-function logout() { showScreen('security'); }
 </script>
 </body>
 </html>
