@@ -55,13 +55,21 @@ th{background:#e3f2fd;}
 
 <!-- Admin Login -->
 <div class="card hidden" id="admin-login">
-  <h3>Administrator Login</h3>
-  <input type="text" id="a-name" placeholder="Name">
+  <h3>Administrative login</h3>
+  <p>Only the 3 administrative members. Password and 6-digit ID both required.</p>
   <input type="password" id="a-pass" placeholder="Password">
   <input type="text" id="a-id" placeholder="6-digit ID" maxlength="6">
-  <button class="btn-full btn-pink" onclick="adminLogin()">Authenticate</button>
+  <button class="btn-full btn-pink" onclick="adminLogin()">Administrative login</button>
+  <button class="btn-full" style="background:#fff3cd;" onclick="alert('Change ID')">Change ID</button>
+  <button class="btn-full" style="background:#e2d5f1;" onclick="alert('Change password')">Change password</button>
+  <button class="btn-full" style="background:#fff3cd;" onclick="alert('Rules and Regulations')">Rules and Regulations</button>
+  <button class="btn-full" style="background:#d1f2eb;" onclick="alert('Application')">Application</button>
+  <button class="btn-full" style="background:#d1f2eb;" onclick="alert('LTL Application list')">LTL Application list</button>
+  <button class="btn-full btn-dark" onclick="alert('Edit wrongly entered data')">Edit wrongly entered data</button>
+  <button class="btn-full" style="background:#d1f2eb;" onclick="alert('Application')">Application</button>
+  <button class="btn-full" style="background:#d1f2eb;" onclick="alert('LTL Application list')">LTL Application list</button>
   <div id="a-err" class="error"></div>
-  <button onclick="show('menu')">Back</button>
+  <button class="btn-full" style="background:#f5cba7;" onclick="show('menu')">Back</button>
 </div>
 
 <!-- Admin Dashboard -->
