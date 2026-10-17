@@ -337,23 +337,30 @@ function showExcel(){
   const year = document.getElementById('year').value;
   const month = document.getElementById('month').value;
   const key = year + '-' + month;
+  const monthsOrder = ['April','May','June','July','August','September','October','November','December','January','February','March'];
+  const mIdx = monthsOrder.indexOf(month);
+  let prevKey = key;
+  if(mIdx > 0) prevKey = year + '-' + monthsOrder[mIdx-1];
+  else if(mIdx === 0) prevKey = (parseInt(year)-1) + '-March';
   const div = document.getElementById('excel-table');
   let html = '<table border="1" style="width:100%;border-collapse:collapse;font-size:11pt;">';
   html += '<tr style="background:#0d2b4a;color:#fff;"><th>NAME</th><th>ACCT</th><th>SHARE</th><th>SHARE THIS MONTH</th><th>TF</th><th>TF THIS MONTH</th><th>GF</th><th>GF THIS MONTH</th><th>LTL</th><th>STL</th><th>LTLP</th><th>LTLI</th><th>LTLB</th><th>STLP</th><th>STLI</th><th>STLB</th><th>FORM</th><th>REGISTRATION</th><th>TOTAL</th></tr>';
   members.forEach(m => {
     const d = (m.months && m.months[key]) || {};
-    // Running balance: opening + this month
+    const prev = (m.months && m.months[prevKey]) || {};
+    const ltl = prev.ltlb || d.ltl || 0;
+    const stl = prev.stlb || d.stl || 0;
     const share = (m.share || 0) + (d.shareMonth || 0);
     const tf = (m.tf || 0) + (d.tfMonth || 0);
     const gf = (m.gf || 0) + (d.gfMonth || 0);
     const ltlRate = 7;
     const stlRate = 9;
-    const ltli = Math.round((d.ltl||0) * (ltlRate/100) * (1/12));
-    const ltlb = (d.ltl||0) - (d.ltlp||0);
-    const stli = Math.round((d.stl||0) * (stlRate/100) * (1/12));
-    const stlb = (d.stl||0) - (d.stlp||0);
+    const ltli = Math.round(ltl * (ltlRate/100) * (1/12));
+    const ltlb = ltl - (d.ltlp||0);
+    const stli = Math.round(stl * (stlRate/100) * (1/12));
+    const stlb = stl - (d.stlp||0);
     const total = (d.shareMonth||0) + (d.tfMonth||0) + (d.gfMonth||0) + (d.ltlp||0) + ltli + (d.stlp||0) + stli + (d.form||0) + (d.registration||0);
-    html += '<tr><td>'+m.name+'</td><td>'+(d.acct||'')+'</td><td>'+share+'</td><td>'+(d.shareMonth||0)+'</td><td>'+tf+'</td><td>'+(d.tfMonth||0)+'</td><td>'+gf+'</td><td>'+(d.gfMonth||0)+'</td><td>'+(d.ltl||0)+'</td><td>'+(d.stl||0)+'</td><td>'+(d.ltlp||0)+'</td><td>'+ltli+'</td><td>'+ltlb+'</td><td>'+(d.stlp||0)+'</td><td>'+stli+'</td><td>'+stlb+'</td><td>'+(d.form||0)+'</td><td>'+(d.registration||0)+'</td><td>'+total+'</td></tr>';
+    html += '<tr><td>'+m.name+'</td><td>'+(d.acct||'')+'</td><td>'+share+'</td><td>'+(d.shareMonth||0)+'</td><td>'+tf+'</td><td>'+(d.tfMonth||0)+'</td><td>'+gf+'</td><td>'+(d.gfMonth||0)+'</td><td>'+ltl+'</td><td>'+stl+'</td><td>'+(d.ltlp||0)+'</td><td>'+ltli+'</td><td>'+ltlb+'</td><td>'+(d.stlp||0)+'</td><td>'+stli+'</td><td>'+stlb+'</td><td>'+(d.form||0)+'</td><td>'+(d.registration||0)+'</td><td>'+total+'</td></tr>';
   });
   html += '</table>';
   div.innerHTML = html;
