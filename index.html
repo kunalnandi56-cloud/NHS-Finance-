@@ -5,11 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>NHS ECCS</title>
 <style>
-body{font-family:Arial;background:#e8f0f8;margin:0;padding:20px;}
+body{font-family:Arial,sans-serif;background:#e8f0f8;margin:0;padding:20px;}
 .header{background:#0d2b4a;color:#fff;text-align:center;padding:15px;border-radius:8px;margin-bottom:20px;}
 .card{background:#fff;padding:20px;border-radius:12px;max-width:500px;margin:15px auto;box-shadow:0 4px 12px rgba(0,0,0,.1);}
 input,select{width:100%;padding:12px;margin:8px 0;border:1px solid #ccc;border-radius:8px;box-sizing:border-box;}
 button{width:100%;padding:12px;background:#c9a227;border:none;border-radius:8px;font-weight:bold;cursor:pointer;margin:6px 0;}
+.btn-dark{background:#0d2b4a;color:#fff;}
+.btn-pink{background:#f8d7da;color:#721c24;}
 .hidden{display:none;}
 .error{color:red;text-align:center;}
 </style>
@@ -24,154 +26,174 @@ button{width:100%;padding:12px;background:#c9a227;border:none;border-radius:8px;
 <div class="card" id="code">
   <h3>Society code</h3>
   <input type="password" id="scode" placeholder="Society code">
-  <button onclick="if(document.getElementById('scode').value==='123456'){document.getElementById('code').classList.add('hidden');document.getElementById('main').classList.remove('hidden');}else{alert('Invalid');}">Open</button>
+  <button class="btn-dark" onclick="openMain()">Open</button>
 </div>
 
 <div class="card hidden" id="main">
   <h3>Main</h3>
-  <button onclick="document.getElementById('main').classList.add('hidden');document.getElementById('add').classList.remove('hidden');">Add Administrators (max 3)</button>
-  <button onclick="document.getElementById('main').classList.add('hidden');document.getElementById('addmem').classList.remove('hidden');">Add Members</button>
-  <button onclick="document.getElementById('main').classList.add('hidden');document.getElementById('adminlogin').classList.remove('hidden');">Administrative Login</button>
-  <button onclick="document.getElementById('main').classList.add('hidden');document.getElementById('login').classList.remove('hidden');loadNames();">Member Login</button>
-  <button onclick="document.getElementById('main').classList.add('hidden');document.getElementById('changep').classList.remove('hidden');">Change Password</button>
+  <button class="btn-dark" onclick="showPage('addadmin')">Add Administrators (max 3)</button>
+  <button onclick="showPage('addmember')">Add Members</button>
+  <button class="btn-pink" onclick="showPage('adminlogin')">Administrative Login</button>
+  <button class="btn-dark" onclick="showPage('memberlogin');loadNames();">Member Login</button>
+  <button onclick="showPage('changepass')">Change Password</button>
+</div>
+
+<div class="card hidden" id="addadmin">
+  <h3>Add Administrators</h3>
+  <input type="text" id="admin-name" placeholder="Administrator Name">
+  <button onclick="addAdmin()">Add Administrator</button>
+  <div id="admin-list"></div>
+  <button onclick="showPage('main')">Back</button>
+</div>
+
+<div class="card hidden" id="addmember">
+  <h3>Add Members</h3>
+  <input type="text" id="member-name" placeholder="Member Name">
+  <button onclick="addMember()">Add Member</button>
+  <div id="member-list"></div>
+  <button onclick="showPage('main')">Back</button>
 </div>
 
 <div class="card hidden" id="adminlogin">
   <h3>Administrative Login</h3>
-  <input type="password" id="admin-pass" placeholder="Password">
-  <input type="text" id="admin-id" placeholder="6-digit ID" maxlength="6">
-  <button onclick="doAdminLogin()">Login</button>
-  <div id="aerr" class="error"></div>
-  <button onclick="document.getElementById('adminlogin').classList.add('hidden');document.getElementById('main').classList.remove('hidden');">Back</button>
+  <input type="password" id="a-pass" placeholder="Password">
+  <input type="text" id="a-id" placeholder="6-digit ID" maxlength="6">
+  <button class="btn-pink" onclick="adminLogin()">Login</button>
+  <div id="a-err" class="error"></div>
+  <button onclick="showPage('main')">Back</button>
 </div>
 
-<div class="card hidden" id="adminpage">
+<div class="card hidden" id="admindash">
   <h3>Administrator Dashboard</h3>
-  <p>You are logged in as administrator.</p>
-  <button onclick="document.getElementById('adminpage').classList.add('hidden');document.getElementById('add').classList.remove('hidden');">Add Administrators</button>
-  <button onclick="document.getElementById('adminpage').classList.add('hidden');document.getElementById('addmem').classList.remove('hidden');">Add Members</button>
-  <button onclick="document.getElementById('adminpage').classList.add('hidden');document.getElementById('main').classList.remove('hidden');">Back to Main</button>
-</div>
-  <h3>Add Administrators</h3>
-  <p>Add up to 3 administrators. Default password is 123456.</p>
-  <input type="text" id="aname" placeholder="Administrator Name">
-  <button onclick="addAdmin()">Add Administrator</button>
-  <div id="alist"></div>
-  <button onclick="document.getElementById('add').classList.add('hidden');document.getElementById('main').classList.remove('hidden');">Back</button>
+  <p>Logged in as Administrator</p>
+  <button onclick="showPage('addadmin')">Add Administrators</button>
+  <button onclick="showPage('addmember')">Add Members</button>
+  <button onclick="showPage('main')">Back to Main</button>
 </div>
 
-<div class="card hidden" id="addmem">
-  <h3>Add Members</h3>
-  <p>Add regular members. Default password is 123456.</p>
-  <input type="text" id="mname-add" placeholder="Member Name">
-  <button onclick="addMember()">Add Member</button>
-  <div id="mlist"></div>
-  <button onclick="document.getElementById('addmem').classList.add('hidden');document.getElementById('main').classList.remove('hidden');">Back</button>
-</div>
-
-<div class="card hidden" id="login">
+<div class="card hidden" id="memberlogin">
   <h3>Member Login</h3>
-  <select id="mname"></select>
-  <input type="password" id="mpass" placeholder="Password">
-  <button onclick="doLogin()">Login</button>
-  <div id="lerr" class="error"></div>
-  <button onclick="document.getElementById('login').classList.add('hidden');document.getElementById('main').classList.remove('hidden');">Back</button>
+  <select id="m-name"></select>
+  <input type="password" id="m-pass" placeholder="Password">
+  <button class="btn-dark" onclick="memberLogin()">Login</button>
+  <div id="m-err" class="error"></div>
+  <button onclick="showPage('main')">Back</button>
 </div>
 
-<div class="card hidden" id="changep">
+<div class="card hidden" id="memberdash">
+  <h3 id="m-welcome">Welcome</h3>
+  <p>You are logged in.</p>
+  <button onclick="showPage('main')">Back to Main</button>
+</div>
+
+<div class="card hidden" id="changepass">
   <h3>Change Password</h3>
-  <select id="cname"></select>
-  <input type="password" id="oldp" placeholder="Current Password">
-  <input type="password" id="newp" placeholder="New Password">
-  <button onclick="changePass()">Update Password</button>
-  <div id="cerr" class="error"></div>
-  <button onclick="document.getElementById('changep').classList.add('hidden');document.getElementById('main').classList.remove('hidden');">Back</button>
+  <select id="c-name"></select>
+  <input type="password" id="c-old" placeholder="Current Password">
+  <input type="password" id="c-new" placeholder="New Password">
+  <button onclick="changePass()">Update</button>
+  <div id="c-err" class="error"></div>
+  <button onclick="showPage('main')">Back</button>
 </div>
 
 <script>
-const members = JSON.parse(localStorage.getItem('nhs_members') || '[]');
+let members = JSON.parse(localStorage.getItem('nhs_members') || '[]');
+
 function save(){ localStorage.setItem('nhs_members', JSON.stringify(members)); }
 
+function showPage(id){
+  document.querySelectorAll('.card').forEach(c => c.classList.add('hidden'));
+  document.getElementById(id).classList.remove('hidden');
+  if(id === 'addadmin') showAdminList();
+  if(id === 'addmember') showMemberList();
+}
+
+function openMain(){
+  if(document.getElementById('scode').value.trim() === '123456'){
+    showPage('main');
+  } else {
+    alert('Invalid society code');
+  }
+}
+
 function addAdmin(){
-  const name = document.getElementById('aname').value.trim();
+  const name = document.getElementById('admin-name').value.trim();
   if(!name) return;
-  if(members.filter(m=>m.isAdmin).length >= 3){ alert('Maximum 3 administrators'); return; }
-  if(members.find(m=>m.name===name)){ alert('Name already exists'); return; }
+  if(members.filter(m => m.isAdmin).length >= 3){ alert('Maximum 3 administrators'); return; }
+  if(members.find(m => m.name === name)){ alert('Name already exists'); return; }
   members.push({name, password:'123456', isAdmin:true});
   save();
-  document.getElementById('aname').value='';
-  showAdmins();
+  document.getElementById('admin-name').value = '';
+  showAdminList();
   alert('Administrator added. Password is 123456');
 }
 
-function showAdmins(){
-  const div = document.getElementById('alist');
-  div.innerHTML = '<h4>Current Administrators:</h4>';
-  members.filter(m=>m.isAdmin).forEach(m => div.innerHTML += '<div>' + m.name + '</div>');
+function showAdminList(){
+  const div = document.getElementById('admin-list');
+  div.innerHTML = '<h4>Administrators:</h4>';
+  members.filter(m => m.isAdmin).forEach(m => div.innerHTML += '<div>' + m.name + '</div>');
 }
 
 function addMember(){
-  const name = document.getElementById('mname-add').value.trim();
+  const name = document.getElementById('member-name').value.trim();
   if(!name) return;
-  if(members.find(m=>m.name===name)){ alert('Name already exists'); return; }
+  if(members.find(m => m.name === name)){ alert('Name already exists'); return; }
   members.push({name, password:'123456', isAdmin:false});
   save();
-  document.getElementById('mname-add').value='';
-  showMembers();
+  document.getElementById('member-name').value = '';
+  showMemberList();
   alert('Member added. Password is 123456');
 }
 
-function showMembers(){
-  const div = document.getElementById('mlist');
-  div.innerHTML = '<h4>Current Members:</h4>';
-  members.filter(m=>!m.isAdmin).forEach(m => div.innerHTML += '<div>' + m.name + '</div>');
+function showMemberList(){
+  const div = document.getElementById('member-list');
+  div.innerHTML = '<h4>Members:</h4>';
+  members.filter(m => !m.isAdmin).forEach(m => div.innerHTML += '<div>' + m.name + '</div>');
 }
 
 function loadNames(){
-  const sel = document.getElementById('mname');
+  const sel = document.getElementById('m-name');
   sel.innerHTML = '<option value="">Select Name</option>';
   members.forEach(m => {
     const o = document.createElement('option');
     o.value = m.name; o.textContent = m.name; sel.appendChild(o);
   });
-  document.getElementById('cname').innerHTML = sel.innerHTML;
+  document.getElementById('c-name').innerHTML = sel.innerHTML;
 }
 
-function doAdminLogin(){
-  const pass = document.getElementById('admin-pass').value;
-  const id = document.getElementById('admin-id').value.trim();
+function adminLogin(){
+  const pass = document.getElementById('a-pass').value;
+  const id = document.getElementById('a-id').value.trim();
   if(pass === '123456' && id === '123456'){
-    document.getElementById('adminlogin').classList.add('hidden');
-    document.getElementById('adminpage').classList.remove('hidden');
+    showPage('admindash');
   } else {
-    document.getElementById('aerr').innerText = 'Invalid password or ID';
+    document.getElementById('a-err').innerText = 'Invalid password or ID';
   }
 }
-  const name = document.getElementById('mname').value;
-  const pass = document.getElementById('mpass').value;
-  const m = members.find(x => x.name===name && x.password===pass);
-  if(m){ 
-    document.getElementById('welcome-name').textContent = 'Welcome ' + m.name;
-    document.getElementById('login').classList.add('hidden');
-    document.getElementById('memberpage').classList.remove('hidden');
+
+function memberLogin(){
+  const name = document.getElementById('m-name').value;
+  const pass = document.getElementById('m-pass').value;
+  const m = members.find(x => x.name === name && x.password === pass);
+  if(m){
+    document.getElementById('m-welcome').textContent = 'Welcome ' + m.name;
+    showPage('memberdash');
+  } else {
+    document.getElementById('m-err').innerText = 'Invalid name or password';
   }
-  else { document.getElementById('lerr').innerText = 'Invalid name or password'; }
 }
 
 function changePass(){
-  const name = document.getElementById('cname').value;
-  const oldp = document.getElementById('oldp').value;
-  const newp = document.getElementById('newp').value;
-  const m = members.find(x => x.name===name && x.password===oldp);
-  if(!m){ document.getElementById('cerr').innerText = 'Invalid name or current password'; return; }
-  if(!newp){ document.getElementById('cerr').innerText = 'Enter new password'; return; }
+  const name = document.getElementById('c-name').value;
+  const oldp = document.getElementById('c-old').value;
+  const newp = document.getElementById('c-new').value;
+  const m = members.find(x => x.name === name && x.password === oldp);
+  if(!m){ document.getElementById('c-err').innerText = 'Invalid name or password'; return; }
+  if(!newp){ document.getElementById('c-err').innerText = 'Enter new password'; return; }
   m.password = newp;
   save();
-  alert('Password changed successfully');
+  alert('Password changed');
 }
-
-showAdmins();
-showMembers();
 </script>
 </body>
 </html>
