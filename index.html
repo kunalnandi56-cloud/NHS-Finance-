@@ -69,7 +69,15 @@ button{padding:10px 14px;background:#c9a227;border:none;border-radius:8px;font-w
   </div>
 </div>
 
-<div class="card hidden" id="rules">
+<div class="card hidden" id="excel">
+  <h3>Excel Sheet</h3>
+  <div id="excel-table" style="overflow-x:auto;"></div>
+  <div class="bottom-btns">
+    <button onclick="logout()">Logout</button>
+    <button onclick="show('admin-login')">Back</button>
+    <button onclick="saveData()">Save</button>
+  </div>
+</div>
   <h3>Rules and Regulations</h3>
   <textarea id="rules-text" rows="8" placeholder="Write rules and regulations"></textarea>
   <div class="bottom-btns">
@@ -183,6 +191,7 @@ function show(id){
   document.getElementById(id).classList.remove('hidden');
   if(id === 'add-members') showMemberList();
   if(id === 'member-login') loadMemberNames();
+  if(id === 'excel') showExcel();
   if(id === 'rules') document.getElementById('rules-text').value = localStorage.getItem('nhs_rules') || '';
   if(id === 'ltl') document.getElementById('ltl-text').value = localStorage.getItem('nhs_ltl') || '';
 }
@@ -254,6 +263,16 @@ function showFieldDisplay(){
     <p><b>Share:</b> ${m.share||0} &nbsp; <b>TF:</b> ${m.tf||0} &nbsp; <b>GF:</b> ${m.gf||0}</p>
     <p><b>LTL:</b> ${m.ltl||0} &nbsp; <b>STL:</b> ${m.stl||0} &nbsp; <b>FORM:</b> ${m.form||0} &nbsp; <b>ADMISSION:</b> ${m.admission||0}</p>
   `;
+}
+
+function showExcel(){
+  const div = document.getElementById('excel-table');
+  let html = '<table border="1" style="width:100%;border-collapse:collapse;font-size:14pt;font-family:Times New Roman;"><tr><th>Name</th><th>Share</th><th>TF</th><th>GF</th><th>FORM</th><th>ADMISSION</th></tr>';
+  members.forEach(m => {
+    html += `<tr><td>${m.name}</td><td>${m.share||0}</td><td>${m.tf||0}</td><td>${m.gf||0}</td><td>${m.form||0}</td><td>${m.admission||0}</td></tr>`;
+  });
+  html += '</table>';
+  div.innerHTML = html;
 }
 
 function loadMemberNames(){
