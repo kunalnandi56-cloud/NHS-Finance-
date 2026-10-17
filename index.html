@@ -40,7 +40,7 @@ input,select{width:100%;padding:12px;margin:8px 0;border:1px solid #ccc;border-r
     <h2>Society code</h2>
     <p>This link is only for the 50 members of NHS ECCS. Enter the society code first.</p>
     <input type="password" id="soc-code" placeholder="Society code">
-    <button class="btn btn-dark" onclick="checkCode()">Open</button>
+    <button class="btn btn-dark" onclick="if(document.getElementById('soc-code').value.trim()==='123456'){document.getElementById('screen-code').classList.add('hidden');document.getElementById('screen-main').classList.remove('hidden');}else{document.getElementById('code-err').innerText='Invalid society code';}">Open</button>
     <div id="code-err" class="error"></div>
   </div>
 
