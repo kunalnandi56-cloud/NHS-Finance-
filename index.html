@@ -310,9 +310,25 @@ function showFieldDisplay(){
 
 function showExcel(){
   const div = document.getElementById('excel-table');
-  let html = '<table border="1" style="width:100%;border-collapse:collapse;font-size:14pt;font-family:Times New Roman;"><tr><th>Name</th><th>Share</th><th>TF</th><th>GF</th><th>FORM</th><th>ADMISSION</th></tr>';
+  let html = '<table border="1" style="width:100%;border-collapse:collapse;font-size:12pt;font-family:Times New Roman;">';
+  html += '<tr style="background:#0d2b4a;color:#fff;"><th>NAME</th><th>ACCT</th><th>SHARE</th><th>SHARE THIS MONTH</th><th>TF</th><th>TF THIS MONTH</th><th>GF</th><th>GF THIS MONTH</th><th>LTL</th><th>STL</th><th>LTLP</th><th>LTLI</th><th>LTLB</th><th>STLP</th></tr>';
   members.forEach(m => {
-    html += `<tr><td>${m.name}</td><td>${m.share||0}</td><td>${m.tf||0}</td><td>${m.gf||0}</td><td>${m.form||0}</td><td>${m.admission||0}</td></tr>`;
+    html += `<tr>
+      <td>${m.name}</td>
+      <td>${m.acct||''}</td>
+      <td>${m.share||0}</td>
+      <td>${m.shareMonth||0}</td>
+      <td>${m.tf||0}</td>
+      <td>${m.tfMonth||0}</td>
+      <td>${m.gf||0}</td>
+      <td>${m.gfMonth||0}</td>
+      <td>${m.ltl||0}</td>
+      <td>${m.stl||0}</td>
+      <td>${m.ltlp||0}</td>
+      <td>${m.ltli||0}</td>
+      <td>${m.ltlb||0}</td>
+      <td>${m.stlp||0}</td>
+    </tr>`;
   });
   html += '</table>';
   div.innerHTML = html;
