@@ -509,43 +509,44 @@ function showLoanForm(type){
   document.getElementById('loan-amount').value = '';
 }
 
-function submitApplication(){
+async function submitApplication(){
   const type = document.getElementById('loan-type-label').textContent;
   const amount = document.getElementById('loan-amount').value;
   const date = document.getElementById('loan-date').value;
   const time = document.getElementById('loan-time').value;
   if(!amount){ alert('Enter amount'); return; }
-  let apps = JSON.parse(localStorage.getItem('nhs_apps') || '[]');
-  apps.push({type: type, amount: amount, date: date, time: time, status: 'PENDING'});
-  localStorage.setItem('nhs_apps', JSON.stringify(apps));
+  const app = {type: type, amount: amount, date: date, time: time, status: 'PENDING'};
+  const { error } = await supabase.from('applications').insert(app);
+  if(error){ console.error(error); alert('Error saving application'); return; }
   alert('Application submitted');
   document.getElementById('loan-form').classList.add('hidden');
   showAppHistory();
 }
 
-function showAppHistory(){
-  const apps = JSON.parse(localStorage.getItem('nhs_apps') || '[]');
+async function showAppHistory(){
+  const { data, error } = await supabase.from('applications').select('*').order('created_at', {ascending: false});
+  if(error){ console.error(error); return; }
   const div = document.getElementById('app-history');
   div.innerHTML = '';
-  apps.forEach(a => {
+  (data || []).forEach(a => {
     div.innerHTML += '<p><b>' + a.type + '</b> — ' + a.amount + '<br>' + a.date + ' ' + a.time + '<br>Status: ' + a.status + '</p>';
   });
 }
 
-function showAdminApps(){
-  const apps = JSON.parse(localStorage.getItem('nhs_apps') || '[]');
+async function showAdminApps(){
+  const { data, error } = await supabase.from('applications').select('*').order('created_at', {ascending: false});
+  if(error){ console.error(error); return; }
   const div = document.getElementById('admin-app-list');
   div.innerHTML = '';
-  if(apps.length === 0){ div.innerHTML = '<p>No applications yet.</p>'; return; }
-  apps.forEach((a, i) => {
+  if(!data || data.length === 0){ div.innerHTML = '<p>No applications yet.</p>'; return; }
+  data.forEach(a => {
     div.innerHTML += '<p><b>' + a.type + '</b> — ' + a.amount + '<br>' + a.date + ' ' + a.time + '<br>Status: ' + a.status + '</p>';
   });
 }
 
-function saveMembers(){
-  localStorage.setItem('nhs_members', JSON.stringify(members));
-  alert('Saved');
-}
+window.onload = function(){
+  loadMembersFromSupabase();
+};
 </script>
 <script>
 if('serviceWorker' in navigator){
