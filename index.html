@@ -238,9 +238,30 @@ button{padding:10px 14px;background:#c9a227;border:none;border-radius:8px;font-w
   <h3>Member Home</h3>
   <button class="btn-full" onclick="showPage('rules-view')">Rules and Regulations</button>
   <button class="btn-full" onclick="showPage('ltl-view')">LTL Application list</button>
+  <button class="btn-full" onclick="showPage('application')">Application</button>
+  <button class="btn-full" onclick="showPage('audit')">Audit</button>
   <div class="bottom-btns">
     <button onclick="showPage('first')">Logout</button>
     <button onclick="showPage('member-login')">Back</button>
+  </div>
+</div>
+
+<div class="card hidden" id="application">
+  <h3>Application</h3>
+  <textarea id="app-text" rows="8" placeholder="Write your application"></textarea>
+  <div class="bottom-btns">
+    <button onclick="showPage('first')">Logout</button>
+    <button onclick="showPage('member-home')">Back</button>
+    <button onclick="alert('Application submitted')">Submit</button>
+  </div>
+</div>
+
+<div class="card hidden" id="audit">
+  <h3>Audit</h3>
+  <p>Audit information will appear here.</p>
+  <div class="bottom-btns">
+    <button onclick="showPage('first')">Logout</button>
+    <button onclick="showPage('member-home')">Back</button>
   </div>
 </div>
 
