@@ -344,6 +344,7 @@ function addMember(){
   if(members.find(m => m.name === name)){ alert('Name exists'); return; }
   members.push({name:name, password:'123456', share:0, tf:0, gf:0, ltl:0, stl:0, form:0, admission:0, months:{}});
   document.getElementById('m-name').value = '';
+  saveMembers();
   showList();
   alert('Member added: ' + name);
 }
