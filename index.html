@@ -38,7 +38,7 @@ button{padding:10px 14px;background:#c9a227;border:none;border-radius:8px;font-w
 <div class="card" id="first">
   <h3>Society code</h3>
   <input type="password" id="scode" placeholder="Society code">
-  <button class="btn-full btn-dark" onclick="openMain()">Open</button>
+  <button class="btn-full btn-dark" onclick="if(document.getElementById('scode').value.trim()==='123456'){document.getElementById('first').classList.add('hidden');document.getElementById('main').classList.remove('hidden');}else{alert('Invalid society code. Please enter 123456');}">Open</button>
   <button class="btn-full" onclick="alert('To install: open browser menu and choose Add to Home Screen')">Install app</button>
 </div>
 
