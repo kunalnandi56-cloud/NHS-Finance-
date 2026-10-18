@@ -304,27 +304,9 @@ button{padding:10px 14px;background:#c9a227;border:none;border-radius:8px;font-w
 </div>
 
 <script>
-const SUPABASE_URL = 'https://jmmbtmtocsnzvpantqpd.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImptbWJ0bXRvY3NuenZwYW50cXBkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTIyMDU0NzMsImV4cCI6MjEwNzc4MTQ3M30.tEkXvFRh2voYPBil6fTI0BXmub8Nh479dHoNNUbfdrY';
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-let members = [];
+let members = JSON.parse(localStorage.getItem('nhs_members') || '[]');
 let currentMember = null;
 let currentField = '';
-
-async function loadMembersFromSupabase(){
-  const { data, error } = await supabase.from('members').select('*');
-  if(error){ console.error(error); return; }
-  members = data || [];
-  showList();
-  loadMemberNames();
-  loadInterestNames();
-}
-
-async function saveMemberToSupabase(member){
-  const { error } = await supabase.from('members').upsert(member);
-  if(error) console.error(error);
-}
 
 function showPage(id){
   document.querySelectorAll('.card').forEach(c => c.classList.add('hidden'));
@@ -568,9 +550,10 @@ async function showAdminApps(){
   });
 }
 
-window.onload = function(){
-  loadMembersFromSupabase();
-};
+function saveMembers(){
+  localStorage.setItem('nhs_members', JSON.stringify(members));
+  alert('Saved');
+}
 </script>
 <script>
 if('serviceWorker' in navigator){
