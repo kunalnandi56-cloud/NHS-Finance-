@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="manifest" href="manifest.json">
 <title>Nhseccs Private Banking</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 body{font-family:'Times New Roman',Times,serif;background:#e8f0f8;margin:0;padding:20px;font-size:14pt;}
 .header{background:#0d2b4a;color:#fff;text-align:center;padding:15px;border-radius:8px;margin-bottom:20px;}
@@ -303,9 +304,27 @@ button{padding:10px 14px;background:#c9a227;border:none;border-radius:8px;font-w
 </div>
 
 <script>
-let members = JSON.parse(localStorage.getItem('nhs_members') || '[]');
+const SUPABASE_URL = 'https://jmmbtmtocsnzvpantqpd.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImptbWJ0bXRvY3NuenZwYW50cXBkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTIyMDU0NzMsImV4cCI6MjEwNzc4MTQ3M30.tEkXvFRh2voYPBil6fTI0BXmub8Nh479dHoNNUbfdrY';
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+let members = [];
 let currentMember = null;
 let currentField = '';
+
+async function loadMembersFromSupabase(){
+  const { data, error } = await supabase.from('members').select('*');
+  if(error){ console.error(error); return; }
+  members = data || [];
+  showList();
+  loadMemberNames();
+  loadInterestNames();
+}
+
+async function saveMemberToSupabase(member){
+  const { error } = await supabase.from('members').upsert(member);
+  if(error) console.error(error);
+}
 
 function showPage(id){
   document.querySelectorAll('.card').forEach(c => c.classList.add('hidden'));
