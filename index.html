@@ -454,7 +454,7 @@ function doMemberLogin(){
   const name = document.getElementById('ml-name').value;
   const pass = document.getElementById('ml-pass').value;
   const m = members.find(x => x.name === name && x.password === pass);
-  if(m) alert('Login successful for ' + m.name);
+  if(m) showPage('member-home');
   else alert('Invalid name or password');
 }
 
