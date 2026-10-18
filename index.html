@@ -62,6 +62,7 @@ button{padding:10px 14px;background:#c9a227;border:none;border-radius:8px;font-w
   <button class="btn-full" onclick="showPage('ltl')">LTL Application list</button>
   <button class="btn-full btn-dark" onclick="showPage('excel')">Open Excel sheet</button>
   <button class="btn-full" onclick="showPage('add-members')">Add members</button>
+  <button class="btn-full" onclick="showPage('admin-applications')">Applications</button>
   <div class="bottom-btns">
     <button onclick="showPage('first')">Logout</button>
     <button onclick="showPage('main')">Back</button>
@@ -248,11 +249,29 @@ button{padding:10px 14px;background:#c9a227;border:none;border-radius:8px;font-w
 
 <div class="card hidden" id="application">
   <h3>Application</h3>
-  <textarea id="app-text" rows="8" placeholder="Write your application"></textarea>
+  <button class="btn-full btn-dark" onclick="showLoanForm('LTL')">LTL</button>
+  <button class="btn-full btn-dark" onclick="showLoanForm('STL (Medical)')">STL (Medical)</button>
+  <button class="btn-full btn-dark" onclick="showLoanForm('STL (Other)')">STL (Other)</button>
+  <div id="loan-form" class="hidden" style="margin-top:15px;">
+    <p id="loan-type-label" style="font-weight:bold;"></p>
+    <input type="number" id="loan-amount" placeholder="Amount">
+    <input type="text" id="loan-date" readonly>
+    <input type="text" id="loan-time" readonly>
+    <button class="btn-full" onclick="submitApplication()">Submit</button>
+  </div>
+  <div id="app-history" style="margin-top:15px;"></div>
   <div class="bottom-btns">
     <button onclick="showPage('first')">Logout</button>
     <button onclick="showPage('member-home')">Back</button>
-    <button onclick="alert('Application submitted')">Submit</button>
+  </div>
+</div>
+
+<div class="card hidden" id="admin-applications">
+  <h3>Applications</h3>
+  <div id="admin-app-list"></div>
+  <div class="bottom-btns">
+    <button onclick="showPage('first')">Logout</button>
+    <button onclick="showPage('admin-login')">Back</button>
   </div>
 </div>
 
@@ -300,6 +319,12 @@ function showPage(id){
   if(id === 'member-login') loadMemberNames();
   if(id === 'excel') showExcel();
   if(id === 'interest') loadInterestNames();
+  if(id === 'rules') document.getElementById('rules-text').value = localStorage.getItem('nhs_rules') || '';
+  if(id === 'ltl') document.getElementById('ltl-text').value = localStorage.getItem('nhs_ltl') || '';
+  if(id === 'rules-view') document.getElementById('rules-display').textContent = localStorage.getItem('nhs_rules') || 'No rules written yet.';
+  if(id === 'ltl-view') document.getElementById('ltl-display').textContent = localStorage.getItem('nhs_ltl') || 'No applications yet.';
+  if(id === 'application') showAppHistory();
+  if(id === 'admin-applications') showAdminApps();
   if(id === 'rules') document.getElementById('rules-text').value = localStorage.getItem('nhs_rules') || '';
   if(id === 'ltl') document.getElementById('ltl-text').value = localStorage.getItem('nhs_ltl') || '';
 }
@@ -471,12 +496,49 @@ function loadMemberNames(){
   });
 }
 
-function doMemberLogin(){
-  const name = document.getElementById('ml-name').value;
-  const pass = document.getElementById('ml-pass').value;
-  const m = members.find(x => x.name === name && x.password === pass);
-  if(m) showPage('member-home');
-  else alert('Invalid name or password');
+function showLoanForm(type){
+  document.getElementById('loan-type-label').textContent = type;
+  document.getElementById('loan-form').classList.remove('hidden');
+  const now = new Date();
+  const ist = new Date(now.toLocaleString('en-US', {timeZone: 'Asia/Kolkata'}));
+  const date = ist.toLocaleDateString('en-GB');
+  const time = ist.toLocaleTimeString('en-US', {hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true});
+  document.getElementById('loan-date').value = date;
+  document.getElementById('loan-time').value = time;
+  document.getElementById('loan-amount').value = '';
+}
+
+function submitApplication(){
+  const type = document.getElementById('loan-type-label').textContent;
+  const amount = document.getElementById('loan-amount').value;
+  const date = document.getElementById('loan-date').value;
+  const time = document.getElementById('loan-time').value;
+  if(!amount){ alert('Enter amount'); return; }
+  let apps = JSON.parse(localStorage.getItem('nhs_apps') || '[]');
+  apps.push({type: type, amount: amount, date: date, time: time, status: 'PENDING'});
+  localStorage.setItem('nhs_apps', JSON.stringify(apps));
+  alert('Application submitted');
+  document.getElementById('loan-form').classList.add('hidden');
+  showAppHistory();
+}
+
+function showAppHistory(){
+  const apps = JSON.parse(localStorage.getItem('nhs_apps') || '[]');
+  const div = document.getElementById('app-history');
+  div.innerHTML = '';
+  apps.forEach(a => {
+    div.innerHTML += '<p><b>' + a.type + '</b> — ' + a.amount + '<br>' + a.date + ' ' + a.time + '<br>Status: ' + a.status + '</p>';
+  });
+}
+
+function showAdminApps(){
+  const apps = JSON.parse(localStorage.getItem('nhs_apps') || '[]');
+  const div = document.getElementById('admin-app-list');
+  div.innerHTML = '';
+  if(apps.length === 0){ div.innerHTML = '<p>No applications yet.</p>'; return; }
+  apps.forEach((a, i) => {
+    div.innerHTML += '<p><b>' + a.type + '</b> — ' + a.amount + '<br>' + a.date + ' ' + a.time + '<br>Status: ' + a.status + '</p>';
+  });
 }
 
 function saveMembers(){
