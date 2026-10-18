@@ -349,8 +349,12 @@ function showPage(id){
 }
 
 function openMain(){
-  if(document.getElementById('scode').value.trim() === '123456') showPage('main');
-  else alert('Invalid society code');
+  const code = document.getElementById('scode').value.trim();
+  if(code === '123456'){
+    showPage('main');
+  } else {
+    alert('Invalid society code. Please enter 123456');
+  }
 }
 
 function getMonthKey(){
