@@ -12,7 +12,8 @@ body{font-family:'Times New Roman',Times,serif;background:#e8f0f8;margin:0;paddi
 .header{background:#0d2b4a;color:#fff;text-align:center;padding:15px;border-radius:8px;margin-bottom:20px;}
 .card{background:#fff;padding:20px;border-radius:12px;max-width:600px;margin:15px auto;box-shadow:0 4px 12px rgba(0,0,0,.1);}
 input,select,textarea{width:100%;padding:12px;margin:8px 0;border:1px solid #ccc;border-radius:8px;box-sizing:border-box;font-family:'Times New Roman',Times,serif;font-size:14pt;}
-button{padding:10px 14px;background:#c9a227;border:none;border-radius:8px;font-weight:bold;cursor:pointer;margin:4px;font-family:'Times New Roman',Times,serif;font-size:14pt;}
+button{padding:12px 16px;background:#c9a227;border:none;border-radius:8px;font-weight:bold;cursor:pointer;margin:4px;font-family:'Times New Roman',Times,serif;font-size:14pt;box-shadow:0 4px 0 #a07d1a, 0 6px 10px rgba(0,0,0,0.2);transition:all 0.1s;}
+button:active{box-shadow:0 2px 0 #a07d1a, 0 3px 5px rgba(0,0,0,0.2);transform:translateY(2px);}
 .btn-full{width:100%;display:block;}
 .btn-dark{background:#0d2b4a;color:#fff;}
 .btn-pink{background:#f8d7da;color:#721c24;}
@@ -41,6 +42,8 @@ button{padding:10px 14px;background:#c9a227;border:none;border-radius:8px;font-w
   <input type="password" id="scode" placeholder="Society code">
   <button class="btn-full btn-dark" onclick="if(document.getElementById('scode').value.trim()==='123456'){document.getElementById('first').classList.add('hidden');document.getElementById('main').classList.remove('hidden');}else{alert('Invalid society code. Please enter 123456');}">Open</button>
   <button class="btn-full" onclick="alert('To install: open browser menu and choose Add to Home Screen')">Install app</button>
+  <button class="btn-full" onclick="navigator.share ? navigator.share({title:'Nhseccs Private Banking', url:window.location.href}) : alert('Link: ' + window.location.href)">Share app</button>
+  <button class="btn-full" onclick="window.open(window.location.href, '_blank')">Download / Open link</button>
 </div>
 
 <div class="card hidden" id="main">
